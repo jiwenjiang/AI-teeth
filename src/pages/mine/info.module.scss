@@ -1,0 +1,31 @@
+.index {
+    background: #f6f6f6;
+    height: 100vh;
+    --primary-color: #ffd340;
+    --rv-primary-color: var(--primary-color);
+    --notify-warning-background-color: var(--primary-color);
+}
+
+.row {
+    margin-bottom: 20px;
+}
+
+.avaBox {
+    display: flex;
+    justify-content: center;
+    padding: 30px;
+
+    .ava {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+    }
+}
+
+.btnBox {
+    padding: 0 20px;
+}
+
+.btn {
+    width: 100%;
+}

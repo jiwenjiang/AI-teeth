@@ -1,0 +1,58 @@
+.box {
+  background: #f9fbfc;
+  padding: 28PX 15PX 15PX 15PX;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  box-sizing: border-box;
+  --primary-color: #ffd340;
+}
+.shadow {
+  flex: 1;
+  box-shadow: 4PX 4PX 8PX 0PX rgba(0, 0, 0, 0.16);
+  border-radius: 8PX;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  .imgBox {
+    width: 115PX;
+    height: 115PX;
+    background: #ffffff;
+    box-shadow: 2PX 2PX 4PX 0PX rgba(24, 24, 24, 0.05);
+    border-radius: 12PX;
+    border: 1PX solid #f0f0f0;
+    margin: 0 auto;
+    margin-top: 70PX;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .img {
+      width: 65PX;
+      height: 87PX;
+    }
+  }
+  .title {
+    font-size: 15PX;
+    font-weight: bold;
+    color: #181818;
+    margin-top: 20PX;
+  }
+  .input {
+    width: 330PX;
+  }
+  .btn {
+    margin-top: 31PX;
+    width: 300PX;
+  }
+  .rights {
+    font-size: 13PX;
+    font-weight: 400;
+    color: #7f7f7f;
+    position: fixed;
+    bottom: 38PX;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}

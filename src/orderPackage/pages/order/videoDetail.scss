@@ -1,0 +1,85 @@
+.scale-orderinfo-wrapper {
+  background: #f6f6f6;
+  min-height: 100vh;
+  --space: 30px;
+  padding: var(--space);
+  font-size: 28px;
+  --primary-color: #ffd340;
+
+  .pay-info {
+    width: 100%;
+    background-color: #fff;
+    border-radius: 8px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+
+    .upper {
+      padding: var(--space);
+      border-bottom: 1px solid #ddd;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .name {
+        font-size: 32px;
+      }
+
+      .status {
+        &.unpaid {
+          color: #F44336;
+        }
+        &.paid {
+          color: #06CC76;
+        }
+        &.used, &.cancelled {
+          color: #888;
+        }
+      }
+    }
+
+    .lower {
+      padding: var(--space);
+      padding-bottom: 0;
+    }
+
+  }
+
+  .misc-info {
+    width: 100%;
+    background-color: #fff;
+    border-radius: 8px;
+    box-sizing: border-box;
+    margin-top: var(--space);
+    padding: var(--space);
+    padding-bottom: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space);
+
+    .label {
+      color: #888;
+    }
+  }
+
+  .action {
+    width: 100%;
+    padding-top: 30px;
+
+    .btn {
+      width: 100%;
+      height: 90px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: unset;
+      font-size: 32px;
+    }
+  }
+}

@@ -1,0 +1,150 @@
+.box {
+  height: 100vh;
+  background-color: #f9fbfc;
+
+  :global(.rv-tabbar) {
+    border-top: 1PX solid #f0f0f0;
+  }
+
+  :global(.rv-tabs__nav) {
+    background-color: transparent;
+  }
+}
+
+.cardBox {
+  background-color: transparent;
+  padding: 8PX;
+}
+
+.card {
+  background-color: #fff;
+  background: #ffffff;
+  box-shadow: 2PX 2PX 4PX 0PX rgba(24, 24, 24, 0.05);
+  border: 1PX solid #f0f0f0;
+  padding: 15PX;
+  padding-top: 8PX;
+  font-size: 13PX;
+  border-radius: 8PX;
+
+  .title {
+    font-size: 15PX;
+    font-weight: bold;
+    color: #181818;
+    height: 46PX;
+    display: flex;
+    align-items: center;
+    border-bottom: 1PX solid #efefef;
+    margin-bottom: 15PX;
+    position: relative;
+
+    .date {
+      position: absolute;
+      right: 0;
+      font-weight: normal;
+      color: #7f7f7f;
+    }
+
+    img {
+      width: 20PX;
+      height: 20PX;
+    }
+  }
+
+  .kv {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15PX;
+    padding: 0 8PX;
+  }
+
+  .kv:last-child {
+    margin-bottom: 0;
+  }
+
+  .kv2 {
+    display: flex;
+    margin-bottom: 15PX;
+    padding: 0 8PX;
+    position: relative;
+
+    .link {
+      color: var(--primary-color);
+      position: absolute;
+      right: 0;
+      width: 55PX;
+      white-space: nowrap;
+    }
+  }
+
+  .k {
+    color: #7f7f7f;
+  }
+
+  .v {
+    color: #181818;
+  }
+
+  .remark {
+    color: #181818;
+    margin-bottom: 10PX;
+  }
+}
+
+.imgIcon {
+  width: 20PX;
+  height: 20PX;
+}
+
+.table {
+  .head {
+    display: flex;
+    height: 40PX;
+    line-height: 40PX;
+    border: 1PX solid #a7a2a2;
+    border-right: none;
+    color: #7f7f7f;
+    font-weight: bold;
+
+    .col1 {
+      width: 130PX;
+      padding-left: 10PX;
+      border-right: 1PX solid #c6bdbd;
+    }
+
+    .col2 {
+      flex: 1;
+      text-align: center;
+      border-right: 1PX solid #c6bdbd;
+    }
+  }
+
+  .body {
+    .li {
+      display: flex;
+      min-height: 40PX;
+      line-height: 15PX;
+      border: 1PX solid #c6bdbd;
+      border-right: none;
+      border-top: none;
+
+      .col1 {
+        width: 130PX;
+        padding-left: 10PX;
+        border-right: 1PX solid #c6bdbd;
+        display: flex;
+        align-items: center;
+      }
+
+      .col2 {
+        flex: 1;
+        text-align: center;
+        border-right: 1PX solid #c6bdbd;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    }
+  }
+
+
+}

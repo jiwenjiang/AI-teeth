@@ -1,0 +1,91 @@
+.scale-orderlist-wrapper {
+  background: #f6f6f6;
+  min-height: 100vh;
+  --space: 30px;
+  padding: var(--space);
+  font-size: 28px;
+  --primary-color: #ffd340;
+  
+  .list {
+    width: 100%;
+
+    .order-info {
+      width: 100%;
+      background-color: #fff;
+      border-radius: 8px;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+
+      &:not(:first-child) {
+        margin-top: var(--space);
+      }
+
+      .upper {
+        padding: var(--space);
+        border-bottom: 1px solid #ddd;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .created {
+          color: #888;
+        }
+
+        .status {
+          &.unpaid {
+            color: #F44336;
+          }
+          &.paid {
+            color: #06CC76;
+          }
+          &.used, &.cancelled {
+            color: #888;
+          }
+        }
+      }
+
+      .lower {
+        padding: var(--space);
+
+        .info {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          font-size: 32px;
+
+          .total-fee {
+            color: #F44336;
+          }
+        }
+
+        .actions {
+          margin-top: 60px;
+          display: flex;
+          justify-content: flex-end;
+          align-items: center;
+
+          .btn {
+            width: 120px;
+            height: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: unset;
+            font-size: 28px;
+            white-space: nowrap;
+
+
+            &:last-child {
+              margin-left: var(--space);
+            }
+
+            &.cancel {
+              border: 2px solid #ccc;
+            }
+          }
+        }
+      }
+    }
+  }
+}

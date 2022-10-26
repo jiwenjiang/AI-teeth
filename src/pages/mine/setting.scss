@@ -1,0 +1,16 @@
+.setting {
+  background: #f6f6f6;
+  min-height: 100vh;
+  --space: 30px;
+  padding-top: var(--space);
+  font-size: 28px;
+
+  .option {
+    width: 100%;
+    background-color: #fff;
+    height: 90px;
+    color: #000000;
+    display: flex;
+    align-items: center;
+  }
+}

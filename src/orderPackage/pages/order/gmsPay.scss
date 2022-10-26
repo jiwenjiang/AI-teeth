@@ -1,0 +1,77 @@
+.index {
+  background: #f9fbfc;
+  min-height: 100vh;
+  padding: 0 30px;
+  overflow: hidden;
+  --primary-color: #ffd340;
+  --notify-warning-background-color: var(--primary-color);
+
+  .desc {
+    font-size: 32px;
+    font-weight: normal;
+    line-height: 48px;
+    letter-spacing: 0px;
+    color: #000000;
+    padding: 22px 30px;
+  }
+
+  .sub-desc {
+    font-size: 28px;
+    font-weight: normal;
+    line-height: 42px;
+    letter-spacing: 0px;
+    color: #888888;
+    margin-top: 16px;
+  }
+
+  .price {
+    color: #F44336;
+  }
+
+  .read {
+    font-size: 28px;
+    font-weight: normal;
+    line-height: 42px;
+    letter-spacing: 0px;
+  }
+
+  .buy {
+    color: var(--primary-color);
+  }
+
+  .agreement {
+    margin-top: 80px;
+  }
+
+  .head {
+    font-size: 34px;
+    font-weight: bold;
+    color: #181818;
+    margin-top: 40px;
+    text-align: center;
+  }
+
+  .body {
+    padding: 30px;
+
+    .title {
+      font-size: 28px;
+      font-weight: bold;
+      margin: 10px 0;
+    }
+
+    .content {
+      font-size: 28px;
+      font-weight: normal;
+      line-height: 42px;
+      margin-top: 10px;
+    }
+  }
+
+  .icon {
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+    transform: translateY(6px);
+  }
+}

@@ -1,0 +1,51 @@
+.intervention-list {
+  background-color: #f6f6f6;
+  --primary-color: #ffd340;
+  width: 100vw;
+  height: 100vh;
+  --space: 30px;
+  box-sizing: border-box;
+  padding: var(--space);
+
+  .video-info {
+    background-color: #fff;
+    box-sizing: border-box;
+    border-radius: 6px;
+    margin-bottom: var(--space);
+
+    .video-title {
+      padding: 24px var(--space);
+      font-size: 32px;
+    }
+
+    .video-cover {
+      .cover {
+        border-top: 1px solid #ddd;
+        border-bottom: 1px solid #ddd;
+        width: 100%;
+      }
+    }
+
+    .actions {
+      height: 88px;
+      font-size: 28px;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+
+      .watch-video,
+      .read-intro {
+        width: 50%;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+      }
+
+      .watch-video {
+        box-sizing: border-box;
+        border-right: 1px solid #ddd;
+        color: var(--primary-color);
+      }
+    }
+  }
+}

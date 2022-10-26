@@ -1,0 +1,151 @@
+.index {
+  background: #f6f6f6;
+  height: 100vh;
+  --primary-color: #ffd340;
+  --size: 30px;
+  --size-sm: 24px;
+  --size-2s: 16px;
+  position: relative;
+
+  :global(.list-item) {
+    padding: 24px !important;
+  }
+
+  .row {
+    padding-top: var(--size);
+
+    .at-input {
+      margin-left: 0;
+      padding: var(--size-sm);
+    }
+
+    .at-input::after,
+    .at-list::after,
+    .at-list__item::after {
+      border: none;
+    }
+
+    .risks {
+      position: relative;
+      padding: var(--size-sm);
+      background-color: #fff;
+
+      .row-inside {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .dropdown {
+          width: 50%;
+          border: 1px solid #999;
+          border-radius: 4px;
+          margin-right: var(--size);
+          padding: var(--size-2s);
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+
+          .dropdown-text {
+            font-size: .9em;
+            color: #999;
+          }
+
+          .dropdown-icon {
+            width: var(--size-sm);
+            height: var(--size-sm);
+          }
+        }
+      }
+    }
+  }
+
+  .weight-input::after {
+    content: "克(g)";
+    color: #aaa;
+    font-size: 32px;
+    right: 30px;
+    top: 50%;
+    left: unset;
+    bottom: unset;
+    transform: translateY(-50%) scale(1);
+    position: absolute;
+  }
+
+  .actions {
+    display: flex;
+    justify-content: center;
+  }
+
+  .confirm {
+    width: 90%;
+    margin: var(--size) auto 0;
+    background-color: var(--primary-color);
+    border: 0;
+  }
+
+  .mask {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(0, 0, 0, .3);
+    z-index: 20;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    .dropdown-items {
+      width: 90%;
+      height: 90%;
+      overflow-y: auto;
+      z-index: 30;
+      padding-bottom: var(--size);
+      border-top: 1px solid #f6f6f6;
+      background-color: #fff;
+
+      &.hidden {
+        display: none;
+      }
+
+      .item {
+        padding: var(--size-sm);
+        display: flex;
+        align-items: center;
+        font-size: .9em;
+        color: #999;
+
+        .icon-wrapper {
+          flex-shrink: 0;
+          width: var(--size-sm);
+          height: var(--size-sm);
+          border: 2px solid #999;
+          border-radius: 4px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+
+          .checked-icon {
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+
+            &.checked {
+              opacity: 1;
+            }
+          }
+        }
+
+        .item-text {
+          margin-left: .5em;
+
+          &.checked {
+            color: #000;
+            font-weight: bold;
+          }
+        }
+      }
+    }
+  }
+}

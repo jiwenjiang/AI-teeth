@@ -1,0 +1,45 @@
+/* navigationBar.wxss */
+.navigation-container {
+    position: fixed;
+    width: 100%;
+    z-index: 99;
+    top: 0;
+    left: 0;
+    background-color: #ffffff;
+}
+
+.navigation-bar {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.navigation-buttons {
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    background-color: transparent;
+    width: 30px;
+    position: absolute;
+    left: 10px;
+    z-index: 1;
+}
+
+.nav-img {
+    height: 16px;
+    width: 16px;
+}
+
+.navigation-title {
+    text-align: center;
+    font-size: 32px;
+    color: #000000;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex: 1;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+}

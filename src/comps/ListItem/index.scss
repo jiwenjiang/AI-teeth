@@ -1,0 +1,35 @@
+.list-item {
+  padding: 38px 30px;
+  position: relative;
+  box-sizing: border-box;
+  color: #333;
+  display: flex;
+
+  .info-title {
+    font-size: 27px;
+    font-weight: 500;
+    line-height: 38px;
+    letter-spacing: 0px;
+    color: #6A6A77;
+  }
+
+  .info-node {
+    font-size: 22px;
+    font-weight: normal;
+    line-height: 31px;
+    letter-spacing: 0px;
+    color: #88889C;
+    margin-top: 5px;
+  }
+
+  .left-box {
+    
+    margin-right: 20px;
+  }
+
+  .right {
+    align-self: center;
+    position: absolute;
+    right: 30px;
+  }
+}

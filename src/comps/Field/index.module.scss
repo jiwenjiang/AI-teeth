@@ -1,0 +1,22 @@
+.box {
+    width: 100%;
+    height: 88px;
+    background-color: #fff;
+    padding: 20px 32px;
+    box-sizing: border-box;
+    display: flex;
+
+    .label {
+        color: #646566;
+        min-width: 172px;
+        margin-right: 48px;
+    }
+
+    .input {
+        flex: 1;
+    }
+
+    .placeholder {
+        color: #cccccc;
+    }
+}

@@ -1,0 +1,94 @@
+.box {
+    background-color: #f9fbfc;
+}
+
+.cardBox {
+    background-color: transparent;
+    padding: 8PX;
+}
+
+.card {
+    background-color: #fff;
+    background: #ffffff;
+    box-shadow: 2PX 2PX 4PX 0PX rgba(24, 24, 24, 0.05);
+    border: 1PX solid #f0f0f0;
+    padding: 5PX 15PX;
+    font-size: 13PX;
+    border-radius: 8PX;
+
+    .title {
+        font-size: 15PX;
+        font-weight: bold;
+        color: #181818;
+        height: 46PX;
+        display: flex;
+        align-items: center;
+        border-bottom: 1PX solid #efefef;
+        margin-bottom: 15PX;
+
+        img {
+            width: 20PX;
+            height: 20PX;
+        }
+    }
+
+    .kv {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 15PX;
+        padding: 0 8PX;
+    }
+
+    .k {
+        color: #7f7f7f;
+    }
+
+    .v {
+        color: #181818;
+    }
+}
+
+.psw {
+    text-align: center;
+    font-size: 13PX;
+    font-weight: 600;
+    color: var(--primary-color);
+    text-decoration: underline;
+    margin-top: 23PX;
+}
+
+.subTitle {
+    font-size: 13PX;
+    color: #181818;
+    margin-bottom: 8PX;
+}
+
+.iconBox {
+    width: 54PX;
+    height: 54PX;
+    background-color: #f7f8fa;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 5PX;
+}
+
+.mediaBox {
+    display: flex;
+    margin-bottom: 10PX;
+    border-bottom: 1PX solid #f0f0f0;
+    padding-bottom: 8PX;
+}
+
+.imgs {
+    width: 54PX;
+    height: 54PX;
+    margin-right: 5PX;
+}
+
+.remark {
+    font-size: 13PX;
+    font-weight: 400;
+    color: #7f7f7f;
+    margin-bottom: 8PX;
+}
