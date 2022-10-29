@@ -1,8 +1,8 @@
 {
-  "name": "fushu-mini",
+  "name": "ai-teeth",
   "version": "1.0.0",
   "private": true,
-  "description": "fushu-mini",
+  "description": "ai-teeth",
   "templateInfo": {
     "name": "taro-ui",
     "typescript": true,
