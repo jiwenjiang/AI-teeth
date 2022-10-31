@@ -11,25 +11,25 @@ import "./custom-variables.scss";
 import { useAuth } from "./service/hook";
 
 function App(props) {
-  const { getAuth } = useAuth();
-  const [child, setChild] = useState({ len: 0 });
+  // const { getAuth } = useAuth();
+  // const [child, setChild] = useState({ len: 0 });
 
-  const getChild = async () => {
-    const res = await request({
-      url: "/children/list",
-      data: { pageNo: 1, pageSize: 1000 }
-    });
-    setChild({ len: res.data.children?.length });
-  };
+  // const getChild = async () => {
+  //   const res = await request({
+  //     url: "/children/list",
+  //     data: { pageNo: 1, pageSize: 1000 }
+  //   });
+  //   setChild({ len: res.data.children?.length });
+  // };
 
-  useDidShow(() => {
-    getAuth(getChild);
-  });
+  // useDidShow(() => {
+  //   getAuth(getChild);
+  // });
 
   return (
-    <ChildContext.Provider value={{ child, updateChild: setChild }}>
-      <View className="html">{props.children}</View>
-    </ChildContext.Provider>
+    // <ChildContext.Provider value={{ child, updateChild: setChild }}>
+    // </ChildContext.Provider>
+    <View className="html">{props.children}</View>
   );
 }
 
