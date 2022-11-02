@@ -1,0 +1,149 @@
+.page {
+  --text-gray: rgba(51, 51, 51, 0.9);
+  --text-blue: #1DA1F2;
+  --bg-gray: #F5F8FC;
+
+  width: 100vw;
+  height: 100vh;
+
+  background: var(--bg-gray);
+  background: url(../../static/imgs/index-bg.png) no-repeat top center;
+  background-size: contain;
+
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+
+  .content {
+    flex-grow: 1;
+
+    display: flex;
+    flex-direction: column;
+    padding-left: 40px;
+    padding-right: 40px;
+
+    position: relative;
+
+    background-color: var(--bg-gray);
+
+    .bannerwrapper {
+      width: 100%;
+      box-sizing: border-box;
+      padding-top: 5px;
+
+      // 加上这行，图片底部就不会有多余的空白
+      display: flex;
+
+      .bannerimg {
+        width: 100%;
+      }
+    }
+
+    .servicelist {
+      display: flex;
+      flex-direction: column;
+
+      .servicetitle {
+        margin-top: 36px;
+        font-weight: bold;
+      }
+
+      .mainservices {
+        margin-top: 28px;
+
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+
+        .service {
+          width: 42.6vw;
+          height: 36vw;
+          box-sizing: border-box;
+          padding: 32px;
+          margin-bottom: 20px;
+
+          border-radius: 32px;
+          background-color: #fff;
+
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+
+          .serviceicon {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            .mainicon {
+              width: 80px;
+              height: 80px;
+            }
+
+          }
+
+          .servicename {
+            display: flex;
+            flex-direction: column;
+          }
+        }
+      }
+
+      .otherservices {
+        margin-top: 28px;
+
+        .service {
+          width: 100%;
+
+          border-radius: 16px;
+          background-color: #fff;
+
+          box-sizing: border-box;
+          padding: 12px 20px 16px;
+          margin-bottom: 28px;
+
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+
+          .left {
+            display: flex;
+            align-items: center;
+
+            .othericon {
+              width: 68px;
+              height: 68px;
+            }
+
+            .servicename {
+              margin-left: 32px;
+              display: flex;
+              flex-direction: column;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// 以下为通用样式
+.cnname {
+  font-size: 28px;
+  color: #222;
+}
+
+.enname {
+  margin-top: 10px;
+  font-size: 20px;
+  color: #666;
+}
+
+.arrow {
+  width: 52px;
+  height: 52px;
+  border-radius: 100em;
+  box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

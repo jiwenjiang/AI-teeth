@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import Taro, { reLaunch, useRouter } from "@tarojs/taro";
+import Taro, { useRouter, switchTab, reLaunch } from "@tarojs/taro";
 import { Button } from "@taroify/core";
 import { View, Text, Image, RichText, Icon } from "@tarojs/components";
 import { Cross } from "@taroify/icons";
@@ -48,7 +48,13 @@ export default function App() {
 
     setStatusBarHeight(statusBarHeight2);
     setNavigationHeight(navigationHeight2);
-  }
+  };
+
+  const goToIndexPage = () => {
+    switchTab({
+      url: '/pages/index/index'
+    });
+  };
 
   const showToS = (type: 'user' | 'privacy') => {
     setShowMask(true);
@@ -263,7 +269,7 @@ export default function App() {
   const hideToS = () => {
     setShowMask(false);
     setNavBarTitle('');
-  }
+  };
 
   const navBarStyles = {
     width: '100%',
@@ -316,7 +322,10 @@ export default function App() {
           <Image src={logo} className={styles.logo} mode="widthFix" />
         </View>
         <View className={styles.bottom}>
-          <CustomButton text={'微信授权一键登录'} />
+          <CustomButton
+            text={'微信授权一键登录'}
+            click={goToIndexPage}
+          />
           <View className={styles.agree} onClick={() => setAgree(!agree)}>
             {agree ? <Icon type='success' size='16' />
             : <Icon type='circle' size='16' />}

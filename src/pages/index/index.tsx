@@ -1,79 +1,131 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
-import { Image, View } from "@tarojs/components";
-import { navigateTo, navigateToMiniProgram } from "@tarojs/taro";
+import Taro, { navigateTo } from "@tarojs/taro";
+import { View, Text, Image } from "@tarojs/components";
 import { Arrow } from "@taroify/icons";
 
-import ListItem from "@/comps/ListItem";
 import TabBar from "@/comps/TabBar";
 
-import Train from "@/static/icons/jujia.svg";
-import SelfTest from "@/static/icons/self-test.svg";
-import VideoCourse from "@/static/icons/video.svg";
+import Banner from "@/static/imgs/index-banner.png";
 
-import "./index.scss";
+import Caries from "@/static/icons/index-caries.png";
+import Warning from "@/static/icons/index-warning.png";
+import Surface from "@/static/icons/index-surface.png";
+import Evaluate from "@/static/icons/index-evaluate.png";
+import Patient from "@/static/icons/index-patient.png";
+import Record from "@/static/icons/index-record.png";
+
+import styles from "./index.module.scss";
 
 export default function App() {
+  const [statusBarHeight, setStatusBarHeight] = useState(0);
+  const [navigationHeight, setNavigationHeight] = useState(0);
+  const [navBarTitle, setNavBarTitle] = useState('首页');
+
+  useEffect(() => {
+    setNavBarHeight();
+  }, []);
+
+  const setNavBarHeight = () => {
+    const systemInfo = wx.getSystemInfoSync();
+    let statusBarHeight2 = systemInfo.statusBarHeight;
+    let boundingClientRect = Taro.getMenuButtonBoundingClientRect();
+    let navigationHeight2 = boundingClientRect.height + (boundingClientRect.top - statusBarHeight2) * 2;
+
+    setStatusBarHeight(statusBarHeight2);
+    setNavigationHeight(navigationHeight2);
+  };
+
+  const mainServices = [
+    {
+      cnName: '儿童龋齿检测',
+      enName: 'Caries detection',
+      iconSrc: Caries,
+    },
+    {
+      cnName: '儿童牙合早期预警',
+      enName: 'Early warning',
+      iconSrc: Warning,
+    },
+    {
+      cnName: '面型自检',
+      enName: 'Surface inspection',
+      iconSrc: Surface,
+    },
+    {
+      cnName: '颜面评估',
+      enName: 'Personnel management',
+      iconSrc: Evaluate,
+    },
+  ];
+
+  const otherServices = [
+    {
+      cnName: '患者管理',
+      enName: 'Face to assess',
+      iconSrc: Patient,
+    },
+    {
+      cnName: '检测记录',
+      enName: 'Check the record',
+      iconSrc: Record,
+    },
+  ];
+
   const goto = url => {
     navigateTo({ url });
   };
 
-  const gotoOther = () => {
-    navigateToMiniProgram({
-      appId: 'wx98dc9b974915de77',
-    });
+  const navBarStyles = {
+    width: '100%',
+    paddingTop: `${statusBarHeight}px`,
+    height: `${navigationHeight}px`,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    fontSize: '16px',
+    color: '#fff',
   };
 
   return (
-    <View className="index">
-      <View className="list-wrap">
-        <View className="list" onClick={() => goto("/pages/evaluate/list")}>
-          <ListItem
-            title="量表自测"
-            subTitle="拍摄视频，自主筛查"
-            left={
-              <View className="left">
-                <Image src={SelfTest} className="icon" />
-              </View>
-            }
-            right={
-              <View className="arrow-icon">
-                <Arrow color="#fff" />
-              </View>
-            }
-          />
+    <View className={styles.page}>
+      <View style={navBarStyles}>
+        <Text>{navBarTitle}</Text>
+      </View>
+      <View className={styles.content}>
+        <View className={styles.bannerwrapper}>
+          <Image className={styles.bannerimg} src={Banner} mode='widthFix' />
         </View>
-        <View className="list">
-          <ListItem
-            title="居家训练"
-            subTitle="居家康复，远程训练"
-            left={
-              <View className="left">
-                <Image src={Train} className="icon" />
+        <View className={styles.servicelist}>
+          <Text className={styles.servicetitle}>服务入口</Text>
+          <View className={styles.mainservices}>
+            {mainServices.map((service, index) => (
+              <View className={styles.service} key={index}>
+                <View className={styles.serviceicon}>
+                  <Image className={styles.mainicon} src={service.iconSrc} mode='widthFix' />
+                  <Arrow className={styles.arrow} />
+                </View>
+                <View className={styles.servicename}>
+                  <Text className={styles.cnname}>{service.cnName}</Text>
+                  <Text className={styles.enname}>{service.enName}</Text>
+                </View>
               </View>
-            }
-            right={
-              <View className="arrow-icon">
-                <Arrow color="#fff" />
+            ))}
+          </View>
+          <View className={styles.otherservices}>
+            {otherServices.map((service, index) => (
+              <View className={styles.service} key={index}>
+                <View className={styles.left}>
+                  <Image className={styles.othericon} src={service.iconSrc} mode='widthFix' />
+                  <View className={styles.servicename}>
+                    <Text className={styles.cnname}>{service.cnName}</Text>
+                    <Text className={styles.enname}>{service.enName}</Text>
+                  </View>
+                </View>
+                <Arrow className={styles.arrow} />
               </View>
-            }
-          />
-        </View>
-        <View className="list" onClick={() => gotoOther()}>
-          <ListItem
-            title="视频课程"
-            subTitle="蕾波视频，助力康复"
-            left={
-              <View className="left">
-                <Image src={VideoCourse} className="icon" />
-              </View>
-            }
-            right={
-              <View className="arrow-icon">
-                <Arrow color="#fff" />
-              </View>
-            }
-          />
+            ))}
+          </View>
         </View>
       </View>
       <TabBar current="index" />
