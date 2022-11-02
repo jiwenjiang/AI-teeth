@@ -6,8 +6,10 @@
   width: 100vw;
   height: 100vh;
 
-  background: var(--bg-gray);
-  background: url(../../static/imgs/index-bg.png) no-repeat top center;
+  background-color: var(--bg-gray);
+  background-image: url(../../static/imgs/index-bg.png);
+  background-repeat: no-repeat;
+  background-position: top center;
   background-size: contain;
 
   display: flex;
@@ -23,8 +25,6 @@
     padding-right: 40px;
 
     position: relative;
-
-    background-color: var(--bg-gray);
 
     .bannerwrapper {
       width: 100%;
@@ -133,7 +133,7 @@
 }
 
 .enname {
-  margin-top: 10px;
+  margin-top: 5px;
   font-size: 20px;
   color: #666;
 }
