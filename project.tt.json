@@ -1,7 +1,7 @@
 {
   "miniprogramRoot": "./",
-  "projectname": "fushu-mini",
-  "description": "fushu-mini",
+  "projectname": "ai-teeth",
+  "description": "ai-teeth",
   "appid": "touristappid",
   "setting": {
     "urlCheck": true,
