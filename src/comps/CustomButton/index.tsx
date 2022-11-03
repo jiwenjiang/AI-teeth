@@ -18,7 +18,7 @@ export default function CustomButton({
   };
   
   return (
-    <View className={`${classes} custom-button`} style={styles} onClick={handle}>
+    <View className={`custom-button ${classes}`} style={styles} onClick={handle}>
       {text}
     </View>
   );
