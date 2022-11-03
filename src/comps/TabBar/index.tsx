@@ -1,8 +1,14 @@
-import { Tabbar } from "@taroify/core";
-import { HomeOutlined, UserCircleOutlined } from "@taroify/icons";
-import { View } from "@tarojs/components";
-import Taro from "@tarojs/taro";
 import React from "react";
+
+import { Tabbar } from "@taroify/core";
+import { Image, View } from "@tarojs/components";
+import Taro from "@tarojs/taro";
+
+import HomeActive from "@/static/icons/tabbar-home-active.png";
+import Home from "@/static/icons/tabbar-home.png";
+import MineActive from "@/static/icons/tabbar-mine-active.png";
+import Mine from "@/static/icons/tabbar-mine.png";
+
 import "./index.scss";
 
 const pageList = [
@@ -26,13 +32,24 @@ export default function TabBar({ current }) {
   return (
     <View className="tab-wrap">
       <Tabbar value={pageList.findIndex(v => v.page === current)} fixed={true}>
-        <Tabbar.TabItem icon={<HomeOutlined />} onClick={() => handleClick(0)}>
+        <Tabbar.TabItem
+          onClick={() => handleClick(0)}
+          className="tab-item"
+        >
+          <Image
+            src={current === pageList[0].page ? HomeActive : Home}
+            className="icon"
+          />
           首页
         </Tabbar.TabItem>
         <Tabbar.TabItem
-          icon={<UserCircleOutlined />}
           onClick={() => handleClick(1)}
+          className="tab-item"
         >
+          <Image
+            src={current === pageList[1].page ? MineActive : Mine}
+            className="icon"
+          />
           我的
         </Tabbar.TabItem>
       </Tabbar>
