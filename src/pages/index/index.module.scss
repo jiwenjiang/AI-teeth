@@ -65,6 +65,8 @@
           border-radius: 32px;
           background-color: #fff;
 
+          position: relative;
+
           display: flex;
           flex-direction: column;
           justify-content: space-between;
@@ -84,6 +86,24 @@
           .servicename {
             display: flex;
             flex-direction: column;
+          }
+
+          .mask {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+
+            border-radius: 32px;
+            background-color: rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(4px);
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            color: #222;
           }
         }
       }

@@ -1,30 +1,32 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
-import Taro, { navigateTo } from "@tarojs/taro";
-import { View, Text, Image } from "@tarojs/components";
 import { Arrow } from "@taroify/icons";
+import { Image, Text, View } from "@tarojs/components";
+import Taro from "@tarojs/taro";
 
 import TabBar from "@/comps/TabBar";
 
 import Banner from "@/static/imgs/index-banner.png";
 
 import Caries from "@/static/icons/index-caries.png";
-import Warning from "@/static/icons/index-warning.png";
-import Surface from "@/static/icons/index-surface.png";
 import Evaluate from "@/static/icons/index-evaluate.png";
 import Patient from "@/static/icons/index-patient.png";
 import Record from "@/static/icons/index-record.png";
+import Surface from "@/static/icons/index-surface.png";
+import Warning from "@/static/icons/index-warning.png";
 
 import styles from "./index.module.scss";
 
 export default function App() {
   const [statusBarHeight, setStatusBarHeight] = useState(0);
   const [navigationHeight, setNavigationHeight] = useState(0);
-  const [navBarTitle, setNavBarTitle] = useState('首页');
 
   useEffect(() => {
     setNavBarHeight();
   }, []);
+
+  const navBarTitle = '首页';
+
 
   const setNavBarHeight = () => {
     const systemInfo = wx.getSystemInfoSync();
@@ -41,21 +43,25 @@ export default function App() {
       cnName: '儿童龋齿检测',
       enName: 'Caries detection',
       iconSrc: Caries,
+      open: true,
     },
     {
       cnName: '儿童牙合早期预警',
       enName: 'Early warning',
       iconSrc: Warning,
+      open: true,
     },
     {
       cnName: '面型自检',
       enName: 'Surface inspection',
       iconSrc: Surface,
+      open: false,
     },
     {
       cnName: '颜面评估',
       enName: 'Personnel management',
       iconSrc: Evaluate,
+      open: false,
     },
   ];
 
@@ -71,10 +77,6 @@ export default function App() {
       iconSrc: Record,
     },
   ];
-
-  const goto = url => {
-    navigateTo({ url });
-  };
 
   const navBarStyles = {
     width: '100%',
@@ -109,6 +111,9 @@ export default function App() {
                   <Text className={styles.cnname}>{service.cnName}</Text>
                   <Text className={styles.enname}>{service.enName}</Text>
                 </View>
+                {!service.open && (
+                  <View className={styles.mask}>敬请期待...</View>
+                )}
               </View>
             ))}
           </View>
