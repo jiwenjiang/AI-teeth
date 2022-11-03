@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 
 import { Arrow } from "@taroify/icons";
 import { Image, Text, View } from "@tarojs/components";
-import Taro from "@tarojs/taro";
+import { getMenuButtonBoundingClientRect, navigateTo } from "@tarojs/taro";
 
 import TabBar from "@/comps/TabBar";
 
@@ -31,7 +31,7 @@ export default function App() {
   const setNavBarHeight = () => {
     const systemInfo = wx.getSystemInfoSync();
     let statusBarHeight2 = systemInfo.statusBarHeight;
-    let boundingClientRect = Taro.getMenuButtonBoundingClientRect();
+    let boundingClientRect = getMenuButtonBoundingClientRect();
     let navigationHeight2 = boundingClientRect.height + (boundingClientRect.top - statusBarHeight2) * 2;
 
     setStatusBarHeight(statusBarHeight2);
@@ -43,24 +43,28 @@ export default function App() {
       cnName: '儿童龋齿检测',
       enName: 'Caries detection',
       iconSrc: Caries,
+      path: 'caries',
       open: true,
     },
     {
       cnName: '儿童牙合早期预警',
       enName: 'Early warning',
       iconSrc: Warning,
+      path: 'warning',
       open: true,
     },
     {
       cnName: '面型自检',
       enName: 'Surface inspection',
       iconSrc: Surface,
+      path: 'surface',
       open: false,
     },
     {
       cnName: '颜面评估',
       enName: 'Personnel management',
       iconSrc: Evaluate,
+      path: 'evaluate',
       open: false,
     },
   ];
@@ -70,13 +74,21 @@ export default function App() {
       cnName: '患者管理',
       enName: 'Face to assess',
       iconSrc: Patient,
+      path: 'patient',
     },
     {
       cnName: '检测记录',
       enName: 'Check the record',
       iconSrc: Record,
+      path: 'record',
     },
   ];
+
+  const goToModule = (path: string) => {
+    navigateTo({
+      url: `/pages/${path}/index`
+    })
+  }
 
   const navBarStyles = {
     width: '100%',
@@ -102,7 +114,11 @@ export default function App() {
           <Text className={styles.servicetitle}>服务入口</Text>
           <View className={styles.mainservices}>
             {mainServices.map((service, index) => (
-              <View className={styles.service} key={index}>
+              <View
+                className={styles.service}
+                key={index}
+                onClick={() => goToModule(service.path)}
+              >
                 <View className={styles.serviceicon}>
                   <Image className={styles.mainicon} src={service.iconSrc} mode='widthFix' />
                   <Arrow className={styles.arrow} />
@@ -119,7 +135,11 @@ export default function App() {
           </View>
           <View className={styles.otherservices}>
             {otherServices.map((service, index) => (
-              <View className={styles.service} key={index}>
+              <View
+                className={styles.service}
+                key={index}
+                onClick={() => goToModule(service.path)}
+              >
                 <View className={styles.left}>
                   <Image className={styles.othericon} src={service.iconSrc} mode='widthFix' />
                   <View className={styles.servicename}>
