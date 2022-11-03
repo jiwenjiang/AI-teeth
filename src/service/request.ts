@@ -1,7 +1,6 @@
 import Taro from "@tarojs/taro";
 
-// const host = "https://wx.fushuhealth.com/recovery-wx";
-const host = "https://wx-test.fushuhealth.com/recovery-wx";
+const host = "https://wx-test.fushuhealth.com/largev-teeth-wx";
 
 const request = (
   options: any
