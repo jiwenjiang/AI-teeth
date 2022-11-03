@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 
-import Taro, { useRouter, switchTab, reLaunch } from "@tarojs/taro";
 import { Button } from "@taroify/core";
-import { View, Text, Image, RichText, Icon } from "@tarojs/components";
 import { Cross } from "@taroify/icons";
+import { Icon, Image, RichText, Text, View } from "@tarojs/components";
+import Taro, { reLaunch, useRouter } from "@tarojs/taro";
 
 import CustomButton from "@/comps/CustomButton";
 
@@ -23,7 +23,7 @@ export default function App() {
   const [showMask, setShowMask] = useState(false);
   const [agree, setAgree] = useState(false);
   const [toSContent, setToSContent] = useState('');
-  // const { getAuth } = useAuth();
+  const { getAuth } = useAuth();
 
   useEffect(() => {
     setNavBarHeight();
@@ -48,12 +48,6 @@ export default function App() {
 
     setStatusBarHeight(statusBarHeight2);
     setNavigationHeight(navigationHeight2);
-  };
-
-  const goToIndexPage = () => {
-    switchTab({
-      url: '/pages/index/index'
-    });
   };
 
   const showToS = (type: 'user' | 'privacy') => {
@@ -281,32 +275,34 @@ export default function App() {
     color: '#000',
   };
 
-  // const onGetPhoneNumber = async e => {
-  //   const login = await Taro.login();
-  //   const userInfo = await Taro.getUserInfo();
-  //   const res = await request({
-  //     url: "/miniapp/login",
-  //     method: "POST",
-  //     data: {
-  //       code: login.code,
-  //       encryptedData: userInfo.encryptedData,
-  //       iv: userInfo.iv,
-  //       phoneCode: e.detail.code
-  //     }
-  //   });
-  //   if (res.code === 0) {
-  //     getAuth();
-  //     if (router.params.returnUrl) {
-  //       if (tabPages.includes(router.params.returnUrl)) {
-  //         Taro.switchTab({ url: router.params.returnUrl });
-  //       } else {
-  //         reLaunch({ url: router.params.returnUrl });
-  //       }
-  //     } else {
-  //       Taro.switchTab({ url: "/pages/index/index" });
-  //     }
-  //   }
-  // };
+  const onGetPhoneNumber = async (e) => {
+    const login = await Taro.login();
+    const userInfo = await Taro.getUserInfo();
+
+    const res = await request({
+      url: "/miniapp/login",
+      method: "POST",
+      data: {
+        code: login.code,
+        encryptedData: userInfo.encryptedData,
+        iv: userInfo.iv,
+        phoneCode: e.detail.code,
+      }
+    });
+
+    if (res.code === 0) {
+      getAuth();
+      if (router.params.returnUrl) {
+        if (tabPages.includes(router.params.returnUrl)) {
+          Taro.switchTab({ url: router.params.returnUrl });
+        } else {
+          reLaunch({ url: router.params.returnUrl });
+        }
+      } else {
+        Taro.switchTab({ url: "/pages/index/index" });
+      }
+    }
+  };
 
   return (
     <View className={styles.page}>
@@ -322,18 +318,23 @@ export default function App() {
           <Image src={logo} className={styles.logo} mode="widthFix" />
         </View>
         <View className={styles.bottom}>
-          <CustomButton
-            text={'微信授权一键登录'}
-            click={goToIndexPage}
-          />
+          <Button
+            className={styles.loginbutton}
+            disabled={!agree}
+            color="primary"
+            openType="getPhoneNumber"
+            onGetPhoneNumber={onGetPhoneNumber}
+          >
+            微信授权一键登录
+          </Button>
           <View className={styles.agree} onClick={() => setAgree(!agree)}>
             {agree ? <Icon type='success' size='16' />
-            : <Icon type='circle' size='16' />}
-              <Text className={styles.agreetext}>我已阅读并同意</Text>
-              {/* Text 组件 onClick 事件似乎无效，得用 View 组件 */}
-              <View className={styles.link} onClick={() => showToS('user')}>《用户协议》</View>
-              和
-              <View className={styles.link} onClick={() => showToS('privacy')}>《隐私协议》</View>
+              : <Icon type='circle' size='16' />}
+            <Text className={styles.agreetext}>我已阅读并同意</Text>
+            {/* Text 组件 onClick 事件无效，得用 View 组件 */}
+            <View className={styles.link} onClick={() => showToS('user')}>《用户协议》</View>
+            和
+            <View className={styles.link} onClick={() => showToS('privacy')}>《隐私协议》</View>
           </View>
         </View>
         {showMask && (<View className={styles.mask}>
@@ -346,18 +347,6 @@ export default function App() {
           <CustomButton classes={'iknow'} text={'知道了'} click={hideToS} />
         </View>)}
       </View>
-      {/* <View className={styles.shadow}>
-        <View>
-          <Button
-            className={styles.btn}
-            color="primary"
-            onGetPhoneNumber={onGetPhoneNumber}
-            openType="getPhoneNumber"
-          >
-            微信登录
-          </Button>
-        </View>
-      </View> */}
     </View>
   );
 }
