@@ -1,8 +1,8 @@
 export default {
   pages: [
-    "pages/patient/index",
     "pages/login/index",
     "pages/index/index",
+    "pages/patient/index",
     "pages/mine/index",
     "pages/mine/setting",
     "pages/mine/password",
