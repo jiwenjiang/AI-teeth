@@ -56,12 +56,19 @@ export default function App() {
       camera: "back",
       success(res) {
         const filePath = res.tempFiles[0].tempFilePath;
-        console.log("🚀 ~ file: photo.tsx ~ line 45 ~ success ~ res", res);
         setOpen(false);
-        mediaList({
-          type: MediaType.PICTURE,
-          filePath,
-          thumbTempFilePath: res.tempFiles[0].tempFilePath
+        wx.editImage({
+          src: filePath, // 图片路径
+          success(res) {
+            mediaList({
+              type: MediaType.PICTURE,
+              filePath: res.tempFilePath,
+              thumbTempFilePath: res.tempFilePath
+            });
+          },
+          fail(e) {
+            console.log("err", e);
+          }
         });
       }
     });
@@ -76,10 +83,18 @@ export default function App() {
       success(res) {
         const filePath = res.tempFiles[0].tempFilePath;
         setShowGuide(false);
-        mediaList({
-          type: MediaType.PICTURE,
-          filePath,
-          thumbTempFilePath: res.tempFiles[0].tempFilePath
+        wx.editImage({
+          src: filePath, // 图片路径
+          success(res) {
+            mediaList({
+              type: MediaType.PICTURE,
+              filePath: res.tempFilePath,
+              thumbTempFilePath: res.tempFilePath
+            });
+          },
+          fail(e) {
+            console.log("err", e);
+          }
         });
       }
     });
