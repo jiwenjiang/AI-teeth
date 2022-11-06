@@ -5,7 +5,6 @@ import request from "./request";
 const upload2Server = async (file, type: MediaType, uploadCb) => {
   const ext = file.split(".")?.[1];
   const param = { ext: ext ?? "jpg", type };
-  console.log("🚀 ~ file: upload.ts ~ line 13 ~ fileName", file);
   const { data } = await request({ url: "/upload/token", data: param });
   const { key, token, bucket } = data;
 

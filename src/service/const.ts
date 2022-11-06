@@ -25,3 +25,7 @@ export enum OrderStatus {
 }
 
 export const tabPages = ["/pages/index/index", "pages/mine/index"];
+
+export enum DetectType {
+  CARIES = 1
+}

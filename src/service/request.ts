@@ -2,9 +2,13 @@ import Taro from "@tarojs/taro";
 
 const host = "https://wx-test.fushuhealth.com/largev-teeth-wx";
 
-const request = (
-  options: any
-): Promise<{ code?: number; data?: any; message: string } & Record<
+type Method = "POST" | "GET" | "DELETE";
+
+const request = (options: {
+  method?: Method;
+  url: string;
+  data?: any;
+}): Promise<{ code?: number; data?: any; message: string } & Record<
   string,
   any
 >> => {

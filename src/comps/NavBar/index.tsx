@@ -1,8 +1,13 @@
 import { ArrowLeft } from "@taroify/icons";
-import { View } from "@tarojs/components";
-import Taro, { useRouter } from "@tarojs/taro";
-import React, { useEffect, useState } from "react";
+import { Text, View } from "@tarojs/components";
+import { getMenuButtonBoundingClientRect } from "@tarojs/taro";
+import React, { CSSProperties, useEffect, useState } from "react";
 import "./index.scss";
+
+const navIconStyles: CSSProperties = {
+  position: "absolute",
+  left: "16px"
+};
 
 export default function NavBar({
   title,
@@ -11,81 +16,51 @@ export default function NavBar({
   title: React.ReactNode;
   back?: Function;
 }) {
-  const [navigationBarHeight, setNavigationBarHeight] = useState(40);
-  const [BarHeight, setStatusBarHeight] = useState(44);
-  const [menuButtonHeight, setMenuButtonHeight] = useState(32);
-  const [
-    navigationBarAndStatusBarHeight,
-    setNavigationBarAndStatusBarHeight
-  ] = useState(84);
-  const router = useRouter();
+  const [statusBarHeight, setStatusBarHeight] = useState(0);
+  const [navigationHeight, setNavigationHeight] = useState(0);
+
+  const onNavBarClick = () => {
+    back?.();
+  };
+
+  const setNavBarHeight = () => {
+    const systemInfo = wx.getSystemInfoSync();
+    let statusBarHeight2 = systemInfo.statusBarHeight;
+    let boundingClientRect = getMenuButtonBoundingClientRect();
+    let navigationHeight2 =
+      boundingClientRect.height +
+      (boundingClientRect.top - statusBarHeight2) * 2;
+
+    setStatusBarHeight(statusBarHeight2);
+    setNavigationHeight(navigationHeight2);
+  };
 
   useEffect(() => {
-    const { statusBarHeight = 44, platform } = Taro.getSystemInfoSync();
-    const { top, height } = Taro.getMenuButtonBoundingClientRect();
-    setStatusBarHeight(statusBarHeight);
-    setMenuButtonHeight(height ?? 32);
-    if (top && top !== 0 && height && height !== 0) {
-      const navigationBarHeight = (top - statusBarHeight) * 2 + height;
-      setNavigationBarHeight(navigationBarHeight);
-      setNavigationBarAndStatusBarHeight(statusBarHeight + navigationBarHeight);
-    } else {
-      const navigationBarHeight = platform === "android" ? 48 : 40;
-      setNavigationBarHeight(navigationBarHeight);
-      setNavigationBarAndStatusBarHeight(statusBarHeight + navigationBarHeight);
-    }
+    setNavBarHeight();
   }, []);
 
-  const backFn = () => {
-    if (back) {
-      back();
-    } else {
-      if (router.params.returnUrl) {
-        if (
-          ["/pages/index/index", "/pages/mine/index"].includes(
-            router.params.returnUrl
-          )
-        ) {
-          Taro.switchTab({ url: router.params.returnUrl });
-        } else {
-          Taro.navigateTo({
-            url: router.params.returnUrl
-          });
-        }
-
-        return;
-      }
-      Taro.navigateBack();
-    }
+  const navBarStyles: CSSProperties = {
+    width: "100%",
+    boxSizing: "border-box",
+    paddingTop: `${statusBarHeight}px`,
+    paddingLeft: `16px`,
+    paddingRight: `16px`,
+    height: `${statusBarHeight + navigationHeight}px`,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    fontSize: "16px",
+    color: "#fff",
+    position: "relative"
   };
 
   return (
     <View>
-      <view
-        className="navigation-container"
-        style={{ height: navigationBarAndStatusBarHeight }}
-      >
-        <view style={{ height: BarHeight }}></view>
-        <view
-          className="navigation-bar"
-          style={{ height: navigationBarHeight }}
-        >
-          <view
-            className="navigation-buttons"
-            style={{ height: menuButtonHeight }}
-            onClick={backFn}
-          >
-            <ArrowLeft />
-          </view>
-          <view
-            className="navigation-title"
-            style={{ height: navigationBarHeight }}
-          >
-            {title}
-          </view>
-        </view>
-      </view>
-      <view style={{ height: navigationBarAndStatusBarHeight }}></view>
+      <View style={navBarStyles}>
+        <ArrowLeft style={navIconStyles} onClick={() => onNavBarClick()} />
+        <Text>{title}</Text>
+        <Text />
+      </View>
     </View>
   );
 }

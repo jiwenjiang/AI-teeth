@@ -1,0 +1,303 @@
+.content {
+  flex-grow: 1;
+
+  display: flex;
+  flex-direction: column;
+
+  position: relative;
+
+  .searchbar {
+    box-sizing: border-box;
+    padding: 28px 40px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .input {
+      width: 75vw;
+      border-radius: 100em;
+      box-sizing: border-box;
+      padding-left: 30px;
+
+      height: 64px;
+      background-color: #fff;
+
+      color: #333;
+      font-size: 28px;
+    }
+
+    .label {
+      color: #fff;
+      font-size: 28px;
+    }
+  }
+
+  .patientlist {
+    flex-shrink: 1;
+    flex-grow: 1;
+
+    background-color: #F6F9FF;
+    border-radius: 24px 24px 0px 0px;
+    box-shadow: 0px -1px 5px rgba(232, 232, 232, 0.5);
+
+    box-sizing: border-box;
+    padding: 40px;
+
+    position: relative;
+
+    .nopatient {
+      height: 100%;
+
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+
+      .banner {
+        width: 79vw;
+      }
+
+      .text {
+        padding-bottom: 52px;
+        font-size: 36px;
+        color: #666;
+      }
+    }
+
+    .patient {
+      margin-bottom: 24px;
+      height: 192px;
+
+      width: 100%;
+      box-shadow: 0px 4px 32px rgba(188, 188, 188, 0.2);
+      border-radius: 16px;
+
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+
+      box-sizing: border-box;
+      padding: 20px;
+      position: relative;
+
+      .info {
+        display: flex;
+        justify-content: space-between;
+        flex-direction: column;
+
+        .upper {
+          display: flex;
+          align-items: center;
+
+          .name {
+            font-size: 36px;
+            color: #333;
+          }
+
+          .seperator {
+            margin-left: 20px;
+            flex-shrink: 0;
+            width: 1px;
+            height: 25px;
+            background-color: #d6d6d6;
+          }
+
+          .gender {
+            margin-left: 20px;
+            width: 28px;
+            height: 28px;
+          }
+
+          .age {
+            margin-left: 6px;
+            font-size: 28px;
+            color: #333;
+          }
+
+          .time {
+            margin-left: 18px;
+            font-size: 28px;
+            color: #999999;
+          }
+        }
+
+        .middle {
+          margin-top: 16px;
+          font-size: 32px;
+          line-height: 44px;
+          display: flex;
+
+          .last {
+            color: #9B90DC;
+          }
+
+          .result {
+            color: var(--text-blue)
+          }
+        }
+
+        .lower {
+          margin-top: 18px;
+          font-size: 28px;
+          color: #333;
+
+          .warning {
+            width: 28px;
+            height: 28px;
+            transform: translateY(4px);
+          }
+        }
+      }
+
+      .tag {
+        position: absolute;
+        background: var(--text-blue);
+        box-shadow: 0px 2px 15px rgba(188, 188, 188, 0.15);
+        right: 0;
+        bottom: 0;
+        width: 112px;
+        height: 44px;
+        border-bottom-right-radius: 16px;
+        border-top-left-radius: 16px;
+        font-size: 24px;
+        color: #FFFFFF;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+    }
+
+    .addbtn {
+      position: absolute;
+      right: 40px;
+      bottom: 200px;
+
+      width: 132px;
+      height: 132px;
+    }
+  }
+
+  .mask {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+
+    z-index: 10;
+    background-color: #F6F9FF;
+    border-radius: 24px 24px 0px 0px;
+    box-shadow: 0px -1px 5px rgba(232, 232, 232, 0.5);
+
+    box-sizing: border-box;
+    padding: 64px 48px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    .header {
+      display: flex;
+      flex-direction: column;
+
+      .title {
+        font-size: 48px;
+        font-weight: 600;
+      }
+
+      .text {
+        margin-top: 32px;
+        font-size: 26px;
+      }
+    }
+
+    .genders {
+      width: 100%;
+
+      display: flex;
+      justify-content: space-evenly;
+      align-items: center;
+
+      .gender {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        .iconwrapper {
+          width: 144px;
+          height: 144px;
+          box-sizing: border-box;
+          border: 2px solid #E0E0E0;
+          border-radius: 48px;
+
+          display: flex;
+          justify-content: center;
+          align-items: center;
+
+          .icon {
+            // 为什么这里的样式必须加 important 才能生效？
+            width: 56px !important;
+            height: 56px;
+          }
+        }
+
+        .text {
+          margin-top: 32px;
+          font-size: 26px;
+          color: #999;
+        }
+      }
+    }
+
+    .other {
+      display: flex;
+      flex-direction: column;
+
+      .label {
+        font-size: 26px;
+        font-weight: 600;
+        color: #111;
+
+        &.birthday {
+          margin-top: 48px;
+        }
+      }
+
+      .input,
+      .datepicker {
+        height: 96px;
+        border: 2px solid #F0F0F0;
+        border-radius: 16px;
+
+        box-sizing: border-box;
+        margin-top: 8px;
+        padding: 0 32px;
+
+        display: flex;
+        align-items: center;
+
+        font-weight: 600;
+        font-size: 30px;
+      }
+
+      .datepicker .pickercontent {
+        width: 100%;
+        height: 100%;
+
+        display: flex;
+        align-items: center;
+
+        .calendar {
+          margin-right: 28px;
+          width: 48px;
+        }
+
+        .text {
+          flex-grow: 1;
+        }
+      }
+    }
+  }
+}
