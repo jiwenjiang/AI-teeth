@@ -1,14 +1,10 @@
-import { ChildContext } from "@/service/context";
 import "@/service/http_interceptors";
-import request from "@/service/request";
 import "@taroify/core/index.scss";
 import "@taroify/icons/index.scss";
 import { View } from "@tarojs/components";
-import { useDidShow } from "@tarojs/taro";
-import React, { useState } from "react";
+import React from "react";
 import "./app.scss";
 import "./custom-variables.scss";
-import { useAuth } from "./service/hook";
 
 function App(props) {
   // const { getAuth } = useAuth();

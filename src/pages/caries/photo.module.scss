@@ -160,6 +160,7 @@
         align-items: center;
         position: relative;
         box-sizing: border-box;
+        overflow-y: auto;
 
         .guideImg {
             width: 382px;
@@ -215,13 +216,20 @@
             color: #666666;
         }
 
+    }
+
+    .btnbox {
+        height: 120px;
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        align-items: flex-start;
+
         .btn {
             background: linear-gradient(301.23deg, #1DA1F2 0%, #3FBAFF 100%);
             border-radius: 80px;
             width: calc(100vw - 160px);
             height: 86px;
-            position: absolute;
-            bottom: 40px;
             left: 80px;
             font-size: 34px;
             display: flex;
@@ -230,4 +238,5 @@
             color: #FFFFFF;
         }
     }
+
 }

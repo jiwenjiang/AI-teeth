@@ -5,7 +5,7 @@ import upload2Server from "@/service/upload";
 import AddPatient from "@/static/icons/add-patient.png";
 import { Popup } from "@taroify/core";
 import { Image, View } from "@tarojs/components";
-import Taro, { useRouter } from "@tarojs/taro";
+import Taro, { navigateBack, useRouter } from "@tarojs/taro";
 import React, { useEffect, useState } from "react";
 import { cls } from "reactutils";
 import styles from "./photo.module.scss";
@@ -26,7 +26,7 @@ export default function App() {
     router.params.childName ?? "儿童龋齿检测"
   );
   const [open, setOpen] = useState(false);
-  const [showGuide, setShowGuide] = useState(false);
+  const [showGuide, setShowGuide] = useState(true);
   const [attrs, setAttrs] = useState<Card[]>([]);
   const [picIndex, setPicIndex] = useState(0);
 
@@ -38,6 +38,7 @@ export default function App() {
       setShowGuide(false);
       return;
     }
+    navigateBack();
   };
 
   const getAttr = async () => {
@@ -100,10 +101,6 @@ export default function App() {
     });
   };
   const mediaList = ({ type, filePath, thumbTempFilePath }) => {
-    console.log(
-      "🚀 ~ file: photo.tsx ~ line 74 ~ mediaList ~ thumbTempFilePath",
-      thumbTempFilePath
-    );
     upload2Server(filePath, type, v => {
       attrs[picIndex].fileId = v.id;
       setAttrs([...attrs]);
@@ -134,7 +131,9 @@ export default function App() {
         data: {
           checkType: Number(router.params.type),
           childrenId: Number(router.params.childrenId),
-          images: attrs?.map(v => ({ fileId: v.fileId, postion: v.position }))
+          images: attrs
+            ?.filter(v => v.fileId)
+            ?.map(v => ({ fileId: v.fileId, position: v.position }))
         }
       });
       Taro.navigateBack();
@@ -159,6 +158,8 @@ export default function App() {
                 <View className={styles.label}>{v}</View>
               </View>
             ))}
+          </View>
+          <View className={styles.btnbox}>
             <View className={styles.btn} onClick={takePhoto}>
               开始拍摄
             </View>
