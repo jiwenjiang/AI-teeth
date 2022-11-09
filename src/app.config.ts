@@ -1,6 +1,5 @@
 export default {
   pages: [
-    "pages/login/index",
     "pages/index/index",
     "pages/patient/index",
     "pages/mine/index",
@@ -8,7 +7,8 @@ export default {
     "pages/mine/password",
     "pages/mine/info",
     "pages/caries/index",
-    "pages/caries/photo"
+    "pages/caries/photo",
+    "pages/login/index"
     // "pages/child/choose",
     // "pages/child/manage",
     // "pages/child/edit",

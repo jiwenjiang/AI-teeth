@@ -3,20 +3,17 @@ import React, { useEffect, useState } from "react";
 import { Button } from "@taroify/core";
 import { Cross } from "@taroify/icons";
 import { Icon, Image, RichText, Text, View } from "@tarojs/components";
-import Taro, { reLaunch, useRouter } from "@tarojs/taro";
+import Taro from "@tarojs/taro";
 
 import CustomButton from "@/comps/CustomButton";
 
-import { tabPages } from "@/service/const";
 import { useAuth } from "@/service/hook";
-import request from "@/service/request";
 
 import styles from "./index.module.scss";
 
 import logo from "@/static/imgs/login-logo.png";
 
 export default function App() {
-  const router = useRouter();
   const [statusBarHeight, setStatusBarHeight] = useState(0);
   const [navigationHeight, setNavigationHeight] = useState(0);
   const [navBarTitle, setNavBarTitle] = useState('');
@@ -275,33 +272,8 @@ export default function App() {
     color: '#000',
   };
 
-  const onGetPhoneNumber = async (e) => {
-    const login = await Taro.login();
-    const userInfo = await Taro.getUserInfo();
-
-    const res = await request({
-      url: "/miniapp/login",
-      method: "POST",
-      data: {
-        code: login.code,
-        encryptedData: userInfo.encryptedData,
-        iv: userInfo.iv,
-        phoneCode: e.detail.code,
-      }
-    });
-
-    if (res.code === 0) {
-      getAuth();
-      if (router.params.returnUrl) {
-        if (tabPages.includes(router.params.returnUrl)) {
-          Taro.switchTab({ url: router.params.returnUrl });
-        } else {
-          reLaunch({ url: router.params.returnUrl });
-        }
-      } else {
-        Taro.switchTab({ url: "/pages/index/index" });
-      }
-    }
+  const onGetPhoneNumber = async () => {
+    getAuth();
   };
 
   return (
