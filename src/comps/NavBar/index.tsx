@@ -10,9 +10,11 @@ const navIconStyles: CSSProperties = {
 };
 
 export default function NavBar({
+  showIcon = true,
   title,
   back
 }: {
+  showIcon?: Boolean;
   title: React.ReactNode;
   back?: Function;
 }) {
@@ -57,7 +59,9 @@ export default function NavBar({
   return (
     <View>
       <View style={navBarStyles}>
-        <ArrowLeft style={navIconStyles} onClick={() => onNavBarClick()} />
+        {showIcon && (
+          <ArrowLeft style={navIconStyles} onClick={() => onNavBarClick()} />
+        )}
         <Text>{title}</Text>
         <Text />
       </View>

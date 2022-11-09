@@ -1,3 +1,4 @@
 export default {
-  navigationBarTitleText: '我的'
+  navigationBarTitleText: '个人中心',
+  navigationStyle: 'custom',
 }

@@ -1,12 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 
 import { Arrow } from "@taroify/icons";
 import { Image, Text, View } from "@tarojs/components";
-import { getMenuButtonBoundingClientRect, navigateTo } from "@tarojs/taro";
+import { navigateTo } from "@tarojs/taro";
 
+import NavBar from "@/comps/NavBar";
 import TabBar from "@/comps/TabBar";
-
-import Banner from "@/static/imgs/index-banner.png";
 
 import Caries from "@/static/icons/index-caries.png";
 import Evaluate from "@/static/icons/index-evaluate.png";
@@ -14,29 +13,13 @@ import Patient from "@/static/icons/index-patient.png";
 import Record from "@/static/icons/index-record.png";
 import Surface from "@/static/icons/index-surface.png";
 import Warning from "@/static/icons/index-warning.png";
+import Banner from "@/static/imgs/index-banner.png";
 
 import styles from "./index.module.scss";
 
 export default function App() {
-  const [statusBarHeight, setStatusBarHeight] = useState(0);
-  const [navigationHeight, setNavigationHeight] = useState(0);
-
   useEffect(() => {
-    setNavBarHeight();
   }, []);
-
-  const navBarTitle = '首页';
-
-
-  const setNavBarHeight = () => {
-    const systemInfo = wx.getSystemInfoSync();
-    let statusBarHeight2 = systemInfo.statusBarHeight;
-    let boundingClientRect = getMenuButtonBoundingClientRect();
-    let navigationHeight2 = boundingClientRect.height + (boundingClientRect.top - statusBarHeight2) * 2;
-
-    setStatusBarHeight(statusBarHeight2);
-    setNavigationHeight(navigationHeight2);
-  };
 
   const mainServices = [
     {
@@ -90,22 +73,9 @@ export default function App() {
     })
   }
 
-  const navBarStyles = {
-    width: '100%',
-    paddingTop: `${statusBarHeight}px`,
-    height: `${navigationHeight}px`,
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    fontSize: '16px',
-    color: '#fff',
-  };
-
   return (
     <View className={styles.page}>
-      <View style={navBarStyles}>
-        <Text>{navBarTitle}</Text>
-      </View>
+      <NavBar showIcon={false} title={'首页'} />
       <View className={styles.content}>
         <View className={styles.bannerwrapper}>
           <Image className={styles.bannerimg} src={Banner} mode='widthFix' />
