@@ -3,9 +3,9 @@ export default {
     "pages/index/index",
     "pages/patient/index",
     "pages/mine/index",
-    "pages/mine/setting",
-    "pages/mine/password",
-    "pages/mine/info",
+    // "pages/mine/setting",
+    // "pages/mine/password",
+    // "pages/mine/info",
     "pages/caries/index",
     "pages/caries/photo",
     "pages/login/index"
