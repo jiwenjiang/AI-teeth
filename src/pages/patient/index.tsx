@@ -68,7 +68,7 @@ export default function App() {
   };
 
   const addPatientStyles = {
-    fontSize: '14px',
+    fontSize: '16px',
     fontWeight: 400,
     width: '36vw',
     height: '9vw',
@@ -281,8 +281,8 @@ export default function App() {
         {showMask && (
           <View className={styles.mask}>
             <View className={styles.header}>
-              <Text className={styles.title}>{editMode ? '您的个人资料' : '患者信息'}</Text>
-              <Text className={styles.text}>{editMode ? '更新你的个人资料，从医生那里获得更好的答案' : '输入患者信息，获取检测报告'}</Text>
+              <Text className={styles.title}>患者信息</Text>
+              <Text className={styles.text}>输入患者信息，获取检测报告</Text>
             </View>
             {/* 选择性别 */}
             <View className={styles.genders}>

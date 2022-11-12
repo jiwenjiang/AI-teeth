@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 
-import { Image, Text, View } from "@tarojs/components";
+import { Image, View } from "@tarojs/components";
 import { navigateTo } from "@tarojs/taro";
 
 import NavBar from "@/comps/NavBar";
@@ -100,9 +100,7 @@ export default function App() {
               >
                 <View className={styles.left}>
                   <Image className={styles.othericon} src={service.iconSrc} mode='widthFix' />
-                  <View className={styles.servicename}>
-                    <Text className={styles.cnname}>{service.cnName}</Text>
-                  </View>
+                  <View className={styles.servicename}>{service.cnName}</View>
                 </View>
                 <Image className={styles.arrow} src={Arrow} mode='widthFix' />
               </View>

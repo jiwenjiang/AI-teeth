@@ -105,7 +105,7 @@
 
             border-radius: 16px;
             background-color: rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(1px);
+            backdrop-filter: blur(2px);
 
             display: flex;
             justify-content: center;
@@ -145,6 +145,8 @@
               margin-left: 32px;
               display: flex;
               flex-direction: column;
+              font-size: 32px;
+              color: #222;
             }
           }
 
@@ -156,10 +158,4 @@
       }
     }
   }
-}
-
-// 以下为通用样式
-.cnname {
-  font-size: 28px;
-  color: #222;
 }
