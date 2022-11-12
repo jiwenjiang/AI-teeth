@@ -1,13 +1,10 @@
-import { ArrowLeft } from "@taroify/icons";
-import { Text, View } from "@tarojs/components";
+import { Image, Text, View } from "@tarojs/components";
 import { getMenuButtonBoundingClientRect } from "@tarojs/taro";
 import React, { CSSProperties, useEffect, useState } from "react";
-import "./index.scss";
 
-const navIconStyles: CSSProperties = {
-  position: "absolute",
-  left: "16px"
-};
+import NavBack from "@/static/icons/nav-back.png";
+
+import "./index.scss";
 
 export default function NavBar({
   showIcon = true,
@@ -45,22 +42,27 @@ export default function NavBar({
     width: "100%",
     boxSizing: "border-box",
     paddingTop: `${statusBarHeight}px`,
-    paddingLeft: `16px`,
-    paddingRight: `16px`,
+    paddingLeft: `24px`,
+    // paddingRight: `16px`,
     height: `${statusBarHeight + navigationHeight}px`,
     display: "flex",
-    justifyContent: "center",
+    justifyContent: "flex-start",
     alignItems: "center",
-    fontSize: "16px",
+    fontSize: "20px",
     color: "#fff",
     position: "relative"
   };
 
+  const navIconStyles: CSSProperties = {
+    width: "9px",
+    marginRight: "18px"
+  };
+  
   return (
     <View>
       <View style={navBarStyles}>
         {showIcon && (
-          <ArrowLeft style={navIconStyles} onClick={() => onNavBarClick()} />
+          <Image style={navIconStyles} src={NavBack} mode='widthFix' onClick={() => onNavBarClick()} />
         )}
         <Text>{title}</Text>
         <Text />
