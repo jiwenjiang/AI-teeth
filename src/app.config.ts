@@ -8,9 +8,9 @@ export default {
   ],
   subpackages: [
     {
-      root: "packageLogin",
+      root: "packages/login",
       pages: [
-        "pages/index",
+        "index",
       ],
     },
   ],

@@ -116,7 +116,7 @@ export function useAuth() {
     if (res.code === 2) {
       const pages = getCurrentPages();
       const path = pages[pages.length - 1].route;
-      navigateTo({ url: `/packageLogin/pages/index?returnUrl=/${path}` });
+      navigateTo({ url: `/packages/login/index?returnUrl=/${path}` });
     }
   };
 

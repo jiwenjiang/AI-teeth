@@ -10,7 +10,7 @@ import "./custom-variables.scss";
 function App(props) {
   useDidShow(() => {
     if (!getStorageSync('token')) {
-      navigateTo({ url: 'packageLogin/pages/index' });
+      navigateTo({ url: 'packages/login/index' });
     }
   });
   return (
