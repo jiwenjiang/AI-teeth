@@ -3,8 +3,17 @@
   bottom: 0;
   left: 0;
   width: 100vw;
+
+  z-index: 9;
+
+  background-color: #fff;
   --tabbar-item-active-color: #1DA1F2;
   filter: drop-shadow(0px -2px 10px rgba(136, 113, 229, 0.14));
+}
+
+.taroify-fixed-view--bottom {
+  box-sizing: border-box;
+  padding-bottom: 48px;
 }
 
 .taroify-tabbar-item__label {
