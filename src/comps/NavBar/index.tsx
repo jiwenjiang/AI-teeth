@@ -43,7 +43,6 @@ export default function NavBar({
     boxSizing: "border-box",
     paddingTop: `${statusBarHeight}px`,
     paddingLeft: `24px`,
-    // paddingRight: `16px`,
     height: `${statusBarHeight + navigationHeight}px`,
     display: "flex",
     justifyContent: "flex-start",

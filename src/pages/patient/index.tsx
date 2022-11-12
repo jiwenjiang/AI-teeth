@@ -46,6 +46,7 @@ export default function App() {
   const [name, setName] = useState('');
   const [showMask, setShowMask] = useState(false);
   const [birthday, setBirthday] = useState('2010-01-02');
+  const [namePlaceholder, setNamePlaceholder] = useState('请输入真实姓名');
 
   useEffect(() => {
     getPatients();
@@ -174,6 +175,18 @@ export default function App() {
 
   const onNameChange = (e) => {
     setName(e.detail.value);
+  };
+
+  const onNameFocus = (e) => {
+    if (!e.detail.value) {
+      setNamePlaceholder('');
+    }
+  };
+
+  const onNameBlur = (e) => {
+    if (!e.detail.value) {
+      setNamePlaceholder('请输入真实姓名');
+    };
   };
 
   const showAddPatientMask = () => {
@@ -318,9 +331,11 @@ export default function App() {
               <Input
                 className={`${styles.input} ${styles.name}`}
                 type='text'
-                placeholder='请输入真实姓名'
+                placeholder={namePlaceholder}
                 value={name}
                 onInput={(e) => onNameChange(e)}
+                onFocus={(e) => onNameFocus(e)}
+                onBlur={(e) => onNameBlur(e)}
               />
               <Text className={`${styles.label} ${styles.birthday}`}>生日</Text>
               <Picker
