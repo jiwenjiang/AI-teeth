@@ -51,7 +51,6 @@ export default function App() {
   };
 
   const choosePhoto = () => {
-
     wx.chooseMedia({
       count: 1,
       mediaType: ["image"],
@@ -147,7 +146,9 @@ export default function App() {
             ?.map(v => ({ fileId: v.fileId, position: v.position }))
         }
       });
-      Taro.navigateBack();
+      Taro.navigateTo({
+        url: `/pages/caries/report`
+      });
     }
   };
 
