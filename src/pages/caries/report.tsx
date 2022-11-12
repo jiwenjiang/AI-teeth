@@ -4,7 +4,6 @@ import request from "@/service/request";
 import Female from "@/static/icons/female.png";
 import Male from "@/static/icons/male.png";
 import Voice from "@/static/icons/voice.svg";
-import Doctor from "@/static/imgs/doctor.png";
 import Tishi from "@/static/imgs/weixintishi.png";
 import { Canvas, Image, ScrollView, Text, View } from "@tarojs/components";
 import Taro, { navigateBack, useRouter } from "@tarojs/taro";
@@ -12,10 +11,16 @@ import React, { useContext, useEffect, useState } from "react";
 import { cls } from "reactutils";
 import styles from "./report.module.scss";
 
+const resultColor = {
+  1: "#0051EF",
+  2: "#FF6B00",
+  3: "#FF0000"
+};
+
 export default function App() {
   const router = useRouter();
   const { systemInfo } = useContext(SystemContext);
-  const [navBarTitle, setNavBarTitle] = useState(
+  const [navBarTitle] = useState(
     router.params.childName ?? "儿童龋齿检测"
   );
   const [data, setData] = useState<any>({});
@@ -27,7 +32,7 @@ export default function App() {
   const getAttr = async () => {
     const response = await request({
       url: "/check/get",
-      data: { id: 12 }
+      data: { id: router.params.id || 12 }
     });
     setData(response.data);
   };
@@ -41,14 +46,8 @@ export default function App() {
       .select(`#canvas${i}`)
       .fields({ node: true, size: true })
       .exec(async res => {
-        console.log("LddConnector -> res", res);
         const canvasNode = res[0].node;
         const ctx = canvasNode.getContext("2d");
-        console.log(
-          "🚀 ~ file: report.tsx ~ line 45 ~ renderCanvas ~ canvasNode",
-          canvasNode,
-          ctx
-        );
         const dpr = wx.getSystemInfoSync().pixelRatio;
         canvasNode.width = 304 * dpr;
         canvasNode.height = 150 * dpr;
@@ -60,6 +59,15 @@ export default function App() {
           image.src = v.imageUrl; // 要加载的图片 url
         });
         ctx.drawImage(image, 0, 0, 304, 150);
+        v.imageResults.forEach(c => {
+          ctx.strokeStyle = resultColor[c.result];
+          ctx.strokeRect(
+            c.bbox[0],
+            c.bbox[1],
+            c.bbox[2] - c.bbox[0],
+            c.bbox[3] - c.bbox[1]
+          );
+        });
       });
   };
 
@@ -103,7 +111,7 @@ export default function App() {
               <Text className={styles.label}>检测结果：</Text>
               <Text className={styles.key}>{data?.result}</Text>
             </View>
-            <Image className={styles.doctor} src={Doctor} />
+            {/* <Image className={styles.doctor} src={Doctor} /> */}
             <View className={styles.card}>
               <View className={styles.head}>治疗方案</View>
               <View className={styles.resultBody}>
@@ -128,7 +136,7 @@ export default function App() {
             <View className={styles.teeth} key={i}>
               <View className={styles.title}>{v.position}</View>
               <View className={styles.teethImgBox}>
-                <Canvas type="2d" id={`canvas${i}`} />
+                <Canvas type="2d" className={styles.canvas} id={`canvas${i}`} />
               </View>
             </View>
           ))}

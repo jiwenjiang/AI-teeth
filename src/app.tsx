@@ -27,6 +27,7 @@ function App(props) {
     setSystemInfo({ navHeight: navigationHeight2 + statusBarHeight2 });
   };
 
+
   useDidShow(() => {
     if (!getStorageSync("token")) {
       navigateTo({ url: "packages/login/index" });

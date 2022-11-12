@@ -77,11 +77,13 @@ export default function App() {
 
   const tag = v => {
     if (!v) return;
-    let age = dayjs().diff(dayjs(v), "year");
+    let age = dayjs().diff(dayjs(v * 1000), "year");
     if (age >= 18) {
       return "成人";
-    } else {
+    } else if (age < 12) {
       return "儿童";
+    } else {
+      return "青少年";
     }
   };
 

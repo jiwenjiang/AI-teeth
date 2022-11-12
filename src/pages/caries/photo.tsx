@@ -1,5 +1,6 @@
 import NavBar from "@/comps/NavBar";
 import { DetectType, MediaType } from "@/service/const";
+import { SystemContext } from "@/service/context";
 import request from "@/service/request";
 import upload2Server from "@/service/upload";
 import AddPatient from "@/static/icons/add-patient.png";
@@ -7,7 +8,7 @@ import Voice from "@/static/icons/voice.svg";
 import { Popup } from "@taroify/core";
 import { Image, Text, View } from "@tarojs/components";
 import Taro, { navigateBack, useRouter } from "@tarojs/taro";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { cls } from "reactutils";
 import styles from "./photo.module.scss";
 
@@ -23,9 +24,8 @@ type Card = {
 
 export default function App() {
   const router = useRouter();
-  const [navBarTitle, setNavBarTitle] = useState(
-    router.params.childName ?? "儿童龋齿检测"
-  );
+  const { systemInfo } = useContext(SystemContext);
+  const [navBarTitle] = useState(router.params.childName ?? "儿童龋齿检测");
   const [open, setOpen] = useState(false);
   const [showGuide, setShowGuide] = useState(false);
   const [attrs, setAttrs] = useState<Card[]>([]);
@@ -135,7 +135,7 @@ export default function App() {
 
   const submit = async () => {
     if (hasPic) {
-      await request({
+      const res = await request({
         method: "POST",
         url: "/check/submit",
         data: {
@@ -147,13 +147,13 @@ export default function App() {
         }
       });
       Taro.navigateTo({
-        url: `/pages/caries/report`
+        url: `/pages/caries/report?id=${res.data.id}&childName=${router.params.childName}`
       });
     }
   };
 
   return (
-    <View className="page">
+    <View className="page" style={{ backgroundColor: "#fff" }}>
       <NavBar title={navBarTitle} back={onNavBarClick} />
       {showGuide ? (
         <View className={styles.guide}>
@@ -178,7 +178,10 @@ export default function App() {
           </View>
         </View>
       ) : (
-        <View className={styles.body}>
+        <View
+          className={styles.body}
+          style={{ height: `calc(100vh - ${systemInfo.navHeight}px - 106px)` }}
+        >
           <View className={styles.tip}>
             <View className={styles.name}>儿童龋齿检测</View>
             <View className={cls(styles.desc, styles.mt20)}>

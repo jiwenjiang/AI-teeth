@@ -34,5 +34,6 @@ export default {
         text: "个人中心"
       }
     ]
-  }
+  },
+  enableShareAppMessage: true
 };

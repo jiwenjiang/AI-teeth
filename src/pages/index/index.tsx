@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 
 import { Image, View } from "@tarojs/components";
 import { navigateTo } from "@tarojs/taro";
@@ -18,62 +18,59 @@ import Warning from "@/static/imgs/index-warning.png";
 import styles from "./index.module.scss";
 
 export default function App() {
-  useEffect(() => {
-  }, []);
-
   const mainServices = [
     {
-      cnName: '儿童龋齿检测',
+      cnName: "儿童龋齿检测",
       bgSrc: Caries,
-      path: 'caries',
-      open: true,
+      path: "caries",
+      open: true
     },
     {
-      cnName: '儿童早期预警',
+      cnName: "儿童早期预警",
       bgSrc: Warning,
-      path: 'warning',
-      open: true,
+      path: "warning",
+      open: true
     },
     {
-      cnName: '面型自检',
+      cnName: "面型自检",
       bgSrc: Surface,
-      path: 'surface',
-      open: false,
+      path: "surface",
+      open: false
     },
     {
-      cnName: '颜面评估',
+      cnName: "颜面评估",
       bgSrc: Evaluate,
-      path: 'evaluate',
-      open: false,
-    },
+      path: "evaluate",
+      open: false
+    }
   ];
 
   const otherServices = [
     {
-      cnName: '患者管理',
+      cnName: "患者管理",
       iconSrc: Patient,
-      path: 'patient',
+      path: "patient"
     },
     {
-      cnName: '检测记录',
+      cnName: "检测记录",
       iconSrc: Record,
-      path: 'record',
-    },
+      path: "record"
+    }
   ];
 
   const goToModule = (path: string) => {
     navigateTo({
       url: `/pages/${path}/index`
-    })
-  }
+    });
+  };
 
   return (
     <View className={styles.page}>
-      <NavBar showIcon={false} title={'首页'} />
+      <NavBar showIcon={false} title={"首页"} />
       <View className={styles.content}>
         <View className={styles.bottomlayer}></View>
         <View className={styles.bannerwrapper}>
-          <Image className={styles.bannerimg} src={Banner} mode='widthFix' />
+          <Image className={styles.bannerimg} src={Banner} mode="widthFix" />
         </View>
         <View className={styles.servicelist}>
           <View className={styles.mainservices}>
@@ -83,7 +80,11 @@ export default function App() {
                 key={index}
                 onClick={() => goToModule(service.path)}
               >
-                <Image className={styles.bg} src={service.bgSrc} mode='widthFix' />
+                <Image
+                  className={styles.bg}
+                  src={service.bgSrc}
+                  mode="widthFix"
+                />
                 <View className={styles.name}>{service.cnName}</View>
                 {!service.open && (
                   <View className={styles.mask}>敬请期待...</View>
@@ -99,10 +100,14 @@ export default function App() {
                 onClick={() => goToModule(service.path)}
               >
                 <View className={styles.left}>
-                  <Image className={styles.othericon} src={service.iconSrc} mode='widthFix' />
+                  <Image
+                    className={styles.othericon}
+                    src={service.iconSrc}
+                    mode="widthFix"
+                  />
                   <View className={styles.servicename}>{service.cnName}</View>
                 </View>
-                <Image className={styles.arrow} src={Arrow} mode='widthFix' />
+                <Image className={styles.arrow} src={Arrow} mode="widthFix" />
               </View>
             ))}
           </View>
