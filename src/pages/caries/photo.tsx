@@ -3,8 +3,9 @@ import { DetectType, MediaType } from "@/service/const";
 import request from "@/service/request";
 import upload2Server from "@/service/upload";
 import AddPatient from "@/static/icons/add-patient.png";
+import Voice from "@/static/icons/voice.svg";
 import { Popup } from "@taroify/core";
-import { Image, View } from "@tarojs/components";
+import { Image, Text, View } from "@tarojs/components";
 import Taro, { navigateBack, useRouter } from "@tarojs/taro";
 import React, { useEffect, useState } from "react";
 import { cls } from "reactutils";
@@ -26,7 +27,7 @@ export default function App() {
     router.params.childName ?? "儿童龋齿检测"
   );
   const [open, setOpen] = useState(false);
-  const [showGuide, setShowGuide] = useState(true);
+  const [showGuide, setShowGuide] = useState(false);
   const [attrs, setAttrs] = useState<Card[]>([]);
   const [picIndex, setPicIndex] = useState(0);
 
@@ -50,27 +51,37 @@ export default function App() {
   };
 
   const choosePhoto = () => {
+
     wx.chooseMedia({
       count: 1,
       mediaType: ["image"],
       sourceType: ["album"],
       camera: "back",
       success(res) {
-        const filePath = res.tempFiles[0].tempFilePath;
+        const tempFilePath = res.tempFiles[0].tempFilePath;
         setOpen(false);
-        wx.editImage({
-          src: filePath, // 图片路径
-          success(res) {
-            mediaList({
-              type: MediaType.PICTURE,
-              filePath: res.tempFilePath,
-              thumbTempFilePath: res.tempFilePath
-            });
-          },
-          fail(e) {
-            console.log("err", e);
-          }
-        });
+        const wxInfo = wx.getSystemInfoSync();
+        if (wxInfo.platform === "devtools") {
+          mediaList({
+            type: MediaType.PICTURE,
+            filePath: tempFilePath,
+            thumbTempFilePath: tempFilePath
+          });
+        } else {
+          wx.editImage({
+            src: tempFilePath, // 图片路径
+            success(res) {
+              mediaList({
+                type: MediaType.PICTURE,
+                filePath: res.tempFilePath,
+                thumbTempFilePath: res.tempFilePath
+              });
+            },
+            fail(e) {
+              console.log("err", e);
+            }
+          });
+        }
       }
     });
   };
@@ -168,12 +179,18 @@ export default function App() {
       ) : (
         <View className={styles.body}>
           <View className={styles.tip}>
-            <View className={styles.name}>面相照</View>
-            <View className={styles.desc}>
-              请至少拍取一张，为了数据更加准确可以多拍几张哦
+            <View className={styles.name}>儿童龋齿检测</View>
+            <View className={cls(styles.desc, styles.mt20)}>
+              <Image className={styles.icon} src={Voice} />
+              <Text className={styles.range}>
+                检测范围：4~12岁，年龄范围超出检测结果可能不准确。
+              </Text>
             </View>
           </View>
           <View className={styles.content}>
+            <View className={cls(styles.desc, styles.pl40)}>
+              <Text>拍摄/上传照片越多生成报告越准确哦！</Text>
+            </View>
             <View className={styles.cardBox}>
               {attrs?.map((v, i) => (
                 <View key={i}>

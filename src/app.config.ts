@@ -8,7 +8,8 @@ export default {
     "pages/mine/password",
     "pages/mine/info",
     "pages/caries/index",
-    "pages/caries/photo"
+    "pages/caries/photo",
+    "pages/caries/report"
     // "pages/child/choose",
     // "pages/child/manage",
     // "pages/child/edit",
