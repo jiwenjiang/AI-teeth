@@ -11,19 +11,32 @@
 }
 
 .content {
-  flex-grow: 1;
+  flex-grow: 0;
+  flex-shrink: 1;
 
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 
   box-sizing: border-box;
-  padding: 64px;
+  padding: 52px 64px 56px;
+  overflow: hidden;
 
-  .texts {
-    font-size: 28px;
+  .textwrapper {
     display: flex;
-    flex-direction: column;
-    text-align: justify;
+    overflow: hidden;
+
+    box-sizing: border-box;
+    padding-bottom: 54px;
+
+    .texts {
+      overflow-y: auto;
+
+      font-size: 28px;
+  
+      display: flex;
+      flex-direction: column;
+      text-align: justify;
+    }
   }
 }

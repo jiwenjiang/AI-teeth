@@ -22,9 +22,9 @@ export default function App() {
   useEffect(() => {
   }, []);
 
-  const showTerms = (page: 'terms' | 'privacy') => {
+  const showTerms = (page: 'user' | 'privacy') => {
     navigateTo({
-      url: `/packages/login/${page}`,
+      url: `/packages/login/terms?category=${page}`,
     })
   };
 
@@ -85,7 +85,7 @@ export default function App() {
               : <Icon type='circle' size='16' />}
             <Text className={styles.agreetext}>我已阅读并同意</Text>
             {/* Text 组件 onClick 事件无效，得用 View 组件 */}
-            <View className={styles.link} onClick={() => showTerms('terms')}>《用户协议》</View>
+            <View className={styles.link} onClick={() => showTerms('user')}>《用户协议》</View>
             和
             <View className={styles.link} onClick={() => showTerms('privacy')}>《隐私协议》</View>
           </View>
