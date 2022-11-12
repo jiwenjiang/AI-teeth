@@ -29,7 +29,7 @@ function App(props) {
 
   useDidShow(() => {
     if (!getStorageSync("token")) {
-      navigateTo({ url: "packages/login/index" });
+      navigateTo({ url: "/packages/login/index" });
     }
     calcBarheight();
   });
