@@ -11,6 +11,7 @@ export default {
       root: "packages/login",
       pages: [
         "index",
+        "terms",
       ],
     },
   ],

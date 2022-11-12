@@ -9,11 +9,15 @@ import "./index.scss";
 export default function NavBar({
   showIcon = true,
   title,
-  back
+  back,
+  customNavBarStyles,
+  customNavIconStyles
 }: {
   showIcon?: Boolean;
   title: React.ReactNode;
   back?: Function;
+  customNavBarStyles?: CSSProperties;
+  customNavIconStyles?: CSSProperties;
 }) {
   const [statusBarHeight, setStatusBarHeight] = useState(0);
   const [navigationHeight, setNavigationHeight] = useState(0);
@@ -56,12 +60,27 @@ export default function NavBar({
     width: "9px",
     marginRight: "18px"
   };
+
+  const allNavBarStyles: CSSProperties = {
+    ...navBarStyles,
+    ...customNavBarStyles,
+  };
+
+  const allNavIconStyles: CSSProperties = {
+    ...navIconStyles,
+    ...customNavIconStyles,
+  };
   
   return (
     <View>
-      <View style={navBarStyles}>
+      <View style={allNavBarStyles}>
         {showIcon && (
-          <Image style={navIconStyles} src={NavBack} mode='widthFix' onClick={() => onNavBarClick()} />
+          <Image
+            style={allNavIconStyles}
+            src={NavBack}
+            mode='widthFix'
+            onClick={() => onNavBarClick()}
+          />
         )}
         <Text>{title}</Text>
         <Text />

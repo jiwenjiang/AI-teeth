@@ -1,0 +1,29 @@
+.page {
+  --text-black: #161616;
+  --text-gray: rgba(51, 51, 51, .9);
+
+  width: 100vw;
+  height: 100vh;
+
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+.content {
+  flex-grow: 1;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  box-sizing: border-box;
+  padding: 64px;
+
+  .texts {
+    font-size: 28px;
+    display: flex;
+    flex-direction: column;
+    text-align: justify;
+  }
+}
