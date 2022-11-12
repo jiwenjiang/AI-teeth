@@ -10,10 +10,9 @@ import "./custom-variables.scss";
 function App(props) {
   useDidShow(() => {
     if (!getStorageSync('token')) {
-      navigateTo({ url: '/pages/login/index' });
+      navigateTo({ url: 'packageLogin/pages/index' });
     }
   });
-
   return (
     <View className="html">{props.children}</View>
   );
