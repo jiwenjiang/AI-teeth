@@ -1,69 +1,48 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 
-import { Arrow } from "@taroify/icons";
-import { Image, Text, View } from "@tarojs/components";
-import { getMenuButtonBoundingClientRect, navigateTo } from "@tarojs/taro";
+import { Image, View } from "@tarojs/components";
+import { navigateTo } from "@tarojs/taro";
 
+import NavBar from "@/comps/NavBar";
 import TabBar from "@/comps/TabBar";
 
-import Banner from "@/static/imgs/index-banner.png";
-
-import Caries from "@/static/icons/index-caries.png";
-import Evaluate from "@/static/icons/index-evaluate.png";
+import Arrow from "@/static/icons/arrow-right.png";
 import Patient from "@/static/icons/index-patient.png";
 import Record from "@/static/icons/index-record.png";
-import Surface from "@/static/icons/index-surface.png";
-import Warning from "@/static/icons/index-warning.png";
+import Banner from "@/static/imgs/index-banner.png";
+import Caries from "@/static/imgs/index-caries.png";
+import Evaluate from "@/static/imgs/index-evaluate.png";
+import Surface from "@/static/imgs/index-surface.png";
+import Warning from "@/static/imgs/index-warning.png";
 
 import styles from "./index.module.scss";
 
 export default function App() {
-  const [statusBarHeight, setStatusBarHeight] = useState(0);
-  const [navigationHeight, setNavigationHeight] = useState(0);
-
   useEffect(() => {
-    setNavBarHeight();
   }, []);
-
-  const navBarTitle = '首页';
-
-
-  const setNavBarHeight = () => {
-    const systemInfo = wx.getSystemInfoSync();
-    let statusBarHeight2 = systemInfo.statusBarHeight;
-    let boundingClientRect = getMenuButtonBoundingClientRect();
-    let navigationHeight2 = boundingClientRect.height + (boundingClientRect.top - statusBarHeight2) * 2;
-
-    setStatusBarHeight(statusBarHeight2);
-    setNavigationHeight(navigationHeight2);
-  };
 
   const mainServices = [
     {
       cnName: '儿童龋齿检测',
-      enName: 'Caries detection',
-      iconSrc: Caries,
+      bgSrc: Caries,
       path: 'caries',
       open: true,
     },
     {
-      cnName: '儿童牙合早期预警',
-      enName: 'Early warning',
-      iconSrc: Warning,
+      cnName: '儿童早期预警',
+      bgSrc: Warning,
       path: 'warning',
       open: true,
     },
     {
       cnName: '面型自检',
-      enName: 'Surface inspection',
-      iconSrc: Surface,
+      bgSrc: Surface,
       path: 'surface',
       open: false,
     },
     {
       cnName: '颜面评估',
-      enName: 'Personnel management',
-      iconSrc: Evaluate,
+      bgSrc: Evaluate,
       path: 'evaluate',
       open: false,
     },
@@ -72,13 +51,11 @@ export default function App() {
   const otherServices = [
     {
       cnName: '患者管理',
-      enName: 'Face to assess',
       iconSrc: Patient,
       path: 'patient',
     },
     {
       cnName: '检测记录',
-      enName: 'Check the record',
       iconSrc: Record,
       path: 'record',
     },
@@ -90,28 +67,15 @@ export default function App() {
     })
   }
 
-  const navBarStyles = {
-    width: '100%',
-    paddingTop: `${statusBarHeight}px`,
-    height: `${navigationHeight}px`,
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    fontSize: '16px',
-    color: '#fff',
-  };
-
   return (
     <View className={styles.page}>
-      <View style={navBarStyles}>
-        <Text>{navBarTitle}</Text>
-      </View>
+      <NavBar showIcon={false} title={'首页'} />
       <View className={styles.content}>
+        <View className={styles.bottomlayer}></View>
         <View className={styles.bannerwrapper}>
           <Image className={styles.bannerimg} src={Banner} mode='widthFix' />
         </View>
         <View className={styles.servicelist}>
-          <Text className={styles.servicetitle}>服务入口</Text>
           <View className={styles.mainservices}>
             {mainServices.map((service, index) => (
               <View
@@ -119,14 +83,8 @@ export default function App() {
                 key={index}
                 onClick={() => goToModule(service.path)}
               >
-                <View className={styles.serviceicon}>
-                  <Image className={styles.mainicon} src={service.iconSrc} mode='widthFix' />
-                  <Arrow className={styles.arrow} />
-                </View>
-                <View className={styles.servicename}>
-                  <Text className={styles.cnname}>{service.cnName}</Text>
-                  <Text className={styles.enname}>{service.enName}</Text>
-                </View>
+                <Image className={styles.bg} src={service.bgSrc} mode='widthFix' />
+                <View className={styles.name}>{service.cnName}</View>
                 {!service.open && (
                   <View className={styles.mask}>敬请期待...</View>
                 )}
@@ -142,12 +100,9 @@ export default function App() {
               >
                 <View className={styles.left}>
                   <Image className={styles.othericon} src={service.iconSrc} mode='widthFix' />
-                  <View className={styles.servicename}>
-                    <Text className={styles.cnname}>{service.cnName}</Text>
-                    <Text className={styles.enname}>{service.enName}</Text>
-                  </View>
+                  <View className={styles.servicename}>{service.cnName}</View>
                 </View>
-                <Arrow className={styles.arrow} />
+                <Image className={styles.arrow} src={Arrow} mode='widthFix' />
               </View>
             ))}
           </View>

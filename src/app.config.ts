@@ -1,40 +1,16 @@
 export default {
   pages: [
-    "pages/login/index",
     "pages/index/index",
     "pages/patient/index",
     "pages/mine/index",
-    "pages/mine/setting",
-    "pages/mine/password",
-    "pages/mine/info",
     "pages/caries/index",
     "pages/caries/photo",
     "pages/caries/report"
-    // "pages/child/choose",
-    // "pages/child/manage",
-    // "pages/child/edit",
-    // "pages/evaluate/list",
-    // "pages/evaluate/index",
-    // "pages/evaluate/step",
-    // "pages/evaluate/stepDetail",
-    // "pages/evaluate/brainDetail",
-    // "pages/evaluate/interventionList",
-    // "pages/evaluate/interventionDetail",
-    // "pages/evaluate/gmsDetail",
-    // "pages/evaluate/brainGmsDetail",
-    // "pages/evaluate/detail",
-    // "pages/evaluate/recordList",
-    // "pages/other/webView"
   ],
   subpackages: [
     {
-      root: "orderPackage",
-      pages: [
-        "pages/order/scale",
-        "pages/order/detail",
-        "pages/order/gmsPay",
-        "pages/order/videoList"
-      ]
+      root: "packages/login",
+      pages: ["index", "terms"]
     }
   ],
   window: {

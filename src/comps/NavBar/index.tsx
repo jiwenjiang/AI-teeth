@@ -1,20 +1,23 @@
-import { ArrowLeft } from "@taroify/icons";
-import { Text, View } from "@tarojs/components";
+import { Image, Text, View } from "@tarojs/components";
 import { getMenuButtonBoundingClientRect } from "@tarojs/taro";
 import React, { CSSProperties, useEffect, useState } from "react";
+
+import NavBack from "@/static/icons/nav-back.png";
+
 import "./index.scss";
 
-const navIconStyles: CSSProperties = {
-  position: "absolute",
-  left: "16px"
-};
-
 export default function NavBar({
+  showIcon = true,
   title,
-  back
+  back,
+  customNavBarStyles,
+  customNavIconStyles
 }: {
+  showIcon?: Boolean;
   title: React.ReactNode;
   back?: Function;
+  customNavBarStyles?: CSSProperties;
+  customNavIconStyles?: CSSProperties;
 }) {
   const [statusBarHeight, setStatusBarHeight] = useState(0);
   const [navigationHeight, setNavigationHeight] = useState(0);
@@ -43,21 +46,42 @@ export default function NavBar({
     width: "100%",
     boxSizing: "border-box",
     paddingTop: `${statusBarHeight}px`,
-    paddingLeft: `16px`,
-    paddingRight: `16px`,
+    paddingLeft: `24px`,
     height: `${statusBarHeight + navigationHeight}px`,
     display: "flex",
-    justifyContent: "center",
+    justifyContent: "flex-start",
     alignItems: "center",
-    fontSize: "16px",
+    fontSize: "20px",
     color: "#fff",
     position: "relative"
   };
 
+  const navIconStyles: CSSProperties = {
+    width: "9px",
+    marginRight: "18px"
+  };
+
+  const allNavBarStyles: CSSProperties = {
+    ...navBarStyles,
+    ...customNavBarStyles,
+  };
+
+  const allNavIconStyles: CSSProperties = {
+    ...navIconStyles,
+    ...customNavIconStyles,
+  };
+  
   return (
     <View>
-      <View style={navBarStyles}>
-        <ArrowLeft style={navIconStyles} onClick={() => onNavBarClick()} />
+      <View style={allNavBarStyles}>
+        {showIcon && (
+          <Image
+            style={allNavIconStyles}
+            src={NavBack}
+            mode='widthFix'
+            onClick={() => onNavBarClick()}
+          />
+        )}
         <Text>{title}</Text>
         <Text />
       </View>

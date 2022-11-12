@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from "react";
 
-import { ArrowLeft } from "@taroify/icons";
 import { Image, Input, Picker, Text, View } from "@tarojs/components";
-import { getMenuButtonBoundingClientRect, showModal, showToast, switchTab } from "@tarojs/taro";
+import { showModal, showToast, switchTab } from "@tarojs/taro";
 
 import CustomButton from "@/comps/CustomButton";
 
 import { GenderType } from "@/service/const";
 import request from "@/service/request";
 import dayjs from "dayjs";
+
+import NavBar from "@/comps/NavBar";
 
 import AddPatient from "@/static/icons/add-patient.png";
 import Calendar from "@/static/icons/calendar.png";
@@ -25,49 +26,39 @@ import Banner from "@/static/imgs/patient-banner.png";
 import styles from "./index.module.scss";
 
 export default function App() {
-  const [statusBarHeight, setStatusBarHeight] = useState(0);
-  const [navigationHeight, setNavigationHeight] = useState(0);
   const [navBarTitle, setNavBarTitle] = useState('患者管理');
   const [editMode, setEditMode] = useState(false);
   const [patientList, setPatientList] = useState<{
     id: number;
     name: string;
-    gender: '男' | '女';
+    gender: GenderType;
     birthday: string;
     birthdayDate: number;
   }[]>([]);
   const [currPatient, setCurrPatient] = useState<{
     id: number;
     name: string;
-    gender: '男' | '女';
+    gender: GenderType;
     birthday: string;
     birthdayDate: number;
-  }>({
-    id: 0,
-    name: '',
-    gender: '男',
-    birthday: '2022-10-04',
-    birthdayDate: 0,
-  });
+  }>();
   const [gender, setGender] = useState(GenderType.MALE);
   const [name, setName] = useState('');
   const [showMask, setShowMask] = useState(false);
   const [birthday, setBirthday] = useState('2010-01-02');
+  const [namePlaceholder, setNamePlaceholder] = useState('请输入真实姓名');
 
   useEffect(() => {
-    setNavBarHeight();
     getPatients();
   }, []);
 
-  const setNavBarHeight = () => {
-    const systemInfo = wx.getSystemInfoSync();
-    let statusBarHeight2 = systemInfo.statusBarHeight;
-    let boundingClientRect = getMenuButtonBoundingClientRect();
-    let navigationHeight2 = boundingClientRect.height + (boundingClientRect.top - statusBarHeight2) * 2;
+  useEffect(() => {
+    if (patientList.length === 0) {
+      return;
+    };
 
-    setStatusBarHeight(statusBarHeight2);
-    setNavigationHeight(navigationHeight2);
-  };
+    setCurrPatient(patientList[0]);
+  }, [patientList]);
 
   const getPatients =async () => {
     const response = await request({
@@ -76,28 +67,8 @@ export default function App() {
     setPatientList(response.data.children);
   };
 
-  const navBarStyles = {
-    width: '100%',
-    boxSizing: 'border-box',
-    paddingTop: `${statusBarHeight}px`,
-    paddingLeft: `16px`,
-    paddingRight: `16px`,
-    height: `${statusBarHeight + navigationHeight}px`,
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    fontSize: '16px',
-    color: '#fff',
-    position: 'relative',
-  };
-
-  const navIconStyles = {
-    position: 'absolute',
-    left: '16px',
-  };
-
   const addPatientStyles = {
-    fontSize: '14px',
+    fontSize: '16px',
     fontWeight: 400,
     width: '36vw',
     height: '9vw',
@@ -131,7 +102,7 @@ export default function App() {
     }
   };
 
-  const addPatient = async () => {
+  const savePatient = async () => {
     if (!name) {
       showToast({
         title: '姓名不能为空',
@@ -151,16 +122,21 @@ export default function App() {
     }
 
     const genderValue = gender;
+    const payload = {
+      name,
+      gender: genderValue,
+      birthday: dayjs(birthday, "YYYY-MM-DD").unix(),
+      id: 0,
+    };
+    if (editMode && currPatient) {
+      payload.id = currPatient.id;
+    }
 
     try {
       await request({
-        method: 'post',
-        url: '/children/save',
-        data: {
-          name,
-          gender: genderValue,
-          birthday: dayjs(birthday, "YYYY-MM-DD").unix(),
-        },
+        method: 'POST',
+        url: `/children/${editMode ? 'update' : 'save'}`,
+        data: payload,
       });
       getPatients();
       closeAddPatientMask();
@@ -187,7 +163,7 @@ export default function App() {
   const onConfirmDeletePatient = async (res) => {
     if (res.confirm) {
       await request({
-        url: `/children/delete?id=${currPatient.id}`,
+        url: `/children/delete?id=${currPatient?.id}`,
       });
       getPatients();
     }
@@ -199,6 +175,18 @@ export default function App() {
 
   const onNameChange = (e) => {
     setName(e.detail.value);
+  };
+
+  const onNameFocus = (e) => {
+    if (!e.detail.value) {
+      setNamePlaceholder('');
+    }
+  };
+
+  const onNameBlur = (e) => {
+    if (!e.detail.value) {
+      setNamePlaceholder('请输入真实姓名');
+    };
   };
 
   const showAddPatientMask = () => {
@@ -216,7 +204,7 @@ export default function App() {
     setNavBarTitle('编辑患者');
 
     setName(patient.name);
-    setGender(patient.gender === '男' ? GenderType.MALE : GenderType.FEMALE);
+    setGender(patient.gender);
     setBirthday(patient.birthday);
 
     setShowMask(true);
@@ -229,11 +217,7 @@ export default function App() {
 
   return (
     <View className={styles.page}>
-      <View style={navBarStyles}>
-        <ArrowLeft style={navIconStyles} onClick={() => onNavBarClick()} />
-        <Text>{navBarTitle}</Text>
-        <Text />
-      </View>
+      <NavBar title={navBarTitle} back={onNavBarClick} />
       <View className={styles.content}>
         {/* 搜索栏 */}
         <View className={styles.searchbar}>
@@ -262,10 +246,10 @@ export default function App() {
                 <View className={styles.upper}>
                   <Text className={styles.name}>{patient.name}</Text>
                   <Text className={styles.seperator}></Text>
-                  <Image className={styles.gender} src={patient.gender === '男' ? Male : Female} mode='widthFix' />
+                  <Image className={styles.gender} src={patient.gender === 1 ? Male : Female} mode='widthFix' />
                   <Text className={styles.age}>{dayjs().year() - dayjs.unix(patient.birthdayDate).year()}岁</Text>
                 </View>
-                <View className={styles.lower}>上次检测时间　{'2022-10-09'}</View>
+                <View className={styles.lower}>创建时间　{'2022-10-09'}</View>
               </View>
               <View className={styles.actions}>
                 <Image
@@ -293,13 +277,14 @@ export default function App() {
             />
           )}
         </View>
-        {/* 添加患者的蒙版 */}
+        {/* 添加/编辑患者的蒙版 */}
         {showMask && (
           <View className={styles.mask}>
             <View className={styles.header}>
-              <Text className={styles.title}>您的个人资料</Text>
-              <Text className={styles.text}>更新你的个人资料，从医生那里获得更好的答案</Text>
+              <Text className={styles.title}>患者信息</Text>
+              <Text className={styles.text}>输入患者信息，获取检测报告</Text>
             </View>
+            {/* 选择性别 */}
             <View className={styles.genders}>
               <View
                 className={styles.gender}
@@ -340,14 +325,17 @@ export default function App() {
                 >女</Text>
               </View>
             </View>
+            {/* 填写名字，选择生日 */}
             <View className={styles.other}>
               <Text className={styles.label}>名字</Text>
               <Input
                 className={`${styles.input} ${styles.name}`}
                 type='text'
-                placeholder='Devin'
+                placeholder={namePlaceholder}
                 value={name}
                 onInput={(e) => onNameChange(e)}
+                onFocus={(e) => onNameFocus(e)}
+                onBlur={(e) => onNameBlur(e)}
               />
               <Text className={`${styles.label} ${styles.birthday}`}>生日</Text>
               <Picker
@@ -362,7 +350,7 @@ export default function App() {
                 </View>
               </Picker>
             </View>
-            <CustomButton text={'保存'} click={addPatient} />
+            <CustomButton text={'保存'} click={savePatient} />
           </View>
         )}
       </View>

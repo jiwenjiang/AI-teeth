@@ -22,6 +22,4 @@ function handleErr(err) {
   );
 }
 
-
-
 addInterceptor(headerInterceptor);

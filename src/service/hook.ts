@@ -1,7 +1,5 @@
 import Taro, {
-  getCurrentPages,
-  navigateTo,
-  setStorageSync,
+  getCurrentPages, navigateTo, setStorageSync,
   useRouter
 } from "@tarojs/taro";
 import { useRef, useState } from "react";
@@ -95,9 +93,11 @@ export function useReportBtnHandle() {
 }
 
 export function useAuth() {
+
   const getAuth = async (cb?: Function) => {
     const login = await Taro.login();
     const userInfo = await Taro.getUserInfo();
+
     const res = await request({
       url: "/miniapp/wxLogin",
       data: {
@@ -106,6 +106,7 @@ export function useAuth() {
         iv: userInfo.iv
       }
     });
+
     if (res.code === 0) {
       setStorageSync("token", res.data.token);
       setStorageSync("user", res.data.user);
@@ -115,8 +116,9 @@ export function useAuth() {
     if (res.code === 2) {
       const pages = getCurrentPages();
       const path = pages[pages.length - 1].route;
-      navigateTo({ url: `/pages/login/index?returnUrl=/${path}` });
+      navigateTo({ url: `/packages/login/index?returnUrl=/${path}` });
     }
   };
+
   return { getAuth };
 }

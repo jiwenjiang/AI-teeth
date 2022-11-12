@@ -2,7 +2,12 @@ import "@/service/http_interceptors";
 import "@taroify/core/index.scss";
 import "@taroify/icons/index.scss";
 import { View } from "@tarojs/components";
-import { getMenuButtonBoundingClientRect, useDidShow } from "@tarojs/taro";
+import {
+  getMenuButtonBoundingClientRect,
+  getStorageSync,
+  navigateTo,
+  useDidShow
+} from "@tarojs/taro";
 import React, { useState } from "react";
 import "./app.scss";
 import "./custom-variables.scss";
@@ -23,6 +28,9 @@ function App(props) {
   };
 
   useDidShow(() => {
+    if (!getStorageSync("token")) {
+      navigateTo({ url: "packages/login/index" });
+    }
     calcBarheight();
   });
 
