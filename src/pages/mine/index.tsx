@@ -1,6 +1,6 @@
 import { Popup } from "@taroify/core";
 import { Image, Text, View } from "@tarojs/components";
-import { getStorageSync, switchTab, useDidShow } from "@tarojs/taro";
+import { getStorageSync, navigateTo, setStorageSync, switchTab } from "@tarojs/taro";
 import React, { useEffect, useState } from "react";
 
 import NavBar from "@/comps/NavBar";
@@ -23,7 +23,6 @@ import styles from "./index.module.scss";
 
 export default function App() {
   const [user, setUser] = useState<any>({});
-  const [userBaseInfo, setUserBaseInfo] = useState<any>({});
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -32,49 +31,54 @@ export default function App() {
        url: "/user/get",
      });
 
-     console.log('base userinfo:\n', data);
-     setUserBaseInfo(data);
+     const user = {
+      ...getStorageSync('user'),
+      birthday: data.birthday,
+      avatarUrl: data.avatarUrl,
+     };
+
+     setUser(user);
+     setStorageSync('user', user);
    })();
   }, []);
 
-  useEffect(() => {
-    (async () => {
-      if (!user.avatarUrl) {
-        return;
-      }
-  
-      const { result } = await request({
-        url: "/user/udpate",
-        method: 'POST',
-        data: {
-          ...userBaseInfo,
-          avatarUrl: user.avatarUrl,
-          avatarFileId: user.avatarFileId,
-        },
-      });
-      console.log('update result:\n', result);
-    })();
-  }, [user.avatarUrl]);
+  const updateUser = async (v) => {
+    await request({
+      url: "/user/update",
+      method: 'POST',
+      data: {
+        name: user.name,
+        gender: user.gender,
+        birthday: user.birthday,
+        avatarFileId: v.id,
+      },
+    });
 
-  useDidShow(() => {
-    setUser(getStorageSync('user'));
-  });
+    const updatedUser = {
+      ...user,
+      avatar: v.id,
+      avatarUrl: v.url,
+    };
+
+    setUser(updatedUser);
+    setStorageSync('user', updatedUser);
+  }
 
   const entries = [
     {
       title: '关于我们',
       iconSrc: About,
-      path: '',
+      page: '',
     },
     {
       title: '用户协议',
       iconSrc: Agreement,
-      path: '',
+      page: 'user',
     },
     {
       title: '隐私协议',
       iconSrc: Privacy,
-      path: '',
+      page: 'privacy',
     },
   ];
 
@@ -88,28 +92,22 @@ export default function App() {
 
   const mediaList = async ({ type, filePath, thumbTempFilePath }) => {
     upload2Server(filePath, type, v => {
-      console.log(v);
-      console.log(user);
-      setUser({
-        ...user,
-        avatarUrl: v.url,
-        avatarFileId: v.id,
-      });
+      updateUser(v);
     });
   };
 
-  const choosePhoto = () => {
+  const uploadPhoto = (sourceType: 'album' | 'camera') => {
     wx.chooseMedia({
       count: 1,
       mediaType: ["image"],
-      sourceType: ["album"],
+      sourceType: [sourceType],
       camera: "back",
       success(res) {
         const filePath = res.tempFiles[0].tempFilePath;
         setOpen(false);
         
         wx.editImage({
-          src: filePath, // 图片路径
+          src: filePath,
           success(res) {
             mediaList({
               type: MediaType.PICTURE,
@@ -125,31 +123,14 @@ export default function App() {
     });
   };
 
-  const takePhoto = () => {
-    wx.chooseMedia({
-      count: 1,
-      mediaType: ["image"],
-      sourceType: ["camera"],
-      camera: "back",
-      success(res) {
-        const filePath = res.tempFiles[0].tempFilePath;
-        setOpen(false);
+  const closePopup = () => {
+    setOpen(false);
+  };
 
-        wx.editImage({
-          src: filePath, // 图片路径
-          success(res) {
-            mediaList({
-              type: MediaType.PICTURE,
-              filePath: res.tempFilePath,
-              thumbTempFilePath: res.tempFilePath
-            });
-          },
-          fail(e) {
-            console.log("err", e);
-          }
-        });
-      }
-    });
+  const showTerms = (page) => {
+    navigateTo({
+      url: `/packages/login/terms?category=${page}`,
+    })
   };
 
   return (
@@ -160,7 +141,7 @@ export default function App() {
           <Image
             className={styles.avatar}
             src={user.avatarUrl ? user.avatarUrl : Avatar}
-            mode='widthFix'
+            mode='scaleToFill'
             onClick={() => setOpen(true)}
           />
           <View className={styles.other}>
@@ -177,7 +158,11 @@ export default function App() {
         </View>
         <View className={styles.entries}>
           {entries.map((entry, i) => (
-            <View className={styles.entry} key={i}>
+            <View
+              className={styles.entry}
+              key={i}
+              onClick={() => showTerms(entry.page)}
+            >
               <View className={styles.left}>
                 <Image className={styles.icon} src={entry.iconSrc} mode='widthFix' />
                 <Text className={styles.text}>{entry.title}</Text>
@@ -192,15 +177,15 @@ export default function App() {
         defaultOpen
         placement="bottom"
         open={open}
-        onClose={() => setOpen(false)}
+        onClose={closePopup}
       >
-        <View className={styles.list} onClick={choosePhoto}>
+        <View className={styles.list} onClick={() => uploadPhoto('album')}>
           从相册中选择
         </View>
-        <View className={styles.list} onClick={takePhoto}>
+        <View className={styles.list} onClick={() => uploadPhoto('camera')}>
           拍照
         </View>
-        <View className={styles.list} onClick={() => setOpen(false)}>
+        <View className={styles.list} onClick={closePopup}>
           取消
         </View>
       </Popup>
