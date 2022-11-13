@@ -60,7 +60,7 @@ export default function App() {
 
   const goToModule = (path: string) => {
     navigateTo({
-      url: `/pages/${path}/index`
+      url: `/packages/${path}/index`
     });
   };
 

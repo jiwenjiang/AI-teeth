@@ -1,7 +1,6 @@
 export default {
   pages: [
     "pages/index/index",
-    "pages/patient/index",
     "pages/mine/index",
     "pages/caries/index",
     "pages/caries/photo",
@@ -11,7 +10,15 @@ export default {
     {
       root: "packages/login",
       pages: ["index", "terms"]
-    }
+    },
+    {
+      root: "packages/patient",
+      pages: ["index"]
+    },
+    {
+      root: "packages/record",
+      pages: ["index"]
+    },
   ],
   window: {
     backgroundTextStyle: "light",
