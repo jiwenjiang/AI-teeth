@@ -1,5 +1,5 @@
 export default {
-  navigationBarTitleText: "患者管理",
+  navigationBarTitleText: "",
   navigationBarTextStyle: 'white',
   navigationStyle: 'custom',
 };

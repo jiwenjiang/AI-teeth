@@ -52,7 +52,7 @@ export default function App() {
     {
       id: number;
       name: string;
-      gender: "男" | "女";
+      gender: GenderType;
       birthday: string;
       birthdayDate: number;
       latestCheck: any;
@@ -210,7 +210,7 @@ export default function App() {
                     <Text className={styles.seperator}></Text>
                     <Image
                       className={styles.gender}
-                      src={patient.gender === "男" ? Male : Female}
+                      src={patient.gender === GenderType.MALE ? Male : Female}
                       mode="widthFix"
                     />
                     <Text className={styles.age}>
