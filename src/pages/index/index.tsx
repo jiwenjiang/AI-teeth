@@ -22,25 +22,25 @@ export default function App() {
     {
       cnName: "儿童龋齿检测",
       bgSrc: Caries,
-      path: "caries",
+      path: "/pages/caries",
       open: true
     },
     {
       cnName: "儿童早期预警",
       bgSrc: Warning,
-      path: "warning",
+      path: "/pages/warning",
       open: true
     },
     {
       cnName: "面型自检",
       bgSrc: Surface,
-      path: "surface",
+      path: "/pages/surface",
       open: false
     },
     {
       cnName: "颜面评估",
       bgSrc: Evaluate,
-      path: "evaluate",
+      path: "/pages/evaluate",
       open: false
     }
   ];
@@ -49,18 +49,18 @@ export default function App() {
     {
       cnName: "患者管理",
       iconSrc: Patient,
-      path: "patient"
+      path: "/packages/patient"
     },
     {
       cnName: "检测记录",
       iconSrc: Record,
-      path: "record"
+      path: "/packages/record"
     }
   ];
 
   const goToModule = (path: string) => {
     navigateTo({
-      url: `/packages/${path}/index`
+      url: `${path}/index`
     });
   };
 
