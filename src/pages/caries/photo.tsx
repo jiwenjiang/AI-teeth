@@ -20,6 +20,7 @@ type Card = {
   remark: string;
   fileUrl?: string;
   fileId?: any;
+  samplePicture: string;
 };
 
 export default function App() {
@@ -31,7 +32,7 @@ export default function App() {
   const [attrs, setAttrs] = useState<Card[]>([]);
   const [picIndex, setPicIndex] = useState(0);
 
-  const hasPic = attrs?.some(v => v.fileUrl);
+  const hasPic = attrs?.some(v => v.fileId);
   const guide = attrs[picIndex] ?? {};
 
   const onNavBarClick = () => {
@@ -156,20 +157,29 @@ export default function App() {
     <View className="page" style={{ backgroundColor: "#fff" }}>
       <NavBar title={navBarTitle} back={onNavBarClick} />
       {showGuide ? (
-        <View className={styles.guide}>
-          <View className={styles.content}>
-            <Image className={styles.guideImg} src={guide.picture}></Image>
-            <View className={styles.remark}>{guide.remark}</View>
-            <View className={styles.desc}>
-              （需要获取照相机、相片权限才能开始分析龋齿情况）
-            </View>
-            <View className={styles.warning}>注意事项</View>
-            {guide.precautions?.map((v, i) => (
-              <View key={i} className={styles.line}>
-                <View className={styles.icon}>{i + 1}</View>
-                <View className={styles.label}>{v}</View>
+        <View className={styles.guideBox}>
+          <View
+            className={styles.guide}
+            style={{ height: `calc(100vh - ${systemInfo.navHeight}px - 90px)` }}
+          >
+            <View className={styles.content}>
+              <Image className={styles.guideImg} src={guide.picture}></Image>
+              <View className={styles.remark}>{guide.remark}</View>
+              <View className={styles.desc}>
+                （需要获取照相机、相片权限才能开始分析龋齿情况）
               </View>
-            ))}
+              <View className={styles.warning}>注意事项</View>
+              {guide.precautions?.map((v, i) => (
+                <View key={i} className={styles.line}>
+                  <View className={styles.icon}>{i + 1}</View>
+                  <View className={styles.label}>{v}</View>
+                </View>
+              ))}
+              <View className={styles.warning}>正确示例</View>
+              <View className={styles.sampleImg}>
+                <Image src={guide.samplePicture} className={styles.samplePic} />
+              </View>
+            </View>
           </View>
           <View className={styles.btnbox}>
             <View className={styles.btn} onClick={takePhoto}>

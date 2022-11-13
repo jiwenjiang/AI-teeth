@@ -7,8 +7,7 @@ import Voice from "@/static/icons/voice.svg";
 import Tishi from "@/static/imgs/weixintishi.png";
 import { Canvas, Image, ScrollView, Text, View } from "@tarojs/components";
 import Taro, { navigateBack, useRouter } from "@tarojs/taro";
-import React, { useContext, useEffect, useState } from "react";
-import { cls } from "reactutils";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import styles from "./report.module.scss";
 
 const resultColor = {
@@ -22,6 +21,7 @@ export default function App() {
   const { systemInfo } = useContext(SystemContext);
   const [navBarTitle] = useState(router.params.childName ?? "儿童龋齿检测");
   const [data, setData] = useState<any>({});
+  const canvasBox = useRef();
 
   const onNavBarClick = () => {
     navigateBack();
@@ -30,7 +30,7 @@ export default function App() {
   const getAttr = async () => {
     const response = await request({
       url: "/check/get",
-      data: { id: router.params.id || 12 }
+      data: { id: router.params.id || 74 }
     });
     setData(response.data);
   };
@@ -67,11 +67,10 @@ export default function App() {
     // console.log("🚀 ~ file: report.tsx ~ line 67 ~ renderCanvas ~ imgData", imgData)
 
     // ----
-    wx.createSelectorQuery()
+    Taro.createSelectorQuery()
       .select(`#canvas${i}`)
-      .fields({ node: true, size: true })
-      .exec(async res => {
-        const canvasNode = res[0].node;
+      .node(async res => {
+        const canvasNode = res.node;
         const ctx = canvasNode.getContext("2d");
         const image = canvasNode.createImage();
         // 等待图片加载
@@ -89,7 +88,15 @@ export default function App() {
             c.bbox[3] - c.bbox[1]
           );
         });
-      });
+      })
+      .exec();
+    // Taro.createSelectorQuery()
+    //   .in(this)
+    //   .select(`#canvas${i}`)
+    //   .fields({ node: true, size: true })
+    //   .exec(async res => {
+
+    //   });
   };
 
   useEffect(() => {
@@ -103,10 +110,6 @@ export default function App() {
       });
     }
   }, [data]);
-
-  const submit = async () => {};
-
-  console.log("cccc", data?.images);
 
   return (
     <View className="page">
@@ -130,6 +133,7 @@ export default function App() {
           className={styles.content}
           scrollY
           style={{ height: `calc(100vh - ${systemInfo.navHeight}px - 106px)` }}
+          ref={canvasBox}
         >
           <View className={styles.result}>
             <View className={styles.title}>
@@ -159,7 +163,7 @@ export default function App() {
           </View>
           {data?.images?.map((v, i) => (
             <View className={styles.teeth} key={i}>
-              <View className={styles.title}>{v.position}</View>
+              <View className={styles.title}>{v.positionName}</View>
               <View className={styles.teethImgBox}>
                 <Canvas
                   type="2d"
@@ -171,9 +175,9 @@ export default function App() {
             </View>
           ))}
         </ScrollView>
-        <View className={cls(styles.btn)} onClick={submit}>
+        {/* <View className={cls(styles.btn)} onClick={submit}>
           开始检测
-        </View>
+        </View> */}
       </View>
     </View>
   );
