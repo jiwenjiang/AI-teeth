@@ -20,9 +20,7 @@ const resultColor = {
 export default function App() {
   const router = useRouter();
   const { systemInfo } = useContext(SystemContext);
-  const [navBarTitle] = useState(
-    router.params.childName ?? "儿童龋齿检测"
-  );
+  const [navBarTitle] = useState(router.params.childName ?? "儿童龋齿检测");
   const [data, setData] = useState<any>({});
 
   const onNavBarClick = () => {
@@ -42,16 +40,39 @@ export default function App() {
   }, []);
 
   const renderCanvas = async (v, i) => {
+    // const canvasNode = wx.createOffscreenCanvas({type: '2d', width: 300, height: 150})
+    // // const canvasNode = res[0].node;
+    // const ctx = canvasNode.getContext("2d");
+    // // const dpr = wx.getSystemInfoSync().pixelRatio;
+    // // canvasNode.width = 304 * dpr;
+    // // canvasNode.height = 150 * dpr;
+    // // ctx.scale(dpr, dpr);
+    // const image = canvasNode.createImage();
+    // // 等待图片加载
+    // await new Promise(resolve => {
+    //   image.onload = resolve;
+    //   image.src = v.imageUrl; // 要加载的图片 url
+    // });
+    // ctx.drawImage(image, 0, 0, 304, 150);
+    // v.imageResults.forEach(c => {
+    //   ctx.strokeStyle = resultColor[c.result];
+    //   ctx.strokeRect(
+    //     c.bbox[0],
+    //     c.bbox[1],
+    //     c.bbox[2] - c.bbox[0],
+    //     c.bbox[3] - c.bbox[1]
+    //   );
+    // });
+    // const imgData = ctx.getImageData(0, 0, 300, 150);
+    // console.log("🚀 ~ file: report.tsx ~ line 67 ~ renderCanvas ~ imgData", imgData)
+
+    // ----
     wx.createSelectorQuery()
       .select(`#canvas${i}`)
       .fields({ node: true, size: true })
       .exec(async res => {
         const canvasNode = res[0].node;
         const ctx = canvasNode.getContext("2d");
-        const dpr = wx.getSystemInfoSync().pixelRatio;
-        canvasNode.width = 304 * dpr;
-        canvasNode.height = 150 * dpr;
-        ctx.scale(dpr, dpr);
         const image = canvasNode.createImage();
         // 等待图片加载
         await new Promise(resolve => {
@@ -74,14 +95,18 @@ export default function App() {
   useEffect(() => {
     if (data.images) {
       Taro.nextTick(() => {
-        data.images.forEach((v, i) => {
-          renderCanvas(v, i);
-        });
+        setTimeout(() => {
+          data.images.forEach((v, i) => {
+            renderCanvas(v, i);
+          });
+        }, 400);
       });
     }
   }, [data]);
 
   const submit = async () => {};
+
+  console.log("cccc", data?.images);
 
   return (
     <View className="page">
@@ -136,7 +161,12 @@ export default function App() {
             <View className={styles.teeth} key={i}>
               <View className={styles.title}>{v.position}</View>
               <View className={styles.teethImgBox}>
-                <Canvas type="2d" className={styles.canvas} id={`canvas${i}`} />
+                <Canvas
+                  type="2d"
+                  id={`canvas${i}`}
+                  style={{ height: 150, width: 304 }}
+                />
+                {/* <Image src={v.imageUrl}></Image> */}
               </View>
             </View>
           ))}
