@@ -18,12 +18,13 @@ import styles from "./index.module.scss";
 
 export default function App() {
   const [patientList, setPatientList] = useState<{
-    id: number;
-    name: string;
+    childrenId: number;
+    childrenName: string;
     gender: GenderType;
-    birthday: string;
-    birthdayDate: number;
-    latestCheck: any;
+    age: number;
+    checkTime: number;
+    checkResult: string;
+    hint: string;
   }[]>([]);
 
   useEffect(() => {
@@ -32,18 +33,18 @@ export default function App() {
 
   const getPatients =async () => {
     const response = await request({
-      url: '/children/list',
+      url: '/check/list',
     });
-    setPatientList(response.data.children);
+    setPatientList(response.data.records);
   };
 
   const onNavBarClick = () => {
     navigateBack();
   };
 
-  const tag = v => {
-    if (!v) return;
-    let age = dayjs().diff(dayjs(v * 1000), "year");
+  const tag = age => {
+    if (!age) return;
+
     if (age >= 18) {
       return "成人";
     } else if (age < 12) {
@@ -55,7 +56,7 @@ export default function App() {
 
   const goto = v => {
     navigateTo({
-      url: `/pages/caries/report?id=${v.id}&childName=${v.name}`,
+      url: `/pages/caries/report?id=${v.id}&childName=${v.childrenName}`,
     });
   };
 
@@ -88,7 +89,7 @@ export default function App() {
             >
               <View className={styles.info}>
                 <View className={styles.upper}>
-                  <Text className={styles.name}>{patient.name}</Text>
+                  <Text className={styles.name}>{patient.childrenName}</Text>
                   <Text className={styles.seperator}></Text>
                   <Image
                     className={styles.gender}
@@ -96,28 +97,27 @@ export default function App() {
                     mode="widthFix"
                   />
                   <Text className={styles.age}>
-                    {dayjs().year() - dayjs.unix(patient.birthdayDate).year()}
-                    岁
+                    {patient.age}岁
                   </Text>
                   <Text className={styles.seperator}></Text>
-                  <Text className={styles.time}>{patient.birthday}</Text>
+                  <Text className={styles.time}>{dayjs.unix(patient.checkTime).format('YYYY-MM-DD HH:mm:ss')}</Text>
                 </View>
-                {patient?.latestCheck?.checkResult && (
+                {patient?.checkResult && (
                   <View className={styles.middle}>
                     <View className={styles.last}>上次检测结果：</View>
                     <View className={styles.result}>
-                      {patient?.latestCheck?.checkResult}
+                      {patient?.checkResult}
                     </View>
                   </View>
                 )}
-                {patient.latestCheck?.hint && (
+                {patient.hint && (
                   <View className={styles.lower}>
                     <Image src={Warning} className={styles.warning} /> 提示：
-                    {patient?.latestCheck?.hint}
+                    {patient?.hint}
                   </View>
                 )}
               </View>
-              <View className={styles.tag}>{tag(patient.birthdayDate)}</View>
+              <View className={styles.tag}>{tag(patient.age)}</View>
             </View>
           ))}
         </View>
