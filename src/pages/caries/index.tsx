@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 
 import { Image, Input, Picker, Text, View } from "@tarojs/components";
-import { navigateTo, showToast, switchTab } from "@tarojs/taro";
+import { navigateTo, showToast, switchTab, useRouter } from "@tarojs/taro";
 
 import CustomButton from "@/comps/CustomButton";
 
-import { DetectType, GenderType } from "@/service/const";
+import { GenderType } from "@/service/const";
 import request from "@/service/request";
 import dayjs from "dayjs";
 
@@ -46,6 +46,7 @@ const activeGenderTextStyles = {
 };
 
 export default function App() {
+  const router = useRouter();
   const [navBarTitle, setNavBarTitle] = useState("儿童龋齿检测");
   const [editMode, setEditMode] = useState(false);
   const [patientList, setPatientList] = useState<
@@ -166,8 +167,9 @@ export default function App() {
   };
 
   const goto = v => {
+    console.log("t", router.params.type);
     navigateTo({
-      url: `/pages/caries/photo?childrenId=${v.id}&childName=${v.name}&type=${DetectType.CARIES}`
+      url: `/pages/caries/photo?childrenId=${v.id}&childName=${v.name}&type=${router.params.type}`
     });
   };
 

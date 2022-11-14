@@ -23,6 +23,17 @@ type Card = {
   samplePicture: string;
 };
 
+const mainServices = [
+  {
+    cnName: "儿童龋齿检测",
+    type: DetectType.CARIES
+  },
+  {
+    cnName: "儿童早期预警",
+    type: DetectType.WARNING
+  }
+];
+
 export default function App() {
   const router = useRouter();
   const { systemInfo } = useContext(SystemContext);
@@ -46,7 +57,7 @@ export default function App() {
   const getAttr = async () => {
     const response = await request({
       url: "/check/attribute",
-      data: { checkType: DetectType.CARIES }
+      data: { checkType: router.params.type }
     });
     setAttrs(response.data.positions);
   };
@@ -153,6 +164,7 @@ export default function App() {
     }
   };
 
+
   return (
     <View className="page" style={{ backgroundColor: "#fff" }}>
       <NavBar title={navBarTitle} back={onNavBarClick} />
@@ -193,7 +205,13 @@ export default function App() {
           style={{ height: `calc(100vh - ${systemInfo.navHeight}px - 106px)` }}
         >
           <View className={styles.tip}>
-            <View className={styles.name}>儿童龋齿检测</View>
+            <View className={styles.name}>
+              {
+                mainServices?.find(
+                  v => v.type === +(router.params.type as keyof DetectType)
+                )?.cnName
+              }
+            </View>
             <View className={cls(styles.desc, styles.mt20)}>
               <Image className={styles.icon} src={Voice} />
               <Text className={styles.range}>

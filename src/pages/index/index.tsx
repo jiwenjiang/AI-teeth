@@ -15,52 +15,55 @@ import Evaluate from "@/static/imgs/index-evaluate.png";
 import Surface from "@/static/imgs/index-surface.png";
 import Warning from "@/static/imgs/index-warning.png";
 
+import { DetectType } from "@/service/const";
 import styles from "./index.module.scss";
 
-export default function App() {
-  const mainServices = [
-    {
-      cnName: "儿童龋齿检测",
-      bgSrc: Caries,
-      path: "/pages/caries",
-      open: true
-    },
-    {
-      cnName: "儿童早期预警",
-      bgSrc: Warning,
-      path: "/pages/warning",
-      open: true
-    },
-    {
-      cnName: "面型自检",
-      bgSrc: Surface,
-      path: "/pages/surface",
-      open: false
-    },
-    {
-      cnName: "颜面评估",
-      bgSrc: Evaluate,
-      path: "/pages/evaluate",
-      open: false
-    }
-  ];
+const mainServices = [
+  {
+    cnName: "儿童龋齿检测",
+    bgSrc: Caries,
+    path: `/pages/caries/index?type=${DetectType.CARIES}`,
+    open: true,
+    type: DetectType.CARIES
+  },
+  {
+    cnName: "儿童早期预警",
+    bgSrc: Warning,
+    path: `/pages/caries/index?type=${DetectType.WARNING}`,
+    open: true,
+    type: DetectType.WARNING
+  },
+  {
+    cnName: "面型自检",
+    bgSrc: Surface,
+    path: "/pages/surface/index",
+    open: false
+  },
+  {
+    cnName: "颜面评估",
+    bgSrc: Evaluate,
+    path: "/pages/evaluate/index",
+    open: false
+  }
+];
 
+export default function App() {
   const otherServices = [
     {
       cnName: "患者管理",
       iconSrc: Patient,
-      path: "/packages/patient"
+      path: "/packages/patient/index"
     },
     {
       cnName: "检测记录",
       iconSrc: Record,
-      path: "/packages/record"
+      path: "/packages/record/index"
     }
   ];
 
   const goToModule = (path: string) => {
     navigateTo({
-      url: `${path}/index`
+      url: `${path}`
     });
   };
 

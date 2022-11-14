@@ -16,12 +16,15 @@ const resultColor = {
   3: "#FF0000"
 };
 
+const canvasWidth = 300;
+
 export default function App() {
   const router = useRouter();
   const { systemInfo } = useContext(SystemContext);
   const [navBarTitle] = useState(router.params.childName ?? "儿童龋齿检测");
   const [data, setData] = useState<any>({});
   const canvasBox = useRef();
+  const [teethList, setTeethList] = useState<any>([]);
 
   const onNavBarClick = () => {
     navigateBack();
@@ -40,37 +43,11 @@ export default function App() {
   }, []);
 
   const renderCanvas = async (v, i) => {
-    // const canvasNode = wx.createOffscreenCanvas({type: '2d', width: 300, height: 150})
-    // // const canvasNode = res[0].node;
-    // const ctx = canvasNode.getContext("2d");
-    // // const dpr = wx.getSystemInfoSync().pixelRatio;
-    // // canvasNode.width = 304 * dpr;
-    // // canvasNode.height = 150 * dpr;
-    // // ctx.scale(dpr, dpr);
-    // const image = canvasNode.createImage();
-    // // 等待图片加载
-    // await new Promise(resolve => {
-    //   image.onload = resolve;
-    //   image.src = v.imageUrl; // 要加载的图片 url
-    // });
-    // ctx.drawImage(image, 0, 0, 304, 150);
-    // v.imageResults.forEach(c => {
-    //   ctx.strokeStyle = resultColor[c.result];
-    //   ctx.strokeRect(
-    //     c.bbox[0],
-    //     c.bbox[1],
-    //     c.bbox[2] - c.bbox[0],
-    //     c.bbox[3] - c.bbox[1]
-    //   );
-    // });
-    // const imgData = ctx.getImageData(0, 0, 300, 150);
-    // console.log("🚀 ~ file: report.tsx ~ line 67 ~ renderCanvas ~ imgData", imgData)
-
-    // ----
     Taro.createSelectorQuery()
       .select(`#canvas${i}`)
       .node(async res => {
         const canvasNode = res.node;
+
         const ctx = canvasNode.getContext("2d");
         const image = canvasNode.createImage();
         // 等待图片加载
@@ -78,7 +55,11 @@ export default function App() {
           image.onload = resolve;
           image.src = v.imageUrl; // 要加载的图片 url
         });
-        ctx.drawImage(image, 0, 0, 304, 150);
+
+        canvasNode.width = image.width;
+        canvasNode.height = image.height;
+
+        ctx.drawImage(image, 0, 0, image.width, image.height);
         v.imageResults.forEach(c => {
           ctx.strokeStyle = resultColor[c.result];
           ctx.strokeRect(
@@ -88,26 +69,42 @@ export default function App() {
             c.bbox[3] - c.bbox[1]
           );
         });
+        ctx.scale(1.5, 1.5);
       })
       .exec();
-    // Taro.createSelectorQuery()
-    //   .in(this)
-    //   .select(`#canvas${i}`)
-    //   .fields({ node: true, size: true })
-    //   .exec(async res => {
+  };
 
-    //   });
+  const genCanvas = async (v, i) => {};
+
+  const calcCanvasSize = async arr => {
+    const canvas = wx.createOffscreenCanvas({
+      type: "2d",
+      width: 300,
+      height: 150
+    });
+
+    for (let v of arr) {
+      const image = canvas.createImage();
+      // 等待图片加载
+      await new Promise(resolve => {
+        image.onload = resolve;
+        image.src = v.imageUrl; // 要加载的图片 url
+      });
+      v.canvasW = canvasWidth;
+      v.scale = canvasWidth / image.width;
+      v.canvasH = image.height * v.scale;
+    }
+    setTeethList([...arr]);
+    Taro.nextTick(() => {
+      arr.forEach((v, i) => {
+        renderCanvas(v, i);
+      });
+    });
   };
 
   useEffect(() => {
     if (data.images) {
-      Taro.nextTick(() => {
-        setTimeout(() => {
-          data.images.forEach((v, i) => {
-            renderCanvas(v, i);
-          });
-        }, 400);
-      });
+      calcCanvasSize(data.images);
     }
   }, [data]);
 
@@ -140,7 +137,6 @@ export default function App() {
               <Text className={styles.label}>检测结果：</Text>
               <Text className={styles.key}>{data?.result}</Text>
             </View>
-            {/* <Image className={styles.doctor} src={Doctor} /> */}
             <View className={styles.card}>
               <View className={styles.head}>治疗方案</View>
               <View className={styles.resultBody}>
@@ -161,14 +157,14 @@ export default function App() {
               <View className={styles.item}>重度龋齿</View>
             </View>
           </View>
-          {data?.images?.map((v, i) => (
+          {teethList?.map((v, i) => (
             <View className={styles.teeth} key={i}>
               <View className={styles.title}>{v.positionName}</View>
               <View className={styles.teethImgBox}>
                 <Canvas
                   type="2d"
                   id={`canvas${i}`}
-                  style={{ height: 150, width: 304 }}
+                  style={{ width: v.canvasW, height: v.canvasH }}
                 />
                 {/* <Image src={v.imageUrl}></Image> */}
               </View>
