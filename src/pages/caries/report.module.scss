@@ -223,6 +223,210 @@
             }
         }
 
+        .warningResult {
+            .warningHead {
+                font-weight: 800;
+                font-size: 44px;
+                color: #333333;
+                position: relative;
+            }
+
+            .warningHead::after {
+                content: '';
+                position: absolute;
+                width: 116px;
+                height: 12px;
+                background: linear-gradient(90deg, #1DA1F2 0%, rgba(255, 255, 255, 0) 93.18%);
+                left: 0;
+                top: 42px;
+            }
+
+            .warningStatusBox {
+                display: flex;
+                justify-content: space-between;
+                margin-top: 40px;
+                padding: 0 30px;
+
+                .warningLine {
+                    width: 180px;
+                    height: 20px;
+                    border-radius: 18px;
+                    position: relative;
+
+                    .line {
+                        width: 80px;
+                        height: 40px;
+                        position: absolute;
+                        left: 50%;
+                        top: 0;
+                        transform: translate(-50%, -10px);
+                    }
+
+                }
+
+                .warningLine:nth-child(1) {
+                    background: #4FD0B1;
+                }
+
+                .warningLine:nth-child(2) {
+                    background: #F2C73B;
+                }
+
+                .warningLine:nth-child(3) {
+                    background: #EE6440;
+                }
+            }
+
+            .warningTip {
+                font-size: 24px;
+                text-align: justify;
+                margin-top: 40px;
+                color: #666666;
+
+                .warningIcon {
+                    display: inline-block;
+                    width: 24px;
+                    height: 24px;
+                    transform: translateY(4px);
+                    margin-right: 8px;
+                }
+            }
+        }
+
+        .warningRefer {
+            background: linear-gradient(180deg, #D1F0E8 0%, #EAF7EE 100%);
+            border-radius: 24px;
+            padding: 86px 40px 34px 40px;
+            margin-top: 34px;
+            position: relative;
+            border-radius: 16px;
+
+            .tishi {
+                position: absolute;
+                left: 16px;
+                top: -8px;
+                width: 166px;
+                height: 58px;
+            }
+
+            .tishitext {
+                position: absolute;
+                left: 36px;
+                top: 0px;
+                font-size: 28px;
+                color: #FFFFFF;
+            }
+
+            .resultBody {
+                font-size: 24px;
+                line-height: 34px;
+                text-align: justify;
+                color: #666666;
+
+                .desc {
+                    font-size: 24px;
+                    line-height: 34px;
+                    color: #FF5C00;
+                    margin-top: 20px;
+                }
+
+                .icon {
+                    width: 36px;
+                    height: 36px;
+                    margin-right: 10px;
+                    transform: translateY(8px);
+                }
+            }
+        }
+
+        .warningList {
+            margin-top: 46px;
+
+            .listHead {
+                display: flex;
+
+                .border {
+                    width: 4px;
+                    height: 60px;
+                    background-color: var(--primary-color);
+                }
+
+                .titleBox {
+                    font-size: 28px;
+                    color: #333333;
+                    position: relative;
+                    margin-left: 14px;
+                    margin-right: 14px;
+
+                    .issue {
+                        width: 162px;
+                        height: 28px;
+                        transform: translateY(-4px);
+                    }
+
+                    .issueText {
+                        font-size: 20px;
+                        color: #fff;
+                        position: absolute;
+                        left: 20px;
+                        top: -2px;
+                    }
+
+                    .title {
+                        transform: translate(16px, -14px);
+                    }
+
+                }
+
+                .hLine {
+                    flex: 1;
+                    height: 1px;
+                    background-color: var(--primary-color);
+                    transform: translateY(28px);
+                }
+
+                .dot {
+                    width: 18px;
+                    height: 18px;
+                    border: 1px solid var(--primary-color);
+                    border-radius: 50%;
+                    transform: translateY(20px);
+                }
+            }
+
+            .listBody {
+                background: rgba(255, 255, 255, 0.9);
+                border: 1px solid #FFFFFF;
+                border-radius: 16px;
+                margin-top: 26px;
+                padding: 26px;
+                padding-bottom: 6px;
+
+                .listItem {
+                    font-size: 24px;
+                    color: #333333;
+                    margin-bottom: 20px;
+
+                    .itemBg {
+                        border-radius: 20px;
+                        background-color: #D5EFFF;
+                        display: inline-block;
+                        padding: 6px 24px;
+                    }
+                }
+
+                .listItem::before {
+                    width: 18px;
+                    height: 18px;
+                    border-radius: 50%;
+                    background-color: var(--primary-color);
+                    content: '';
+                    display: inline-block;
+                    margin-right: 20px;
+                }
+            }
+        }
+
     }
 
     .btn {

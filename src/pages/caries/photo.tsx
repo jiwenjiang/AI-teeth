@@ -1,3 +1,4 @@
+import MaskLoading from "@/comps/Loading";
 import NavBar from "@/comps/NavBar";
 import { DetectType, MediaType } from "@/service/const";
 import { SystemContext } from "@/service/context";
@@ -42,6 +43,7 @@ export default function App() {
   const [showGuide, setShowGuide] = useState(false);
   const [attrs, setAttrs] = useState<Card[]>([]);
   const [picIndex, setPicIndex] = useState(0);
+  const [fileLoading, setFileLoading] = useState(false);
 
   const hasPic = attrs?.some(v => v.fileId);
   const guide = attrs[picIndex] ?? {};
@@ -82,6 +84,7 @@ export default function App() {
           wx.editImage({
             src: tempFilePath, // 图片路径
             success(res) {
+              setFileLoading(true);
               mediaList({
                 type: MediaType.PICTURE,
                 filePath: res.tempFilePath,
@@ -109,6 +112,7 @@ export default function App() {
         wx.editImage({
           src: filePath, // 图片路径
           success(res) {
+            setFileLoading(true);
             mediaList({
               type: MediaType.PICTURE,
               filePath: res.tempFilePath,
@@ -126,6 +130,7 @@ export default function App() {
     upload2Server(filePath, type, v => {
       attrs[picIndex].fileId = v.id;
       setAttrs([...attrs]);
+      setFileLoading(false);
     });
     attrs[picIndex].fileUrl = thumbTempFilePath;
     setAttrs([...attrs]);
@@ -158,12 +163,19 @@ export default function App() {
             ?.map(v => ({ fileId: v.fileId, position: v.position }))
         }
       });
-      Taro.navigateTo({
-        url: `/pages/caries/report?id=${res.data.id}&childName=${router.params.childName}`
-      });
+      console.log("111", Number(router.params.type));
+      if (Number(router.params.type) === DetectType.CARIES) {
+        Taro.navigateTo({
+          url: `/pages/caries/report?id=${res.data.id}&childName=${router.params.childName}`
+        });
+      }
+      if (Number(router.params.type) === DetectType.WARNING) {
+        Taro.navigateTo({
+          url: `/pages/caries/warningReport?id=${res.data.id}&childName=${router.params.childName}`
+        });
+      }
     }
   };
-
 
   return (
     <View className="page" style={{ backgroundColor: "#fff" }}>
@@ -267,6 +279,7 @@ export default function App() {
           </Popup>
         </View>
       )}
+      <MaskLoading visible={fileLoading} text="照片上传中..." />
     </View>
   );
 }

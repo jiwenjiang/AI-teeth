@@ -61,6 +61,7 @@ export default function App() {
 
         ctx.drawImage(image, 0, 0, image.width, image.height);
         v.imageResults.forEach(c => {
+          ctx.lineWidth = 2;
           ctx.strokeStyle = resultColor[c.result];
           ctx.strokeRect(
             c.bbox[0],
@@ -73,8 +74,6 @@ export default function App() {
       })
       .exec();
   };
-
-  const genCanvas = async (v, i) => {};
 
   const calcCanvasSize = async arr => {
     const canvas = wx.createOffscreenCanvas({

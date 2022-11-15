@@ -4,7 +4,8 @@ export default {
     "pages/mine/index",
     "pages/caries/index",
     "pages/caries/photo",
-    "pages/caries/report"
+    "pages/caries/report",
+    "pages/caries/warningReport"
   ],
   subpackages: [
     {
