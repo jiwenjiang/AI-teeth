@@ -163,7 +163,6 @@ export default function App() {
             ?.map(v => ({ fileId: v.fileId, position: v.position }))
         }
       });
-      console.log("111", Number(router.params.type));
       if (Number(router.params.type) === DetectType.CARIES) {
         Taro.navigateTo({
           url: `/pages/caries/report?id=${res.data.id}&childName=${router.params.childName}`

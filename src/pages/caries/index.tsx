@@ -71,7 +71,8 @@ export default function App() {
 
   const getPatients = async () => {
     const response = await request({
-      url: "/children/list"
+      url: "/children/list",
+      data: { type: router.params.type }
     });
     setPatientList(response.data.children);
   };
