@@ -5,7 +5,7 @@ import { navigateTo, showToast, switchTab, useRouter } from "@tarojs/taro";
 
 import CustomButton from "@/comps/CustomButton";
 
-import { GenderType } from "@/service/const";
+import { DetectType, GenderType } from "@/service/const";
 import request from "@/service/request";
 import dayjs from "dayjs";
 
@@ -47,7 +47,11 @@ const activeGenderTextStyles = {
 
 export default function App() {
   const router = useRouter();
-  const [navBarTitle, setNavBarTitle] = useState("儿童龋齿检测");
+  const [navBarTitle, setNavBarTitle] = useState(
+    +(router.params.type as any) === DetectType.CARIES
+      ? "儿童龋齿检测"
+      : "儿童早期预警"
+  );
   const [editMode, setEditMode] = useState(false);
   const [patientList, setPatientList] = useState<
     {
@@ -164,7 +168,11 @@ export default function App() {
 
   const closeAddPatientMask = () => {
     setShowMask(false);
-    setNavBarTitle("儿童龋齿检测");
+    setNavBarTitle(
+      +(router.params.type as any) === DetectType.CARIES
+        ? "儿童龋齿检测"
+        : "儿童早期预警"
+    );
   };
 
   const goto = v => {
