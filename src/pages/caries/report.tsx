@@ -61,14 +61,16 @@ export default function App() {
 
         ctx.drawImage(image, 0, 0, image.width, image.height);
         v.imageResults.forEach(c => {
-          ctx.lineWidth = 2;
-          ctx.strokeStyle = resultColor[c.result];
-          ctx.strokeRect(
-            c.bbox[0],
-            c.bbox[1],
-            c.bbox[2] - c.bbox[0],
-            c.bbox[3] - c.bbox[1]
-          );
+          if (c.score > 0.8) {
+            ctx.lineWidth = 2;
+            ctx.strokeStyle = resultColor[c.result];
+            ctx.strokeRect(
+              c.bbox[0],
+              c.bbox[1],
+              c.bbox[2] - c.bbox[0],
+              c.bbox[3] - c.bbox[1]
+            );
+          }
         });
         ctx.scale(1.5, 1.5);
       })
