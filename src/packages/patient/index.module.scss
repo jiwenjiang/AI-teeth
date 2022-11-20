@@ -156,7 +156,7 @@
       }
 
       .addbtn {
-        position: absolute;
+        position: fixed;
         right: 40px;
         bottom: 200px;
 
@@ -251,7 +251,8 @@
           }
         }
 
-        .input, .datepicker {
+        .input,
+        .datepicker {
           height: 96px;
           border: 2px solid #F0F0F0;
           border-radius: 16px;
