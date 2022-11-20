@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Image, Input, Text, View } from "@tarojs/components";
 import { navigateBack, navigateTo } from "@tarojs/taro";
 
-import { GenderType } from "@/service/const";
+import { GenderType, DetectType } from "@/service/const";
 import request from "@/service/request";
 import dayjs from "dayjs";
 
@@ -56,7 +56,7 @@ export default function App() {
 
   const goto = v => {
     navigateTo({
-      url: `/pages/caries/report?id=${v.id}&childName=${v.childrenName}`,
+      url: `/pages/caries/${v.checkType === DetectType.CARIES ? 'report' : 'warningReport'}?id=${v.id}&childName=${v.childrenName}`,
     });
   };
 
