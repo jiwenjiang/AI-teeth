@@ -31,6 +31,8 @@
       justify-content: space-between;
       align-items: center;
 
+      position: relative;
+
       .input {
         width: 75vw;
         border-radius: 100em;
@@ -42,6 +44,27 @@
 
         color: #333;
         font-size: 28px;
+      }
+
+      .clear {
+        z-index: 10;
+        position: absolute;
+        top: 0;
+        left: 40px;
+        bottom: 0;
+
+        width: 75vw;
+        box-sizing: border-box;
+        padding-right: 28px;
+
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+
+        .icon {
+          width: 32px;
+          height: 32px;
+        }
       }
 
       .label {

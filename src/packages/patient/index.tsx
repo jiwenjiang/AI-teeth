@@ -22,12 +22,14 @@ import IcMaleW from "@/static/icons/ic-male-w.png";
 import IcMale from "@/static/icons/ic-male.png";
 import Male from "@/static/icons/male.png";
 import Banner from "@/static/imgs/patient-banner.png";
+import Clear from "@/static/icons/clear.png";
 
 import styles from "./index.module.scss";
 
 export default function App() {
   const [navBarTitle, setNavBarTitle] = useState('患者管理');
   const [editMode, setEditMode] = useState(false);
+  const [searchText, setSearchText] = useState<string>('');
   const [patientList, setPatientList] = useState<{
     id: number;
     name: string;
@@ -60,9 +62,14 @@ export default function App() {
     setCurrPatient(patientList[0]);
   }, [patientList]);
 
-  const getPatients =async () => {
+  const getPatients = async () => {
+    let url = '/children/list'
+    if (searchText) {
+      url += `?name=${searchText}`
+    }
+
     const response = await request({
-      url: '/children/list',
+      url,
     });
     setPatientList(response.data.children);
   };
@@ -101,6 +108,18 @@ export default function App() {
       switchTab({ url: "/pages/index/index" });
     }
   };
+
+  const onInput = (e) => {
+    setSearchText(e.detail.value)
+  }
+
+  const onConfirm = () => {
+    getPatients()
+  }
+
+  const clearSearch = () => {
+    setSearchText('')
+  }
 
   const savePatient = async () => {
     if (!name) {
@@ -221,8 +240,20 @@ export default function App() {
       <View className={styles.content}>
         {/* 搜索栏 */}
         <View className={styles.searchbar}>
-          <Input className={styles.input} type='text' placeholder='搜索' />
-          <Text className={styles.label}>搜索</Text>
+          <Input
+            className={styles.input}
+            type='text'
+            value={searchText}
+            placeholder='搜索'
+            onInput={(e) => onInput(e)}
+            onConfirm={onConfirm}
+          />
+          {searchText && (
+            <View className={styles.clear} onClick={clearSearch}>
+              <Image className={styles.icon} src={Clear} mode='widthFix' />
+            </View>
+          )}
+          <View className={styles.label} onClick={onConfirm}>搜索</View>
         </View>
         {/* 患者列表 */}
         <View className={styles.patientlist}>
