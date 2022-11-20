@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 
-import { Image, Input, Text, View } from "@tarojs/components";
+import { Image, Input, Text, View, Icon } from "@tarojs/components";
 import { navigateBack, navigateTo } from "@tarojs/taro";
+import { Success } from "@taroify/icons";
 
 import { GenderType, DetectType } from "@/service/const";
 import request from "@/service/request";
@@ -13,10 +14,13 @@ import Female from "@/static/icons/female.png";
 import Male from "@/static/icons/male.png";
 import Warning from "@/static/icons/warning.svg";
 import Banner from "@/static/imgs/patient-banner.png";
+import Select from "@/static/icons/select.png";
 
 import styles from "./index.module.scss";
 
 export default function App() {
+  const [showSelect, setShowSelect] = useState<boolean>(false)
+  const [checkType, setCheckType] = useState<number>(0)
   const [patientList, setPatientList] = useState<{
     childrenId: number;
     childrenName: string;
@@ -29,11 +33,34 @@ export default function App() {
 
   useEffect(() => {
     getPatients();
-  }, []);
+  }, [checkType]);
 
-  const getPatients =async () => {
+  const checkTypes = [
+    {
+      id: 0,
+      name: '全部记录',
+    },
+    {
+      id: 1,
+      name: '儿童龋齿检测',
+    },
+    {
+      id: 2,
+      name: '儿童早期预警',
+    },
+    {
+      id: 3,
+      name: '面型自检',
+    },
+    {
+      id: 4,
+      name: '颜面评估',
+    },
+  ]
+
+  const getPatients = async () => {
     const response = await request({
-      url: '/check/list',
+      url: `/check/list?checkType=${checkType}`,
     });
     setPatientList(response.data.records);
   };
@@ -41,6 +68,18 @@ export default function App() {
   const onNavBarClick = () => {
     navigateBack();
   };
+
+  const toggleShowSelect = () => {
+    setShowSelect(!showSelect)
+  }
+
+  const hideSelect = () => {
+    setShowSelect(false)
+  }
+
+  const updateCheckType = (id) => {
+    setCheckType(id)
+  }
 
   const tag = age => {
     if (!age) return;
@@ -66,9 +105,17 @@ export default function App() {
 
       <View className={styles.content}>
         {/* 搜索栏 */}
-        <View className={styles.searchbar}>
-          <Input className={styles.input} type='text' placeholder='搜索' />
-          <Text className={styles.label}>搜索</Text>
+        <View className={styles.topbar}>
+          <View
+            className={styles.filterbar}
+            onClick={toggleShowSelect}
+          >
+            <Text className={styles.label}>{checkTypes[checkType].name}</Text>
+            <Image className={styles.banner} src={Select} mode='widthFix' />
+          </View>
+          <View className={styles.searchbar}>
+            <Input className={styles.input} type='text' placeholder='搜索' />
+          </View>
         </View>
         {/* 患者列表 */}
         <View className={styles.patientlist}>
@@ -120,6 +167,25 @@ export default function App() {
               <View className={styles.tag}>{tag(patient.age)}</View>
             </View>
           ))}
+          {showSelect && (
+            <View
+              className={styles.selectlist}
+              onClick={hideSelect}
+            >
+              <View className={styles.container}>
+                {checkTypes.map((item, i) => (
+                  <View
+                    className={`${styles.item} ${checkType === item.id && styles['text-blue']}`}
+                    key={i}
+                    onClick={() => updateCheckType(item.id)}
+                  >
+                    <Text>{item.name}</Text>
+                    {(checkType === item.id) && (<Success size='16' />)}
+                  </View>
+                ))}
+              </View>
+            </View>
+          )}
         </View>
       </View>
     </View>

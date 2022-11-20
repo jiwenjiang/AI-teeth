@@ -15,6 +15,10 @@
   flex-direction: column;
   box-sizing: border-box;
 
+  .text-blue {
+    color: var(--text-blue);
+  }
+
   .content {
     flex-grow: 1;
 
@@ -23,7 +27,7 @@
 
     position: relative;
 
-    .searchbar {
+    .topbar {
       box-sizing: border-box;
       padding: 28px 40px;
 
@@ -31,22 +35,52 @@
       justify-content: space-between;
       align-items: center;
 
-      .input {
-        width: 75vw;
-        border-radius: 100em;
-        box-sizing: border-box;
-        padding-left: 30px;
-
+      .filterbar {
+        width: 40%;
         height: 64px;
         background-color: #fff;
+        border-radius: 100em;
 
-        color: #333;
-        font-size: 28px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        .label {
+          color: #666;
+          font-size: 28px;
+        }
+
+        .banner {
+          margin-left: 12px;
+          width: 18px;
+        }
       }
 
-      .label {
-        color: #fff;
-        font-size: 28px;
+      .searchbar {
+        width: 54%;
+        height: 64px;
+
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .input {
+          width: 75vw;
+          border-radius: 100em;
+          box-sizing: border-box;
+          padding-left: 30px;
+
+          height: 64px;
+          background-color: #fff;
+
+          color: #333;
+          font-size: 28px;
+        }
+
+        .label {
+          color: #fff;
+          font-size: 28px;
+        }
       }
     }
 
@@ -85,33 +119,33 @@
       .patient {
         margin-bottom: 24px;
         height: 192px;
-  
+
         width: 100%;
         box-shadow: 0px 4px 32px rgba(188, 188, 188, 0.2);
         border-radius: 16px;
-  
+
         display: flex;
         justify-content: space-between;
         align-items: flex-start;
-  
+
         box-sizing: border-box;
         padding: 20px;
         position: relative;
-  
+
         .info {
           display: flex;
           justify-content: space-between;
           flex-direction: column;
-  
+
           .upper {
             display: flex;
             align-items: center;
-  
+
             .name {
               font-size: 36px;
               color: #333;
             }
-  
+
             .seperator {
               margin-left: 20px;
               flex-shrink: 0;
@@ -119,46 +153,46 @@
               height: 25px;
               background-color: #d6d6d6;
             }
-  
+
             .gender {
               margin-left: 20px;
               width: 28px;
               height: 28px;
             }
-  
+
             .age {
               margin-left: 6px;
               font-size: 28px;
               color: #333;
             }
-  
+
             .time {
               margin-left: 18px;
               font-size: 28px;
               color: #999999;
             }
           }
-  
+
           .middle {
             margin-top: 16px;
             font-size: 32px;
             line-height: 44px;
             display: flex;
-  
+
             .last {
               color: #9B90DC;
             }
-  
+
             .result {
-              color: var(--text-blue)
+              color: var(--text-blue);
             }
           }
-  
+
           .lower {
             margin-top: 18px;
             font-size: 28px;
             color: #333;
-  
+
             .warning {
               width: 28px;
               height: 28px;
@@ -166,7 +200,7 @@
             }
           }
         }
-  
+
         .tag {
           position: absolute;
           background: var(--text-blue);
@@ -183,7 +217,43 @@
           justify-content: center;
           align-items: center;
         }
-  
+
+      }
+
+      .selectlist {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+
+        display: flex;
+        flex-direction: column;
+        background: rgba(0, 0, 0, 0.6);
+
+        .container {
+          background-color: #F9FDFF;
+          color: #333;
+          font-size: 28px;
+
+          box-sizing: border-box;
+          padding: 0 20px;
+          border-radius: 0px 0px 24px 24px;
+
+          .item {
+            box-sizing: border-box;
+            padding: 16px 32px;
+            border-top: 2px solid rgba(0, 0, 0, 0.1);
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            &:last-child {
+              padding-bottom: 20px;
+            }
+          }
+        }
       }
     }
   }
