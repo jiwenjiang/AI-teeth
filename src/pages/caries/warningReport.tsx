@@ -111,7 +111,7 @@ export default function App() {
               <View>{data?.treatment}</View>
               <View className={styles.desc}>
                 <Image className={styles.icon} src={Voice} />
-                (以上治疗方案为辅助判断，具体方案请以牙科医生检查结果为准）。
+                （检测范围：4～12岁，年龄范围超过检测结果可能不准确。以上治疗方案为辅助判断，具体方案请以牙科医生加测结果为准）
               </View>
             </View>
           </View>
@@ -120,7 +120,7 @@ export default function App() {
               <View className={styles.border}></View>
               <View className={styles.titleBox}>
                 <Image src={Issue} className={styles.issue}></Image>
-                <Text className={styles.issueText}>List of issues</Text>
+                <Text className={styles.issueText}></Text>
                 <View className={styles.title}>问题清单</View>
               </View>
               <View className={styles.hLine}></View>

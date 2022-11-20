@@ -35,6 +35,16 @@ const mainServices = [
   }
 ];
 
+const uploadImg = (v = true) => ({
+  text: "照片上传中...",
+  show: v
+});
+
+const submitImg = {
+  text: "照片检测中...",
+  show: true
+};
+
 export default function App() {
   const router = useRouter();
   const { systemInfo } = useContext(SystemContext);
@@ -43,7 +53,7 @@ export default function App() {
   const [showGuide, setShowGuide] = useState(false);
   const [attrs, setAttrs] = useState<Card[]>([]);
   const [picIndex, setPicIndex] = useState(0);
-  const [fileLoading, setFileLoading] = useState(false);
+  const [fileLoading, setFileLoading] = useState(uploadImg(false));
 
   const hasPic = attrs?.some(v => v.fileId);
   const guide = attrs[picIndex] ?? {};
@@ -75,6 +85,7 @@ export default function App() {
         setOpen(false);
         const wxInfo = wx.getSystemInfoSync();
         if (wxInfo.platform === "devtools") {
+          setFileLoading(uploadImg());
           mediaList({
             type: MediaType.PICTURE,
             filePath: tempFilePath,
@@ -84,7 +95,7 @@ export default function App() {
           wx.editImage({
             src: tempFilePath, // 图片路径
             success(res) {
-              setFileLoading(true);
+              setFileLoading(uploadImg());
               mediaList({
                 type: MediaType.PICTURE,
                 filePath: res.tempFilePath,
@@ -112,7 +123,7 @@ export default function App() {
         wx.editImage({
           src: filePath, // 图片路径
           success(res) {
-            setFileLoading(true);
+            setFileLoading(uploadImg());
             mediaList({
               type: MediaType.PICTURE,
               filePath: res.tempFilePath,
@@ -130,7 +141,7 @@ export default function App() {
     upload2Server(filePath, type, v => {
       attrs[picIndex].fileId = v.id;
       setAttrs([...attrs]);
-      setFileLoading(false);
+      setFileLoading(uploadImg(false));
     });
     attrs[picIndex].fileUrl = thumbTempFilePath;
     setAttrs([...attrs]);
@@ -152,6 +163,7 @@ export default function App() {
 
   const submit = async () => {
     if (hasPic) {
+      setFileLoading(submitImg);
       const res = await request({
         method: "POST",
         url: "/check/submit",
@@ -163,6 +175,7 @@ export default function App() {
             ?.map(v => ({ fileId: v.fileId, position: v.position }))
         }
       });
+      setFileLoading({ ...submitImg, show: false });
       if (Number(router.params.type) === DetectType.CARIES) {
         Taro.navigateTo({
           url: `/pages/caries/report?id=${res.data.id}&childName=${router.params.childName}`
@@ -243,8 +256,12 @@ export default function App() {
                       onClick={() => choose(i)}
                     >
                       {v.fileUrl ? (
-                        <Image className={styles.cardImg} src={v.fileUrl} />
+                        <View
+                          className={styles.cardImg}
+                          style={{ backgroundImage: `url(${v.fileUrl})` }}
+                        ></View>
                       ) : (
+                        // <Image  src={v.fileUrl} />
                         <Image className={styles.addbtn} src={AddPatient} />
                       )}
                     </View>
@@ -278,7 +295,7 @@ export default function App() {
           </Popup>
         </View>
       )}
-      <MaskLoading visible={fileLoading} text="照片上传中..." />
+      <MaskLoading visible={fileLoading.show} text={fileLoading.text} />
     </View>
   );
 }

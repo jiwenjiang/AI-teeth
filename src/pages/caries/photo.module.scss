@@ -102,6 +102,9 @@
                     .cardImg {
                         width: 244px;
                         height: 284px;
+                        background-size: contain;
+                        background-repeat: no-repeat;
+                        background-position: center;
                     }
                 }
             }
