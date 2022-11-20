@@ -16,6 +16,13 @@ const resultColor = {
   3: "#FF0000"
 };
 
+const resultTextColor = {
+  未发现龋齿情况: "#1DA1F2",
+  牙齿存在轻度龋齿: "#1DA1F2",
+  牙齿存在中度龋齿: "#FF6B00",
+  牙齿存在重度龋齿: "#FF0000"
+};
+
 const canvasWidth = 300;
 
 export default function App() {
@@ -136,7 +143,12 @@ export default function App() {
           <View className={styles.result}>
             <View className={styles.title}>
               <Text className={styles.label}>检测结果：</Text>
-              <Text className={styles.key}>{data?.result}</Text>
+              <Text
+                className={styles.key}
+                style={{ color: resultTextColor[data?.result] }}
+              >
+                {data?.result}
+              </Text>
             </View>
             <View className={styles.card}>
               <View className={styles.head}>治疗方案</View>

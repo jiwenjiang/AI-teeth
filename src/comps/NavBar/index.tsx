@@ -1,10 +1,8 @@
+import NavBack from "@/static/icons/nav-back.png";
 import { Image, Text, View } from "@tarojs/components";
 import { getMenuButtonBoundingClientRect } from "@tarojs/taro";
 import React, { CSSProperties, useEffect, useState } from "react";
-
-import NavBack from "@/static/icons/nav-back.png";
-
-import "./index.scss";
+import styles from "./index.module.scss";
 
 export default function NavBar({
   showIcon = true,
@@ -46,7 +44,7 @@ export default function NavBar({
     width: "100%",
     boxSizing: "border-box",
     paddingTop: `${statusBarHeight}px`,
-    paddingLeft: `24px`,
+    paddingLeft: `14px`,
     height: `${statusBarHeight + navigationHeight}px`,
     display: "flex",
     justifyContent: "flex-start",
@@ -57,30 +55,26 @@ export default function NavBar({
   };
 
   const navIconStyles: CSSProperties = {
-    width: "9px",
-    marginRight: "18px"
+    width: "9px"
   };
 
   const allNavBarStyles: CSSProperties = {
     ...navBarStyles,
-    ...customNavBarStyles,
+    ...customNavBarStyles
   };
 
   const allNavIconStyles: CSSProperties = {
     ...navIconStyles,
-    ...customNavIconStyles,
+    ...customNavIconStyles
   };
-  
+
   return (
     <View>
       <View style={allNavBarStyles}>
         {showIcon && (
-          <Image
-            style={allNavIconStyles}
-            src={NavBack}
-            mode='widthFix'
-            onClick={() => onNavBarClick()}
-          />
+          <View className={styles.backBox} onClick={() => onNavBarClick()}>
+            <Image style={allNavIconStyles} src={NavBack} mode="widthFix" />
+          </View>
         )}
         <Text>{title}</Text>
         <Text />

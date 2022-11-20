@@ -68,15 +68,16 @@ export default function App() {
   const [name, setName] = useState("");
   const [showMask, setShowMask] = useState(false);
   const [birthday, setBirthday] = useState("2010-01-02");
+  const [searchText, setSearchText] = useState("");
 
   useEffect(() => {
     getPatients();
   }, []);
 
-  const getPatients = async () => {
+  const getPatients = async (name = "") => {
     const response = await request({
       url: "/children/list",
-      data: { type: router.params.type }
+      data: { type: router.params.type, name: name }
     });
     setPatientList(response.data.children);
   };
@@ -182,6 +183,10 @@ export default function App() {
     });
   };
 
+  const onSearch = () => {
+    getPatients(searchText);
+  };
+
   return (
     <View className="page">
       <NavBar title={navBarTitle} back={onNavBarClick} />
@@ -189,8 +194,16 @@ export default function App() {
       <View className={styles.content}>
         {/* 搜索栏 */}
         <View className={styles.searchbar}>
-          <Input className={styles.input} type="text" placeholder="搜索" />
-          <Text className={styles.label}>搜索</Text>
+          <Input
+            className={styles.input}
+            value={searchText}
+            onInput={e => setSearchText(e.detail.value)}
+            type="text"
+            placeholder="搜索"
+          />
+          <Text className={styles.label} onClick={onSearch}>
+            搜索
+          </Text>
         </View>
         {/* 患者列表 */}
         <View className={styles.patientlist}>
