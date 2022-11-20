@@ -87,7 +87,6 @@ export default function App() {
           <View className={styles.button}>
             <Button
               className={styles.loginbutton}
-              disabled={!agree}
               color="primary"
               openType="getPhoneNumber"
               onGetPhoneNumber={onGetPhoneNumber}
@@ -120,7 +119,7 @@ export default function App() {
           <View className={styles.popupwrapper}>
             <View className={styles.content}>
               <View className={styles.close}>
-                <Cross size='15px' color="#aaa" />
+                <Cross size='15px' color="#aaa" onClick={() => setPopupOpen(false)} />
               </View>
               <Text className={styles.title}>阅读并同意以下条款</Text>
               <View className={styles.links}>

@@ -29,7 +29,7 @@
     width: 100vw;
     height: 1px;
   }
-  
+
   .center {
     width: 100vw;
 
@@ -44,33 +44,34 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-  
+
     .button {
       position: relative;
-  
+
       .btnmask {
+        z-index: 10;
         position: absolute;
         top: 0;
         left: 0;
         width: 80vw;
         height: 88px;
       }
-    
+
       .loginbutton {
         width: 80vw;
         height: 88px;
-    
+
         border-radius: 100em;
         background: linear-gradient(270deg, #1DA1F2 3%, #3FBAFF);
         border: none;
-    
+
         margin: 0 auto;
         flex-shrink: 0;
-    
+
         display: flex;
         justify-content: center;
         align-items: center;
-    
+
         font-size: 36px;
         color: #fff;
       }
@@ -82,15 +83,15 @@
       align-items: center;
       font-size: 24px;
       color: var(--text-gray);
-    
+
       .agreetext {
         margin-left: .5em;
       }
-      
+
       .link {
         color: var(--text-blue);
       }
-    }    
+    }
   }
 
   .popupwrapper {
