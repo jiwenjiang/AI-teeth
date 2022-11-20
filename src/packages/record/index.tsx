@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import { Image, Input, Text, View, Icon } from "@tarojs/components";
+import { Image, Input, Text, View } from "@tarojs/components";
 import { navigateBack, navigateTo } from "@tarojs/taro";
 import { Success } from "@taroify/icons";
 
@@ -15,25 +15,43 @@ import Male from "@/static/icons/male.png";
 import Warning from "@/static/icons/warning.svg";
 import Banner from "@/static/imgs/patient-banner.png";
 import Select from "@/static/icons/select.png";
+import Search from "@/static/icons/search.png";
+import Clear from "@/static/icons/clear.png";
 
 import styles from "./index.module.scss";
 
 export default function App() {
   const [showSelect, setShowSelect] = useState<boolean>(false)
   const [checkType, setCheckType] = useState<number>(0)
+  const [showMask, setShowMask] = useState<boolean>(true)
+  const [showClear, setShowClear] = useState<boolean>(false)
+  const [searchText, setSearchText] = useState<string>('')
   const [patientList, setPatientList] = useState<{
+    id: number;
+    userId: number;
     childrenId: number;
     childrenName: string;
     gender: GenderType;
     age: number;
-    checkTime: number;
+    checkType: number;
+    checkTypeStr: string;
     checkResult: string;
+    checkTime: number;
     hint: string;
   }[]>([]);
 
   useEffect(() => {
     getPatients();
   }, [checkType]);
+
+  useEffect(() => {
+    if (searchText) {
+      setShowClear(true);
+    } else {
+      setShowClear(false);
+      setShowMask(true);
+    }
+  }, [searchText]);
 
   const checkTypes = [
     {
@@ -58,9 +76,14 @@ export default function App() {
     },
   ]
 
+  const checkResultPrefix = {
+    1: '龋齿检测',
+    2: '早期预警',
+  }
+
   const getPatients = async () => {
     const response = await request({
-      url: `/check/list?checkType=${checkType}`,
+      url: `/check/list?checkType=${checkType}${searchText ? ('&name=' + searchText) : ''}`,
     });
     setPatientList(response.data.records);
   };
@@ -79,6 +102,33 @@ export default function App() {
 
   const updateCheckType = (id) => {
     setCheckType(id)
+  }
+
+  const onInput = (e) => {
+    setSearchText(e.detail.value)
+  }
+
+  const onFocus = () => {
+    setShowMask(false)
+  }
+
+  const onBlur = () => {
+    if (!searchText) {
+      setShowMask(true)
+    }
+  }
+
+  const onConfirm = () => {
+    if (!searchText) {
+      setShowMask(true)
+      return
+    }
+
+    getPatients()
+  }
+
+  const clearSearch = () => {
+    setSearchText('')
   }
 
   const tag = age => {
@@ -104,8 +154,9 @@ export default function App() {
       <NavBar title='检测记录' back={onNavBarClick} />
 
       <View className={styles.content}>
-        {/* 搜索栏 */}
+        {/* 顶部操作栏 */}
         <View className={styles.topbar}>
+          {/* 筛选栏 */}
           <View
             className={styles.filterbar}
             onClick={toggleShowSelect}
@@ -113,8 +164,28 @@ export default function App() {
             <Text className={styles.label}>{checkTypes[checkType].name}</Text>
             <Image className={styles.banner} src={Select} mode='widthFix' />
           </View>
+          {/* 搜索栏 */}
           <View className={styles.searchbar}>
-            <Input className={styles.input} type='text' placeholder='搜索' />
+            <Input
+              className={styles.input}
+              type='text'
+              value={searchText}
+              onInput={(e) => onInput(e)}
+              onFocus={onFocus}
+              onBlur={onBlur}
+              onConfirm={onConfirm}
+            />
+            {showMask && (
+              <View className={styles.mask}>
+                <Image className={styles.icon} src={Search} mode='widthFix' />
+                <Text className={styles.text}>搜索</Text>
+              </View>
+            )}
+            {showClear && (
+              <View className={styles.clear} onClick={clearSearch}>
+                <Image className={styles.icon} src={Clear} mode='widthFix' />
+              </View>
+            )}
           </View>
         </View>
         {/* 患者列表 */}
@@ -151,10 +222,7 @@ export default function App() {
                 </View>
                 {patient?.checkResult && (
                   <View className={styles.middle}>
-                    <View className={styles.last}>上次检测结果：</View>
-                    <View className={styles.result}>
-                      {patient?.checkResult}
-                    </View>
+                    {checkResultPrefix[patient?.checkType]}：{patient?.checkResult}
                   </View>
                 )}
                 {patient.hint && (
@@ -167,6 +235,7 @@ export default function App() {
               <View className={styles.tag}>{tag(patient.age)}</View>
             </View>
           ))}
+          {/* 筛选检测类型的下拉菜单 */}
           {showSelect && (
             <View
               className={styles.selectlist}
@@ -180,7 +249,9 @@ export default function App() {
                     onClick={() => updateCheckType(item.id)}
                   >
                     <Text>{item.name}</Text>
-                    {(checkType === item.id) && (<Success size='16' />)}
+                    {(checkType === item.id) && (
+                      <Success size='16' />
+                    )}
                   </View>
                 ))}
               </View>
