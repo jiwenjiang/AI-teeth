@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import { Image, Input, Picker, Text, View } from "@tarojs/components";
-import { showModal, showToast, switchTab } from "@tarojs/taro";
+import { showToast, switchTab } from "@tarojs/taro";
 
 import CustomButton from "@/comps/CustomButton";
 
@@ -23,6 +23,8 @@ import IcMale from "@/static/icons/ic-male.png";
 import Male from "@/static/icons/male.png";
 import Banner from "@/static/imgs/patient-banner.png";
 import Clear from "@/static/icons/clear.png";
+import Close from "@/static/icons/close.png";
+import Warn from "@/static/icons/warn.png";
 
 import styles from "./index.module.scss";
 
@@ -47,6 +49,7 @@ export default function App() {
   const [gender, setGender] = useState(GenderType.MALE);
   const [name, setName] = useState('');
   const [showMask, setShowMask] = useState(false);
+  const [showDelete, setShowDelete] = useState(false);
   const [birthday, setBirthday] = useState('2010-01-02');
   const [namePlaceholder, setNamePlaceholder] = useState('请输入真实姓名');
 
@@ -170,22 +173,15 @@ export default function App() {
   };
 
   const deletePatient = async (patient) => {
+    setShowDelete(true);
     setCurrPatient(patient);
-
-    showModal({
-      title: '提示',
-      content: `确认删除患者${patient.name}？`,
-      success: onConfirmDeletePatient,
-    });
   };
 
-  const onConfirmDeletePatient = async (res) => {
-    if (res.confirm) {
-      await request({
-        url: `/children/delete?id=${currPatient?.id}`,
-      });
-      getPatients();
-    }
+  const onConfirmDeletePatient = async () => {
+    await request({
+      url: `/children/delete?id=${currPatient?.id}`,
+    });
+    getPatients();
   };
 
   const onDateChange = (e) => {
@@ -382,6 +378,33 @@ export default function App() {
               </Picker>
             </View>
             <CustomButton text={'保存'} click={savePatient} />
+          </View>
+        )}
+        {/* 删除患者的蒙版 */}
+        {showDelete && (
+          <View className={styles['delete-mask']} onClick={() => setShowDelete(false)}>
+            <View className={styles.content}>
+              <View className={styles.top}>
+                <View className={styles.header}>
+                  <View className={styles.left}>
+                    <Image className={styles.warn} src={Warn} />
+                    <Text className={styles.title}>提示</Text>
+                  </View>
+                  <Image className={styles.right} src={Close} />
+                </View>
+                <View className={styles.main}>是否确认删除</View>
+              </View>
+              <View className={styles.bottom}>
+                <View
+                  className={styles.cancel}
+                  onClick={() => setShowDelete(false)}
+                >取消</View>
+                <View
+                  className={styles.confirm}
+                  onClick={onConfirmDeletePatient}
+                >确定</View>
+              </View>
+            </View>
           </View>
         )}
       </View>
