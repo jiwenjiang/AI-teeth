@@ -17,6 +17,7 @@ const resultColor = {
 };
 
 const resultTextColor = {
+  未发现牙齿: "#1DA1F2",
   未发现龋齿情况: "#1DA1F2",
   牙齿存在轻度龋齿: "#1DA1F2",
   牙齿存在中度龋齿: "#FF6B00",
@@ -161,15 +162,17 @@ export default function App() {
               </View>
             </View>
           </View>
-          <View className={styles.refer}>
-            <Image className={styles.tishi} src={Tishi} />
-            <Text className={styles.tishitext}>温馨提示</Text>
-            <View className={styles.chengdu}>
-              <View className={styles.item}>轻度龋齿</View>
-              <View className={styles.item}>中度龋齿</View>
-              <View className={styles.item}>重度龋齿</View>
+          {data?.result !== "未发现牙齿" && (
+            <View className={styles.refer}>
+              <Image className={styles.tishi} src={Tishi} />
+              <Text className={styles.tishitext}>温馨提示</Text>
+              <View className={styles.chengdu}>
+                <View className={styles.item}>轻度龋齿</View>
+                <View className={styles.item}>中度龋齿</View>
+                <View className={styles.item}>重度龋齿</View>
+              </View>
             </View>
-          </View>
+          )}
           {teethList?.map((v, i) => (
             <View className={styles.teeth} key={i}>
               <View className={styles.title}>{v.positionName}</View>
