@@ -16,7 +16,7 @@
   box-sizing: border-box;
 
   .content {
-    flex-grow: 1;
+    overflow: hidden;
 
     display: flex;
     flex-direction: column;
@@ -31,6 +31,8 @@
       justify-content: space-between;
       align-items: center;
 
+      position: relative;
+
       .input {
         width: 75vw;
         border-radius: 100em;
@@ -44,6 +46,27 @@
         font-size: 28px;
       }
 
+      .clear {
+        z-index: 10;
+        position: absolute;
+        top: 0;
+        left: 40px;
+        bottom: 0;
+
+        width: 75vw;
+        box-sizing: border-box;
+        padding-right: 28px;
+
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+
+        .icon {
+          width: 32px;
+          height: 32px;
+        }
+      }
+
       .label {
         color: #fff;
         font-size: 28px;
@@ -51,8 +74,7 @@
     }
 
     .patientlist {
-      flex-shrink: 1;
-      flex-grow: 1;
+      overflow-y: auto;
 
       background-color: #f9fdff;
       border-radius: 24px 24px 0px 0px;
@@ -156,7 +178,7 @@
       }
 
       .addbtn {
-        position: absolute;
+        position: fixed;
         right: 40px;
         bottom: 200px;
 
@@ -238,6 +260,9 @@
       }
 
       .other {
+        box-sizing: border-box;
+        padding-bottom: 120px;
+
         display: flex;
         flex-direction: column;
 
@@ -251,7 +276,8 @@
           }
         }
 
-        .input, .datepicker {
+        .input,
+        .datepicker {
           height: 96px;
           border: 2px solid #F0F0F0;
           border-radius: 16px;
@@ -280,6 +306,100 @@
 
           .text {
             flex-grow: 1;
+          }
+        }
+      }
+    }
+
+    .delete-mask {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+
+      z-index: 10;
+      background: rgba(0, 0, 0, 0.37);
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      .content {
+        width: 72vw;
+        height: 42.67vw;
+        background-color: #F8F8F8;
+        border-radius: 36px;
+
+        display: flex;
+        flex-direction: column;
+
+        .top {
+          flex-grow: 1;
+          box-sizing: border-box;
+          padding: 32px 32px 0 60px;
+
+          .header {
+            display: flex;
+            justify-content: space-between;
+
+            .left {
+              box-sizing: border-box;
+              padding-top: 14px;
+              display: flex;
+              align-items: center;
+
+              .warn {
+                width: 36px;
+                height: 36px;
+              }
+
+              .title {
+                margin-left: 16px;
+                font-size: 34px;
+                color: #000;
+              }
+            }
+
+            .right {
+              width: 44px;
+              height: 44px;
+            }
+          }
+
+          .main {
+            margin-top: 24px;
+            margin-left: 54px;
+            font-size: 28px;
+            color: #FF5C00;
+          }
+        }
+
+        .bottom {
+          height: 89px;
+          box-sizing: border-box;
+          border-top: 2px solid #ddd;
+          font-size: 34px;
+          display: flex;
+          align-items: center;
+
+          .cancel,
+          .confirm {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 50%;
+            height: 100%;
+          }
+
+          .cancel {
+            color: #828282;
+            box-sizing: border-box;
+            border-right: 2px solid #ddd;
+          }
+
+          .confirm {
+            color: var(--text-blue);
           }
         }
       }
