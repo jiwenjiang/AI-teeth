@@ -140,6 +140,7 @@ export default function App() {
   const mediaList = ({ type, filePath, thumbTempFilePath }) => {
     upload2Server(filePath, type, v => {
       attrs[picIndex].fileId = v.id;
+      attrs[picIndex].fileUrl = v.url;
       setAttrs([...attrs]);
       setFileLoading(uploadImg(false));
     });

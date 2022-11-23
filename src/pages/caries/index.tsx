@@ -50,7 +50,7 @@ export default function App() {
   const [navBarTitle, setNavBarTitle] = useState(
     +(router.params.type as any) === DetectType.CARIES
       ? "儿童龋齿检测"
-      : "儿童早期预警"
+      : "早期矫正预警"
   );
   const [editMode, setEditMode] = useState(false);
   const [patientList, setPatientList] = useState<
