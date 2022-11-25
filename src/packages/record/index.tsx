@@ -40,12 +40,15 @@ export default function App() {
     hint: string;
   }[]>([]);
 
+  let resetFlag = false;
+
   useEffect(() => {
     getPatients();
   }, [checkType]);
 
   useEffect(() => {
     if (searchText) {
+      setShowMask(false);
       setShowClear(true);
     } else {
       setShowClear(false);
@@ -64,7 +67,7 @@ export default function App() {
     },
     {
       id: 2,
-      name: '儿童早期预警',
+      name: '早期矫正预警',
     },
     {
       id: 3,
@@ -72,7 +75,7 @@ export default function App() {
     },
     {
       id: 4,
-      name: '颜面评估',
+      name: '面型分析',
     },
   ]
 
@@ -83,7 +86,7 @@ export default function App() {
 
   const getPatients = async () => {
     const response = await request({
-      url: `/check/list?checkType=${checkType}${searchText ? ('&name=' + searchText) : ''}`,
+      url: `/check/list?checkType=${checkType}${!resetFlag ? ('&name=' + searchText) : ''}`,
     });
     setPatientList(response.data.records);
   };
@@ -105,7 +108,7 @@ export default function App() {
   }
 
   const onInput = (e) => {
-    setSearchText(e.detail.value)
+    setSearchText(e.detail.value.trim())
   }
 
   const onFocus = () => {
@@ -118,21 +121,24 @@ export default function App() {
     }
   }
 
-  const onConfirm = () => {
+  const onConfirm = async () => {
     if (!searchText) {
       setShowMask(true)
       return
     }
 
-    getPatients()
+    await getPatients()
   }
 
-  const clearSearch = () => {
+  const clearSearch = async () => {
     setSearchText('')
+    resetFlag = true
+    await getPatients()
+    resetFlag = false
   }
 
   const tag = age => {
-    if (!age) return;
+    if (isNaN(age)) return;
 
     if (age >= 18) {
       return "成人";

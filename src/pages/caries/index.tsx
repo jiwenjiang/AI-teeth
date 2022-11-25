@@ -172,7 +172,7 @@ export default function App() {
     setNavBarTitle(
       +(router.params.type as any) === DetectType.CARIES
         ? "儿童龋齿检测"
-        : "儿童早期预警"
+        : "早期矫正预警"
     );
   };
 

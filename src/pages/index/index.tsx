@@ -27,7 +27,7 @@ const mainServices = [
     type: DetectType.CARIES
   },
   {
-    cnName: "儿童早期预警",
+    cnName: "早期矫正预警",
     bgSrc: Warning,
     path: `/pages/caries/index?type=${DetectType.WARNING}`,
     open: true,
@@ -40,7 +40,7 @@ const mainServices = [
     open: false
   },
   {
-    cnName: "颜面评估",
+    cnName: "面型分析",
     bgSrc: Evaluate,
     path: "/pages/evaluate/index",
     open: false

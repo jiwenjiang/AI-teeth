@@ -3,6 +3,8 @@ import { Image, Text, View } from "@tarojs/components";
 import { getStorageSync, navigateTo, setStorageSync, switchTab } from "@tarojs/taro";
 import React, { useEffect, useState } from "react";
 
+import dayjs from "dayjs";
+
 import NavBar from "@/comps/NavBar";
 import TabBar from "@/comps/TabBar";
 
@@ -26,20 +28,21 @@ export default function App() {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-   (async () => {
-     const { data } = await request({
-       url: "/user/get",
-     });
+    (async () => {
+      const { data } = await request({
+        url: "/user/get",
+      });
 
-     const user = {
-      ...getStorageSync('user'),
-      birthday: data.birthday,
-      avatarUrl: data.avatarUrl,
-     };
+      const user = {
+        ...getStorageSync('user'),
+        birthday: data.birthday,
+        avatarUrl: data.avatarUrl,
+        age: dayjs().year() - dayjs(data.birthday).year(),
+      };
 
-     setUser(user);
-     setStorageSync('user', user);
-   })();
+      setUser(user);
+      setStorageSync('user', user);
+    })();
   }, []);
 
   const updateUser = async (v) => {
@@ -105,7 +108,7 @@ export default function App() {
       success(res) {
         const filePath = res.tempFiles[0].tempFilePath;
         setOpen(false);
-        
+
         wx.editImage({
           src: filePath,
           success(res) {
@@ -128,6 +131,10 @@ export default function App() {
   };
 
   const showTerms = (page) => {
+    if (!page) {
+      return;
+    }
+
     navigateTo({
       url: `/packages/login/terms?category=${page}`,
     })

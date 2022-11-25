@@ -30,7 +30,7 @@ const mainServices = [
     type: DetectType.CARIES
   },
   {
-    cnName: "儿童早期预警",
+    cnName: "早期矫正预警",
     type: DetectType.WARNING
   }
 ];
