@@ -276,10 +276,8 @@ export default function App() {
         {showMask && (
           <View className={styles.mask}>
             <View className={styles.header}>
-              <Text className={styles.title}>您的个人资料</Text>
-              <Text className={styles.text}>
-                更新你的个人资料，从医生那里获得更好的答案
-              </Text>
+              <Text className={styles.title}>患者信息</Text>
+              <Text className={styles.text}>输入患者信息，获取检测报告</Text>
             </View>
             <View className={styles.genders}>
               <View
@@ -350,7 +348,7 @@ export default function App() {
               <Input
                 className={`${styles.input} ${styles.name}`}
                 type="text"
-                placeholder="Devin"
+                placeholder="请输入真实姓名"
                 value={name}
                 onInput={e => onNameChange(e)}
               />
