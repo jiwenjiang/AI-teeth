@@ -171,8 +171,10 @@
           align-items: center;
 
           .action {
-            width: 40px;
-            height: 40px;
+            width: 60px;
+            height: 60px;
+            box-sizing: border-box;
+            padding: 10px;
 
             &:first-child {
               margin-right: 40px;

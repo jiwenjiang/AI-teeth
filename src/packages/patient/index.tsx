@@ -282,13 +282,13 @@ export default function App() {
                 <Image
                   className={styles.action}
                   src={Edit}
-                  mode='widthFix'
+                  mode='aspectFill'
                   onClick={() => showEditPatientMask(patient)}
                 />
                 <Image
                   className={styles.action}
                   src={Delete}
-                  mode='widthFix'
+                  mode='aspectFill'
                   onClick={() => deletePatient(patient)}
                 />
               </View>
