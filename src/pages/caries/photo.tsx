@@ -200,7 +200,7 @@ export default function App() {
             style={{ height: `calc(100vh - ${systemInfo.navHeight}px - 90px)` }}
           >
             <View className={styles.content}>
-              <Image className={styles.guideImg} src={guide.picture}></Image>
+              <Image className={styles.guideImg} mode='aspectFit' src={guide.picture}></Image>
               <View className={styles.remark}>{guide.remark}</View>
               <View className={styles.desc}>
                 （需要获取照相机、相片权限才能开始分析龋齿情况）
