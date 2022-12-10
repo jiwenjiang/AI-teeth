@@ -87,13 +87,15 @@
       border-top-right-radius: 16px;
 
       box-sizing: border-box;
-      padding: 56px;
+      padding: 28px;
 
       display: flex;
       flex-direction: column;
 
       .entry {
-        margin-bottom: 56px;
+        box-sizing: border-box;
+        padding-top: 28px;
+        padding-bottom: 28px;
 
         width: 100%;
         display: flex;
