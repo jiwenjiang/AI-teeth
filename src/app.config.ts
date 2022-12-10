@@ -10,7 +10,7 @@ export default {
   subpackages: [
     {
       root: "packages/login",
-      pages: ["index", "terms"]
+      pages: ["index", "terms", "about"]
     },
     {
       root: "packages/patient",

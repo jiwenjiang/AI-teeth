@@ -758,8 +758,20 @@ const topNodes = [
   },
 ];
 
+const aboutNodes = [
+  {
+    className: 'maintitle',
+    text: `《公司简介》`,
+  },
+  {
+    className: 'para',
+    text: `北京基骨智能科技公司致力于用人工智能、大数据等先进技术来解决口腔临床痛点，提供高效、便捷、智能的数字化诊疗解决方案和产品。`,
+  },
+];
+
 const tou = <any>[];
 const top = <any>[];
+const about = <any>[];
 
 const setStyles = (className) => {
   switch (className) {
@@ -792,21 +804,8 @@ const buildRichTextNodes = (plainNodes, output) => {
 
 buildRichTextNodes(touNodes, tou);
 buildRichTextNodes(topNodes, top);
-
-// touNodes.forEach((item) => {
-//   if (item.text) {
-//     tou.push({
-//       name: 'div',
-//       attrs: {
-//         style: setStyles(item.className),
-//       },
-//       children: [{
-//         type: 'text',
-//         text: item.text,
-//       }],
-//     });
-//   }
-// });
+buildRichTextNodes(aboutNodes, about);
 
 export const TermOfUser = tou;
 export const TermOfPrivacy = top;
+export const About = about;

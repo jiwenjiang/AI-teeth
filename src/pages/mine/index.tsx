@@ -71,17 +71,17 @@ export default function App() {
     {
       title: '关于我们',
       iconSrc: About,
-      page: '',
+      page: '/packages/login/about',
     },
     {
       title: '用户协议',
       iconSrc: Agreement,
-      page: 'user',
+      page: '/packages/login/terms?category=user',
     },
     {
       title: '隐私协议',
       iconSrc: Privacy,
-      page: 'privacy',
+      page: '/packages/login/terms?category=privacy',
     },
   ];
 
@@ -130,16 +130,6 @@ export default function App() {
     setOpen(false);
   };
 
-  const showTerms = (page) => {
-    if (!page) {
-      return;
-    }
-
-    navigateTo({
-      url: `/packages/login/terms?category=${page}`,
-    })
-  };
-
   return (
     <View className={styles.mine}>
       <NavBar title={'个人中心'} back={onNavBarClick} />
@@ -168,7 +158,7 @@ export default function App() {
             <View
               className={styles.entry}
               key={i}
-              onClick={() => showTerms(entry.page)}
+              onClick={() => navigateTo({ url: entry.page })}
             >
               <View className={styles.left}>
                 <Image className={styles.icon} src={entry.iconSrc} mode='widthFix' />
