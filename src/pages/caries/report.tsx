@@ -35,7 +35,15 @@ export default function App() {
   const [teethList, setTeethList] = useState<any>([]);
 
   const onNavBarClick = () => {
-    navigateBack();
+    const currentPages = Taro.getCurrentPages();
+    if (currentPages.length > 1 && currentPages[currentPages.length - 2].route.includes('pages/caries/photo')) {
+      Taro.navigateTo({
+        url: `/pages/caries/index?type=1`,
+      });
+    } else {
+      navigateBack();
+    }
+
   };
 
   const getAttr = async () => {
