@@ -5,6 +5,8 @@ import { SystemContext } from "@/service/context";
 import request from "@/service/request";
 import upload2Server from "@/service/upload";
 import AddPatient from "@/static/icons/add-patient.png";
+import RemovePhoto from "@/static/icons/remove.png";
+import Warn2 from "@/static/icons/warn2.png";
 import Voice from "@/static/icons/voice.svg";
 import { Popup } from "@taroify/core";
 import { Image, Text, View } from "@tarojs/components";
@@ -49,9 +51,12 @@ export default function App() {
   const router = useRouter();
   const { systemInfo } = useContext(SystemContext);
   const [navBarTitle] = useState(router.params.childName ?? "儿童龋齿检测");
-  const [open, setOpen] = useState(false);
   const [showGuide, setShowGuide] = useState(false);
+  const [showAdd, setShowAdd] = useState(false);
+  const [showRemove, setShowRemove] = useState<boolean>(false);
   const [attrs, setAttrs] = useState<Card[]>([]);
+  const [imgPaths, setImgPaths] = useState<string[]>([]);
+  const [removeIndex, setRemoveIndex] = useState<number>(0);
   const [picIndex, setPicIndex] = useState(0);
   const [fileLoading, setFileLoading] = useState(uploadImg(false));
 
@@ -81,32 +86,7 @@ export default function App() {
       sourceType: ["album"],
       camera: "back",
       success(res) {
-        const tempFilePath = res.tempFiles[0].tempFilePath;
-        setOpen(false);
-        const wxInfo = wx.getSystemInfoSync();
-        if (wxInfo.platform === "devtools") {
-          setFileLoading(uploadImg());
-          mediaList({
-            type: MediaType.PICTURE,
-            filePath: tempFilePath,
-            thumbTempFilePath: tempFilePath
-          });
-        } else {
-          wx.editImage({
-            src: tempFilePath, // 图片路径
-            success(res) {
-              setFileLoading(uploadImg());
-              mediaList({
-                type: MediaType.PICTURE,
-                filePath: res.tempFilePath,
-                thumbTempFilePath: res.tempFilePath
-              });
-            },
-            fail(e) {
-              console.log("err", e);
-            }
-          });
-        }
+        onPhotoChosen(res);
       }
     });
   };
@@ -118,26 +98,45 @@ export default function App() {
       sourceType: ["camera"],
       camera: "back",
       success(res) {
-        const filePath = res.tempFiles[0].tempFilePath;
-        setShowGuide(false);
-        wx.editImage({
-          src: filePath, // 图片路径
-          success(res) {
-            setFileLoading(uploadImg());
-            mediaList({
-              type: MediaType.PICTURE,
-              filePath: res.tempFilePath,
-              thumbTempFilePath: res.tempFilePath
-            });
-          },
-          fail(e) {
-            console.log("err", e);
-          }
-        });
+        onPhotoChosen(res);
       }
     });
   };
-  const mediaList = ({ type, filePath, thumbTempFilePath }) => {
+
+  const onPhotoChosen = (res, mode = 'choose') => {
+    const tempFilePath = res.tempFiles[0].tempFilePath;
+    const wxInfo = wx.getSystemInfoSync();
+
+    setImgPaths([...imgPaths, tempFilePath]);
+    setShowAdd(false);
+    showGuide && setShowGuide(false);
+
+    if (mode === 'choose' && wxInfo.platform === "devtools") {
+      onPhotoReady({ tempFilePath });
+      return;
+    }
+
+    wx.editImage({
+      src: tempFilePath,
+      success(res) {
+        onPhotoReady(res);
+      },
+      fail(e) {
+        console.log("err", e);
+      }
+    });
+  }
+
+  const onPhotoReady = (res) => {
+    setFileLoading(uploadImg());
+    uploadImages({
+      type: MediaType.PICTURE,
+      filePath: res.tempFilePath,
+      thumbTempFilePath: res.tempFilePath,
+    });
+  }
+
+  const uploadImages = ({ type, filePath, thumbTempFilePath }) => {
     upload2Server(filePath, type, v => {
       attrs[picIndex].fileId = v.id;
       attrs[picIndex].fileUrl = v.url;
@@ -150,17 +149,27 @@ export default function App() {
 
   const openGuide = () => {
     setShowGuide(true);
-    setOpen(false);
+    setShowAdd(false);
   };
 
   useEffect(() => {
     getAttr();
   }, []);
 
-  const choose = i => {
+  const choose = (i) => {
     setPicIndex(i);
-    setOpen(true);
+    setShowAdd(true);
   };
+
+  const beforeRemovePhoto = (i) => {
+    setRemoveIndex(i);
+    setShowRemove(true);
+  }
+
+  const removePhoto = () => {
+    setImgPaths(imgPaths.filter((v, index) => index !== removeIndex));
+    setShowRemove(false);
+  }
 
   const submit = async () => {
     if (hasPic) {
@@ -173,7 +182,7 @@ export default function App() {
           childrenId: Number(router.params.childrenId),
           images: attrs
             ?.filter(v => v.fileId)
-            ?.map(v => ({ fileId: v.fileId, position: v.position }))
+            ?.map(v => ({ fileId: v.fileId }))
         }
       });
       setFileLoading({ ...submitImg, show: false });
@@ -189,6 +198,72 @@ export default function App() {
       }
     }
   };
+
+  const doUploadCards = () => {
+    if ((router.params.type === '1' && imgPaths.length < 10)) {
+      return (
+        attrs?.map((v, i) => (
+          <View key={i}>
+            <View className={styles.card}>
+              <View
+                className={styles.cardContent}
+                onClick={() => choose(i)}
+              >
+                <Image className={styles.addbtn} mode='aspectFit' src={AddPatient} />
+              </View>
+            </View>
+            <View className={styles.label}>{v.name}</View>
+          </View>
+        ))
+      )
+    } else if (router.params.type === '2') {
+      return (
+        attrs?.map((v, i) => (
+          <View key={i}>
+            <View className={styles.card}>
+              <View
+                className={styles.cardContent}
+                onClick={() => choose(i)}
+              >
+                {v.fileUrl ? (
+                  <Image className={styles.cardImg} mode='aspectFit' src={v.fileUrl} />
+                ) : (
+                  <Image className={styles.addbtn} src={AddPatient} />
+                )}
+              </View>
+            </View>
+            <View className={styles.label}>{v.name}</View>
+          </View>
+        ))
+      )
+    } else {
+      return null
+    }
+  }
+
+  const uploadedCards = () => {
+    if (router.params.type === '1' && imgPaths.length > 0) {
+      return (
+        imgPaths.map((imgPath, i) => (
+          <View className={styles.cardWrapper} key={i}>
+            <View className={styles.card}>
+              <View className={styles.cardContent}>
+                <Image className={styles.cardImg} mode='aspectFit' src={imgPath} />
+              </View>
+            </View>
+            <View className={styles.label}>照片{i + 1}</View>
+            <Image
+              className={styles.removePhoto}
+              src={RemovePhoto}
+              onClick={() => beforeRemovePhoto(i)}
+            />
+          </View>
+        ))
+      )
+    } else {
+      return null
+    }
+  }
 
   return (
     <View className="page" style={{ backgroundColor: "#fff" }}>
@@ -229,6 +304,7 @@ export default function App() {
           className={styles.body}
           style={{ height: `calc(100vh - ${systemInfo.navHeight}px - 106px)` }}
         >
+          {/* 页面标题及检测范围提示 */}
           <View className={styles.tip}>
             <View className={styles.name}>
               {
@@ -237,39 +313,22 @@ export default function App() {
                 )?.cnName
               }
             </View>
-            <View className={cls(styles.desc, styles.mt20)}>
+            <View className={styles.desc}>
               <Image className={styles.icon} src={Voice} />
               <Text className={styles.range}>
                 检测范围：4~12岁，年龄范围超出检测结果可能不准确。
               </Text>
             </View>
           </View>
+          {/* 选择照片并上传 */}
           <View className={styles.content}>
-            <View className={cls(styles.desc, styles.pl40)}>
+            <View className={styles.desc2}>
+              <Image className={styles.icon} mode='aspectFit' src={Warn2} />
               <Text>拍摄/上传照片越多生成报告越准确哦！</Text>
             </View>
             <View className={styles.cardBox}>
-              {attrs?.map((v, i) => (
-                <View key={i}>
-                  <View className={styles.card}>
-                    <View
-                      className={styles.cardContent}
-                      onClick={() => choose(i)}
-                    >
-                      {v.fileUrl ? (
-                        <View
-                          className={styles.cardImg}
-                          style={{ backgroundImage: `url(${v.fileUrl})` }}
-                        ></View>
-                      ) : (
-                        // <Image  src={v.fileUrl} />
-                        <Image className={styles.addbtn} src={AddPatient} />
-                      )}
-                    </View>
-                  </View>
-                  <View className={styles.label}>{v.name}</View>
-                </View>
-              ))}
+              {doUploadCards()}
+              {uploadedCards()}
             </View>
             <View
               className={cls(styles.btn, hasPic && styles.activeBtn)}
@@ -281,8 +340,8 @@ export default function App() {
           <Popup
             defaultOpen
             placement="bottom"
-            open={open}
-            onClose={() => setOpen(false)}
+            open={showAdd}
+            onClose={() => setShowAdd(false)}
           >
             <View className={styles.list} onClick={choosePhoto}>
               从相册中选择
@@ -290,7 +349,20 @@ export default function App() {
             <View className={styles.list} onClick={openGuide}>
               拍照
             </View>
-            <View className={styles.list} onClick={() => setOpen(false)}>
+            <View className={styles.list} onClick={() => setShowAdd(false)}>
+              取消
+            </View>
+          </Popup>
+          <Popup
+            defaultOpen
+            placement="bottom"
+            open={showRemove}
+            onClose={() => setShowRemove(false)}
+          >
+            <View className={styles.list} onClick={removePhoto}>
+              确认删除
+            </View>
+            <View className={styles.list} onClick={() => setShowRemove(false)}>
               取消
             </View>
           </Popup>
