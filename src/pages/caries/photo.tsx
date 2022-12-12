@@ -26,6 +26,12 @@ type Card = {
   samplePicture: string;
 };
 
+type ImageInfo = {
+  fileId?: number;
+  fileUrl?: string;
+  filePath: string;
+}
+
 const mainServices = [
   {
     cnName: "儿童龋齿检测",
@@ -55,13 +61,25 @@ export default function App() {
   const [showAdd, setShowAdd] = useState(false);
   const [showRemove, setShowRemove] = useState<boolean>(false);
   const [attrs, setAttrs] = useState<Card[]>([]);
-  const [imgPaths, setImgPaths] = useState<string[]>([]);
+  const [imageInfos, setImageInfos] = useState<ImageInfo[]>([]);
   const [removeIndex, setRemoveIndex] = useState<number>(0);
   const [picIndex, setPicIndex] = useState(0);
   const [fileLoading, setFileLoading] = useState(uploadImg(false));
-
-  const hasPic = attrs?.some(v => v.fileId);
+  const [hasPic, setHasPic] = useState<boolean>(false);
   const guide = attrs[picIndex] ?? {};
+
+  useEffect(() => {
+    getAttr();
+    initImgInfos();
+  }, []);
+
+  useEffect(() => {
+    if (Number(router.params.type) === DetectType.CARIES) {
+      setHasPic(imageInfos.length > 0);
+    } else if (Number(router.params.type) === DetectType.WARNING) {
+      setHasPic(attrs?.some(v => v.fileId));
+    }
+  }, [attrs, imageInfos]);
 
   const onNavBarClick = () => {
     if (showGuide) {
@@ -79,6 +97,17 @@ export default function App() {
     setAttrs(response.data.positions);
   };
 
+  const initImgInfos = () => {
+    if (Number(router.params.type) === DetectType.WARNING) {
+      setImageInfos(Array(attrs.length).fill({
+        fileId: 0,
+        fileUrl: '',
+        filePath: '',
+      }));
+    }
+  }
+
+  // 从相册选择图片
   const choosePhoto = () => {
     wx.chooseMedia({
       count: 1,
@@ -91,6 +120,7 @@ export default function App() {
     });
   };
 
+  // 拍照
   const takePhoto = () => {
     wx.chooseMedia({
       count: 1,
@@ -103,11 +133,11 @@ export default function App() {
     });
   };
 
+  // 图片准备完毕后的回调
   const onPhotoChosen = (res, mode = 'choose') => {
     const tempFilePath = res.tempFiles[0].tempFilePath;
     const wxInfo = wx.getSystemInfoSync();
 
-    setImgPaths([...imgPaths, tempFilePath]);
     setShowAdd(false);
     showGuide && setShowGuide(false);
 
@@ -127,62 +157,85 @@ export default function App() {
     });
   }
 
+  // 图片编辑完毕，开始上传
   const onPhotoReady = (res) => {
     setFileLoading(uploadImg());
     uploadImages({
       type: MediaType.PICTURE,
       filePath: res.tempFilePath,
-      thumbTempFilePath: res.tempFilePath,
     });
   }
 
-  const uploadImages = ({ type, filePath, thumbTempFilePath }) => {
-    upload2Server(filePath, type, v => {
+  // 上传图片
+  const uploadImages = ({ type, filePath }) => {
+    upload2Server(filePath, type, onPhotoUploaded);
+  };
+
+  // 保存上传成功后返回的图片信息
+  const onPhotoUploaded = (v) => {
+    if (Number(router.params.type) === DetectType.CARIES) {
+      setImageInfos([
+        ...imageInfos,
+        {
+          fileId: v.id,
+          fileUrl: v.url,
+          filePath: v.url,
+        },
+      ]);
+    } else if (Number(router.params.type) === DetectType.WARNING) {
       attrs[picIndex].fileId = v.id;
       attrs[picIndex].fileUrl = v.url;
       setAttrs([...attrs]);
-      setFileLoading(uploadImg(false));
-    });
-    attrs[picIndex].fileUrl = thumbTempFilePath;
-    setAttrs([...attrs]);
-  };
+    }
+    setFileLoading(uploadImg(false));
+  }
 
   const openGuide = () => {
     setShowGuide(true);
     setShowAdd(false);
   };
 
-  useEffect(() => {
-    getAttr();
-  }, []);
-
   const choose = (i) => {
     setPicIndex(i);
     setShowAdd(true);
   };
 
-  const beforeRemovePhoto = (i) => {
+  const beforeRemovePhoto = (i: number) => {
     setRemoveIndex(i);
     setShowRemove(true);
   }
 
   const removePhoto = () => {
-    setImgPaths(imgPaths.filter((v, index) => index !== removeIndex));
+    setImageInfos(imageInfos.filter((_, index) => index !== removeIndex));
     setShowRemove(false);
   }
 
   const submit = async () => {
     if (hasPic) {
       setFileLoading(submitImg);
+      let images;
+      if (Number(router.params.type) === DetectType.CARIES) {
+        images = imageInfos
+          ?.map((v, i) => ({
+            fileId: v.fileId,
+            position: (i + 1).toString(),
+          }))
+      } else if (Number(router.params.type) === DetectType.WARNING) {
+        images = attrs
+          ?.filter(v => v.fileId)
+          ?.map(v => ({
+            fileId: v.fileId,
+            position: v.position,
+          }))
+      }
+
       const res = await request({
         method: "POST",
         url: "/check/submit",
         data: {
           checkType: Number(router.params.type),
           childrenId: Number(router.params.childrenId),
-          images: attrs
-            ?.filter(v => v.fileId)
-            ?.map(v => ({ fileId: v.fileId }))
+          images,
         }
       });
       setFileLoading({ ...submitImg, show: false });
@@ -200,7 +253,7 @@ export default function App() {
   };
 
   const doUploadCards = () => {
-    if ((router.params.type === '1' && imgPaths.length < 10)) {
+    if ((router.params.type === '1' && imageInfos.length < 10)) {
       return (
         attrs?.map((v, i) => (
           <View key={i}>
@@ -242,13 +295,13 @@ export default function App() {
   }
 
   const uploadedCards = () => {
-    if (router.params.type === '1' && imgPaths.length > 0) {
+    if (router.params.type === '1' && imageInfos.length > 0) {
       return (
-        imgPaths.map((imgPath, i) => (
+        imageInfos.map((v, i) => (
           <View className={styles.cardWrapper} key={i}>
             <View className={styles.card}>
               <View className={styles.cardContent}>
-                <Image className={styles.cardImg} mode='aspectFit' src={imgPath} />
+                <Image className={styles.cardImg} mode='aspectFit' src={v.filePath} />
               </View>
             </View>
             <View className={styles.label}>照片{i + 1}</View>
