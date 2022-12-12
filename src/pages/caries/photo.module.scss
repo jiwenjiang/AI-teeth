@@ -12,6 +12,7 @@
         border-radius: 24px 24px 0 0;
         overflow: hidden;
         box-sizing: border-box;
+        flex-shrink: 0;
 
         .name {
             font-size: 40px;
@@ -119,9 +120,6 @@
                     .cardImg {
                         width: 244px;
                         height: 284px;
-                        // background-size: contain;
-                        // background-repeat: no-repeat;
-                        // background-position: center;
                     }
                 }
             }
