@@ -5,6 +5,9 @@ import Female from "@/static/icons/female.png";
 import Male from "@/static/icons/male.png";
 import Voice from "@/static/icons/voice.svg";
 import Tishi from "@/static/imgs/weixintishi.png";
+import Doctor from "@/static/imgs/doctor.png";
+import NoTeeth from "@/static/imgs/report-no_teeth.png";
+import NoCaries from "@/static/imgs/report-no_caries.png";
 import { Canvas, Image, ScrollView, Text, View } from "@tarojs/components";
 import Taro, { navigateBack, useRouter } from "@tarojs/taro";
 import React, { useContext, useEffect, useRef, useState } from "react";
@@ -16,12 +19,27 @@ const resultColor = {
   3: "#FF0000"
 };
 
-const resultTextColor = {
-  未发现牙齿: "#1DA1F2",
-  未发现龋齿情况: "#1DA1F2",
-  牙齿存在轻度龋齿: "#1DA1F2",
-  牙齿存在中度龋齿: "#FF6B00",
-  牙齿存在重度龋齿: "#FF0000"
+const resultTypes = {
+  'no_teeth': {
+    symptom: '未发现牙齿',
+    color: '#1DA1F2',
+    treatment: '您上传的照片未检测到，请重新上传/拍摄照片！',
+  },
+  'no_caries': {
+    symptom: '未发现龋齿情况',
+    color: '#1DA1F2',
+    treatment: '您上传的口内照中，暂未发现龋齿，请继续保持口腔卫生，认真刷牙哦！同时定期进行口腔检查和预防性涂氟。',
+  },
+  'caries': {
+    symptom: '牙齿存在轻度龋齿',
+    color: '#FF6B00',
+    treatment: '您上传的口内照中，检测到有可能存在龋齿，请及时前往口腔科就医检查！',
+  },
+  'heavy_caries': {
+    symptom: '牙齿存在重度龋齿',
+    color: '#FF0000',
+    treatment: '您上传的口内照中，发现严重龋齿，请尽快前往口腔科就医检查！',
+  },
 };
 
 const canvasWidth = 300;
@@ -31,6 +49,7 @@ export default function App() {
   const { systemInfo } = useContext(SystemContext);
   const [navBarTitle] = useState(router.params.childName ?? "儿童龋齿检测");
   const [data, setData] = useState<any>({});
+  const [condition, setCondition] = useState<any>(null);
   const canvasBox = useRef();
   const [teethList, setTeethList] = useState<any>([]);
 
@@ -46,7 +65,7 @@ export default function App() {
 
   };
 
-  const getAttr = async () => {
+  const getReport = async () => {
     const response = await request({
       url: "/check/get",
       data: { id: router.params.id || 74 }
@@ -55,8 +74,30 @@ export default function App() {
   };
 
   useEffect(() => {
-    getAttr();
+    getReport();
   }, []);
+
+  useEffect(() => {
+    getCondition();
+  }, [data]);
+
+  const getCondition = () => {
+    switch (data.result) {
+      case resultTypes.heavy_caries.symptom:
+        setCondition(resultTypes.heavy_caries);
+        break;
+      case resultTypes.caries.symptom:
+        setCondition(resultTypes.caries);
+        break;
+      case resultTypes.no_caries.symptom:
+        setCondition(resultTypes.no_caries);
+        break;
+      case resultTypes.no_teeth.symptom:
+      default:
+        setCondition(resultTypes.no_teeth);
+        break;
+    }
+  }
 
   const renderCanvas = async (v, i) => {
     Taro.createSelectorQuery()
@@ -143,61 +184,48 @@ export default function App() {
             <Text className={styles.time}>{data?.children?.birthday}</Text>
           </View>
         </View>
-        <ScrollView
-          className={styles.content}
-          scrollY
-          style={{ height: `calc(100vh - ${systemInfo.navHeight}px - 106px)` }}
-          ref={canvasBox}
-        >
-          <View className={styles.result}>
-            <View className={styles.title}>
-              <Text className={styles.label}>检测结果：</Text>
-              <Text
-                className={styles.key}
-                style={{ color: resultTextColor[data?.result] }}
-              >
-                {data?.result}
-              </Text>
-            </View>
-            <View className={styles.card}>
-              <View className={styles.head}>治疗方案</View>
-              <View className={styles.resultBody}>
-                <View>{data?.treatment}</View>
-                <View className={styles.desc}>
-                  <Image className={styles.icon} src={Voice} />
-                  （检测范围：4～12岁，年龄范围超过检测结果可能不准确。以上治疗方案为辅助判断，具体方案请以牙科医生加测结果为准）
+        {condition && (
+          <View
+            className={styles.content}
+            // style={{ height: `calc(100vh - ${systemInfo.navHeight}px - 106px)` }}
+            ref={canvasBox}
+          >
+            <View className={styles.result}>
+              <Image className={styles.doctor} mode='widthFix' src={Doctor} />
+              <View className={styles.title}>
+                <Text className={styles.label}>检测结果：</Text>
+                <Text
+                  style={{ color: condition.color }}
+                >
+                  {condition.symptom}
+                </Text>
+              </View>
+              <View className={styles.card}>
+                <View className={styles.head}>治疗方案</View>
+                <View className={styles.resultBody}>
+                  <View>{condition.treatment}</View>
+                  <View className={styles.desc}>
+                    <Image className={styles.icon} src={Voice} />
+                    （检测范围：4～12岁，年龄范围超过检测结果可能不准确。以上治疗方案为辅助判断，具体方案请以牙科医生加测结果为准）
+                  </View>
                 </View>
               </View>
             </View>
+            {teethList?.map((v, i) => (
+              <View className={styles.teeth} key={i}>
+                <View className={styles.title}>{v.positionName}</View>
+                <View className={styles.teethImgBox}>
+                  <Canvas
+                    type="2d"
+                    id={`canvas${i}`}
+                    style={{ width: v.canvasW, height: v.canvasH }}
+                  />
+                  {/* <Image src={v.imageUrl}></Image> */}
+                </View>
+              </View>
+            ))}
           </View>
-          {data?.result !== "未发现牙齿" && (
-            <View className={styles.refer}>
-              <Image className={styles.tishi} src={Tishi} />
-              <Text className={styles.tishitext}>温馨提示</Text>
-              <View className={styles.chengdu}>
-                <View className={styles.item}>轻度龋齿</View>
-                <View className={styles.item}>中度龋齿</View>
-                <View className={styles.item}>重度龋齿</View>
-              </View>
-            </View>
-          )}
-          {teethList?.map((v, i) => (
-            <View className={styles.teeth} key={i}>
-              <View className={styles.title}>{v.positionName}</View>
-              <View className={styles.teethImgBox}>
-                <Canvas
-                  type="2d"
-                  id={`canvas${i}`}
-                  style={{ width: v.canvasW, height: v.canvasH }}
-                />
-                {/* <Image src={v.imageUrl}></Image> */}
-              </View>
-            </View>
-          ))}
-        </ScrollView>
-        {/* <View className={cls(styles.btn)} onClick={submit}>
-          开始检测
-        </View> */}
+        )}
       </View>
     </View>
   );
