@@ -72,7 +72,7 @@
             .doctor {
                 position: absolute;
                 right: 0;
-                top: -48px;
+                top: -50px;
                 width: 130px;
                 z-index: 2;
             }
@@ -121,6 +121,16 @@
                         transform: translateY(8px);
                     }
                 }
+            }
+        }
+
+        .no_teeth,
+        .no_caries {
+            box-sizing: border-box;
+            padding: 136px 40px 0;
+            
+            .img {
+                width: 100%;
             }
         }
 

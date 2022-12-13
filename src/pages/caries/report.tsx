@@ -84,17 +84,29 @@ export default function App() {
   const getCondition = () => {
     switch (data.result) {
       case resultTypes.heavy_caries.symptom:
-        setCondition(resultTypes.heavy_caries);
+        setCondition({
+          type: 'heavy_caries',
+          ...resultTypes.heavy_caries,
+        });
         break;
       case resultTypes.caries.symptom:
-        setCondition(resultTypes.caries);
+        setCondition({
+          type: 'caries',
+          ...resultTypes.caries,
+        });
         break;
       case resultTypes.no_caries.symptom:
-        setCondition(resultTypes.no_caries);
+        setCondition({
+          type: 'no_caries',
+          ...resultTypes.no_caries,
+        });
         break;
       case resultTypes.no_teeth.symptom:
       default:
-        setCondition(resultTypes.no_teeth);
+        setCondition({
+          type: 'no_teeth',
+          ...resultTypes.no_teeth,
+        });
         break;
     }
   }
@@ -161,10 +173,10 @@ export default function App() {
   };
 
   useEffect(() => {
-    if (data.images) {
+    if (condition?.type === 'caries' || condition?.type === 'heavy_caries') {
       calcCanvasSize(data.images);
     }
-  }, [data]);
+  }, [data, condition]);
 
   return (
     <View className="page">
@@ -187,7 +199,6 @@ export default function App() {
         {condition && (
           <View
             className={styles.content}
-            // style={{ height: `calc(100vh - ${systemInfo.navHeight}px - 106px)` }}
             ref={canvasBox}
           >
             <View className={styles.result}>
@@ -206,12 +217,22 @@ export default function App() {
                   <View>{condition.treatment}</View>
                   <View className={styles.desc}>
                     <Image className={styles.icon} src={Voice} />
-                    （检测范围：4～12岁，年龄范围超过检测结果可能不准确。以上治疗方案为辅助判断，具体方案请以牙科医生加测结果为准）
+                    （测量结果仅供参考，具体结果请以口腔医生检查结果为准。）
                   </View>
                 </View>
               </View>
             </View>
-            {teethList?.map((v, i) => (
+            {condition.type === 'no_teeth' && (
+              <View className={styles.no_teeth}>
+                <Image className={styles.img} mode='widthFix' src={NoTeeth} />
+              </View>
+            )}
+            {condition.type === 'no_caries' && (
+              <View className={styles.no_caries}>
+                <Image className={styles.img} mode='widthFix' src={NoCaries} />
+              </View>
+            )}
+            {(condition.type === 'caries' || condition.type === 'heavy_caries') && teethList?.map((v, i) => (
               <View className={styles.teeth} key={i}>
                 <View className={styles.title}>{v.positionName}</View>
                 <View className={styles.teethImgBox}>
