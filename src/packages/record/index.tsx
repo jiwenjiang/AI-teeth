@@ -40,7 +40,6 @@ export default function App() {
     hint: string;
   }[]>([]);
   const [pageInfo, setPageInfo] = useState<any>(null);
-  const [loadFlag, setLoadFlag] = useState<boolean>(false);
 
   let resetFlag = false;
 
@@ -159,11 +158,6 @@ export default function App() {
   };
 
   useReachBottom(async () => {
-    if (!loadFlag) {
-      setLoadFlag(!loadFlag);
-      return;
-    }
-
 
     if (pageInfo.page < pageInfo.totalPage) {
       const response = await request({
