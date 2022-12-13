@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import { Image, Input, Text, View } from "@tarojs/components";
-import { navigateBack, navigateTo } from "@tarojs/taro";
+import { navigateBack, navigateTo, useReachBottom } from "@tarojs/taro";
 import { Success } from "@taroify/icons";
 
 import { GenderType, DetectType } from "@/service/const";
@@ -39,6 +39,8 @@ export default function App() {
     checkTime: number;
     hint: string;
   }[]>([]);
+  const [pageInfo, setPageInfo] = useState<any>(null);
+  const [loadFlag, setLoadFlag] = useState<boolean>(false);
 
   let resetFlag = false;
 
@@ -89,6 +91,7 @@ export default function App() {
       url: `/check/list?checkType=${checkType}${!resetFlag ? ('&name=' + searchText) : ''}`,
     });
     setPatientList(response.data.records);
+    setPageInfo(response.data.page);
   };
 
   const onNavBarClick = () => {
@@ -154,6 +157,22 @@ export default function App() {
       url: `/pages/caries/${v.checkType === DetectType.CARIES ? 'report' : 'warningReport'}?id=${v.id}&childName=${v.childrenName}`,
     });
   };
+
+  useReachBottom(async () => {
+    if (!loadFlag) {
+      setLoadFlag(!loadFlag);
+      return;
+    }
+
+
+    if (pageInfo.page < pageInfo.totalPage) {
+      const response = await request({
+        url: `/check/list?checkType=${checkType}${searchText ? `&name=${searchText}` : ''}&pageNo=${pageInfo.page + 1}`,
+      });
+      setPatientList(patientList.concat(response.data.records));
+      setPageInfo(response.data.page);
+    }
+  });
 
   return (
     <View className={styles.page}>
@@ -241,6 +260,12 @@ export default function App() {
               <View className={styles.tag}>{tag(patient.age)}</View>
             </View>
           ))}
+          {/* 上拉加载更多 */}
+          {(patientList.length > 0 && pageInfo?.page) && (
+            <View className={styles.loadmore}>
+              <Text className={styles.text}>{pageInfo?.page < pageInfo?.totalPage ? '上拉加载更多' : '已加载全部内容'}</Text>
+            </View>
+          )}
           {/* 筛选检测类型的下拉菜单 */}
           {showSelect && (
             <View
