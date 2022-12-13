@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import { Image, Input, Text, View } from "@tarojs/components";
-import { navigateBack, navigateTo, useReachBottom } from "@tarojs/taro";
+import { navigateBack, navigateTo, useReachBottom, showLoading, hideLoading } from "@tarojs/taro";
 import { Success } from "@taroify/icons";
 
 import { GenderType, DetectType } from "@/service/const";
@@ -158,13 +158,19 @@ export default function App() {
   };
 
   useReachBottom(async () => {
-
     if (pageInfo.page < pageInfo.totalPage) {
+      showLoading({
+        title: '加载中...',
+      })
+
       const response = await request({
         url: `/check/list?checkType=${checkType}${searchText ? `&name=${searchText}` : ''}&pageNo=${pageInfo.page + 1}`,
       });
       setPatientList(patientList.concat(response.data.records));
       setPageInfo(response.data.page);
+
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      hideLoading();
     }
   });
 
