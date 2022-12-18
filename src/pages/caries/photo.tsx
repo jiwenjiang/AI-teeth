@@ -206,7 +206,17 @@ export default function App() {
   }
 
   const removePhoto = () => {
-    setImageInfos(imageInfos.filter((_, index) => index !== removeIndex));
+    if (Number(router.params.type) === DetectType.CARIES) {
+      setImageInfos(imageInfos.filter((_, index) => index !== removeIndex));
+    } else if (Number(router.params.type) === DetectType.WARNING) {
+      setAttrs(attrs.map((v, index) => {
+        if (index === removeIndex) {
+          v.fileId = 0;
+          v.fileUrl = '';
+        }
+        return v;
+      }))
+    }
     setShowRemove(false);
   }
 
@@ -272,7 +282,7 @@ export default function App() {
     } else if (router.params.type === '2') {
       return (
         attrs?.map((v, i) => (
-          <View key={i}>
+          <View className={styles.cardWrapper} key={i}>
             <View className={styles.card}>
               <View
                 className={styles.cardContent}
@@ -286,6 +296,11 @@ export default function App() {
               </View>
             </View>
             <View className={styles.label}>{v.name}</View>
+            {v.fileId ? (<Image
+              className={styles.removePhoto}
+              src={RemovePhoto}
+              onClick={() => beforeRemovePhoto(i)}
+            />) : null}
           </View>
         ))
       )

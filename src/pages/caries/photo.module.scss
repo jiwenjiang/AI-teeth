@@ -192,6 +192,7 @@
 .guideBox {
     box-sizing: border-box;
     flex-grow: 1;
+
     .guide {
         display: flex;
         flex-direction: column;
@@ -240,12 +241,13 @@
                 line-height: 50px;
                 color: #333333;
                 margin-top: 80px;
-                margin-bottom: 32px;
+                margin-bottom: 36px;
             }
 
             .sampleImg {
-                min-height: 390px;
                 width: 350px;
+                box-sizing: border-box;
+                padding: 32px;
                 display: flex;
                 align-items: center;
                 justify-content: center;
@@ -254,8 +256,7 @@
                 border-radius: 12px;
 
                 .samplePic {
-                    height: 336px;
-                    width: 286px;
+                    width: 100%;
                 }
             }
 
