@@ -36,7 +36,7 @@ const resultTypes = {
     treatment: '您上传的口内照中，检测到有可能存在龋齿，请及时前往口腔科就医检查！',
   },
   'heavy_caries': {
-    symptom: '牙齿存在重度龋齿',
+    symptom: '牙齿发现重度龋齿',
     color: '#FF0000',
     treatment: '您上传的口内照中，发现严重龋齿，请尽快前往口腔科就医检查！',
   },
@@ -78,37 +78,40 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    getCondition();
+    if (data.id) {
+      getCondition();
+    }
   }, [data]);
 
   const getCondition = () => {
-    switch (data.result) {
-      case resultTypes.heavy_caries.symptom:
-        setCondition({
-          type: 'heavy_caries',
-          ...resultTypes.heavy_caries,
-        });
-        break;
-      case resultTypes.caries.symptom:
-        setCondition({
-          type: 'caries',
-          ...resultTypes.caries,
-        });
-        break;
-      case resultTypes.no_caries.symptom:
-        setCondition({
-          type: 'no_caries',
-          ...resultTypes.no_caries,
-        });
-        break;
-      case resultTypes.no_teeth.symptom:
-      default:
-        setCondition({
-          type: 'no_teeth',
-          ...resultTypes.no_teeth,
-        });
-        break;
+    if (data.result.includes('重度龋齿')) {
+      setCondition({
+        type: 'heavy_caries',
+        ...resultTypes.heavy_caries,
+      })
+      return
     }
+
+    if (data.result.includes('轻度龋齿')) {
+      setCondition({
+        type: 'caries',
+        ...resultTypes.caries,
+      })
+      return
+    }
+
+    if (data.result.includes('未发现龋齿')) {
+      setCondition({
+        type: 'no_caries',
+        ...resultTypes.no_caries,
+      })
+      return
+    }
+
+    setCondition({
+      type: 'no_teeth',
+      ...resultTypes.no_teeth,
+    })
   }
 
   const renderCanvas = async (v, i) => {
@@ -234,14 +237,13 @@ export default function App() {
             )}
             {(condition.type === 'caries' || condition.type === 'heavy_caries') && teethList?.map((v, i) => (
               <View className={styles.teeth} key={i}>
-                <View className={styles.title}>{v.positionName}</View>
+                <View className={styles.title}>提示：检测出的龋齿已被标出</View>
                 <View className={styles.teethImgBox}>
                   <Canvas
                     type="2d"
                     id={`canvas${i}`}
                     style={{ width: v.canvasW, height: v.canvasH }}
                   />
-                  {/* <Image src={v.imageUrl}></Image> */}
                 </View>
               </View>
             ))}
