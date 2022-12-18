@@ -1,16 +1,16 @@
 export default {
   pages: [
     "pages/index/index",
-    "pages/mine/index",
-    "pages/caries/index",
-    "pages/caries/photo",
-    "pages/caries/report",
-    "pages/caries/warningReport"
+    "pages/mine/index"
   ],
   subpackages: [
     {
       root: "packages/login",
       pages: ["index", "terms", "about"]
+    },
+    {
+      root: "packages/caries",
+      pages: ["index", "photo", "report", "warningReport"]
     },
     {
       root: "packages/patient",

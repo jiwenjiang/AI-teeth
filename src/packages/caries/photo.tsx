@@ -251,12 +251,12 @@ export default function App() {
       setFileLoading({ ...submitImg, show: false });
       if (Number(router.params.type) === DetectType.CARIES) {
         Taro.navigateTo({
-          url: `/pages/caries/report?id=${res.data.id}&childName=${router.params.childName}`
+          url: `/packages/caries/report?id=${res.data.id}&childName=${router.params.childName}`
         });
       }
       if (Number(router.params.type) === DetectType.WARNING) {
         Taro.navigateTo({
-          url: `/pages/caries/warningReport?id=${res.data.id}&childName=${router.params.childName}`
+          url: `/packages/caries/warningReport?id=${res.data.id}&childName=${router.params.childName}`
         });
       }
     }

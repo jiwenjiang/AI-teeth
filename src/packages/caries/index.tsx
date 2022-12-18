@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import { Image, Input, Picker, Text, View } from "@tarojs/components";
-import { navigateTo, showToast, switchTab, useRouter } from "@tarojs/taro";
+import { navigateTo, showToast, switchTab, useDidShow, useRouter } from "@tarojs/taro";
 
 import CustomButton from "@/comps/CustomButton";
 
@@ -73,6 +73,10 @@ export default function App() {
   useEffect(() => {
     getPatients();
   }, []);
+
+  useDidShow(() => {
+    getPatients();
+  });
 
   const getPatients = async (name = "") => {
     const response = await request({
@@ -179,7 +183,7 @@ export default function App() {
   const goto = v => {
     console.log("t", router.params.type);
     navigateTo({
-      url: `/pages/caries/photo?childrenId=${v.id}&childName=${v.name}&type=${router.params.type}`
+      url: `/packages/caries/photo?childrenId=${v.id}&childName=${v.name}&type=${router.params.type}`
     });
   };
 

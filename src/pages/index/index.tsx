@@ -22,14 +22,14 @@ const mainServices = [
   {
     cnName: "儿童龋齿检测",
     bgSrc: Caries,
-    path: `/pages/caries/index?type=${DetectType.CARIES}`,
+    path: `/packages/caries/index?type=${DetectType.CARIES}`,
     open: true,
     type: DetectType.CARIES
   },
   {
     cnName: "早期矫正预警",
     bgSrc: Warning,
-    path: `/pages/caries/index?type=${DetectType.WARNING}`,
+    path: `/packages/caries/index?type=${DetectType.WARNING}`,
     open: true,
     type: DetectType.WARNING
   },

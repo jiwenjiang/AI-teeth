@@ -153,7 +153,7 @@ export default function App() {
 
   const goto = v => {
     navigateTo({
-      url: `/pages/caries/${v.checkType === DetectType.CARIES ? 'report' : 'warningReport'}?id=${v.id}&childName=${v.childrenName}`,
+      url: `/packages/caries/${v.checkType === DetectType.CARIES ? 'report' : 'warningReport'}?id=${v.id}&childName=${v.childrenName}`,
     });
   };
 

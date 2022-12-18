@@ -55,7 +55,7 @@ export default function App() {
 
   const onNavBarClick = () => {
     const currentPages = Taro.getCurrentPages();
-    if (currentPages.length > 1 && currentPages[currentPages.length - 2].route.includes('pages/caries/photo')) {
+    if (currentPages.length > 1 && currentPages[currentPages.length - 2].route.includes('packages/caries/photo')) {
       Taro.navigateBack({
         delta: 2,
       });
