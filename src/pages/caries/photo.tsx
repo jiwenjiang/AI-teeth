@@ -342,7 +342,7 @@ export default function App() {
               ))}
               <View className={styles.warning}>正确示例</View>
               <View className={styles.sampleImg}>
-                <Image src={guide.samplePicture} className={styles.samplePic} />
+                <Image src={guide.samplePicture} mode='widthFix' className={styles.samplePic} />
               </View>
             </View>
           </View>
