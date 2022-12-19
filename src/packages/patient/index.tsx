@@ -38,6 +38,7 @@ export default function App() {
     gender: GenderType;
     birthday: string;
     birthdayDate: number;
+    createTime: string;
   }[]>([]);
   const [currPatient, setCurrPatient] = useState<{
     id: number;
@@ -45,6 +46,7 @@ export default function App() {
     gender: GenderType;
     birthday: string;
     birthdayDate: number;
+    createTime: string;
   }>();
   const [gender, setGender] = useState(GenderType.MALE);
   const [name, setName] = useState('');
@@ -276,7 +278,7 @@ export default function App() {
                   <Image className={styles.gender} src={patient.gender === 1 ? Male : Female} mode='widthFix' />
                   <Text className={styles.age}>{dayjs().year() - dayjs.unix(patient.birthdayDate).year()}岁</Text>
                 </View>
-                <View className={styles.lower}>创建时间　{'2022-10-09'}</View>
+                <View className={styles.lower}>创建时间　{patient.createTime}</View>
               </View>
               <View className={styles.actions}>
                 <Image
