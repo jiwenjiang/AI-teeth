@@ -1,5 +1,6 @@
 .content {
   flex-grow: 1;
+  overflow: hidden;
 
   display: flex;
   flex-direction: column;
@@ -36,6 +37,7 @@
   .patientlist {
     flex-shrink: 1;
     flex-grow: 1;
+    overflow-y: auto;
 
     background-color: #f9fdff;
     border-radius: 24px 24px 0px 0px;
