@@ -171,6 +171,9 @@ export default function App() {
         icon: "error",
         duration: 2000,
       });
+    } finally {
+      setName('');
+      setNamePlaceholder('请输入真实姓名');
     }
   };
 
