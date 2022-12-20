@@ -5,22 +5,15 @@ import Current1 from "@/static/icons/currentGreen.svg";
 import Current3 from "@/static/icons/currentRed.svg";
 import Current2 from "@/static/icons/currentYellow.svg";
 import Female from "@/static/icons/female.png";
-import Issue from "@/static/icons/issue.svg";
+import Issue from "@/static/icons/warningreport-problems-bg.png";
 import Male from "@/static/icons/male.png";
 import Voice from "@/static/icons/voice.svg";
-import Warning from "@/static/icons/warning2.svg";
 import Tishi from "@/static/imgs/weixintishi.png";
 import { Image, ScrollView, Text, View } from "@tarojs/components";
 import { navigateBack, useRouter } from "@tarojs/taro";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { cls } from "reactutils";
 import styles from "./report.module.scss";
-
-const resultColor = {
-  1: "#0051EF",
-  2: "#FF6B00",
-  3: "#FF0000"
-};
 
 const resultText = {
   "0": "不需要早期干预",
@@ -96,13 +89,6 @@ export default function App() {
                 )}
               </View>
             </View>
-            <View className={styles.warningTip}>
-              <Image src={Warning} className={styles.warningIcon} />
-              <Text>
-                您目前{data.result === "0" ? "无" : "有"}表现出症状，
-                {resultText[data.result]}
-              </Text>
-            </View>
           </View>
           <View className={styles.warningRefer}>
             <Image className={styles.tishi} src={Tishi} />
@@ -111,7 +97,7 @@ export default function App() {
               <View>{data?.treatment}</View>
               <View className={styles.desc}>
                 <Image className={styles.icon} src={Voice} />
-                （检测范围：4～12岁，年龄范围超过检测结果可能不准确。以上治疗方案为辅助判断，具体方案请以牙科医生加测结果为准）
+                （测量结果仅供参考，具体结果请以口腔医生检查结果为准。）
               </View>
             </View>
           </View>
@@ -119,25 +105,21 @@ export default function App() {
             <View className={styles.listHead}>
               <View className={styles.border}></View>
               <View className={styles.titleBox}>
-                <Image src={Issue} className={styles.issue}></Image>
-                <Text className={styles.issueText}></Text>
-                <View className={styles.title}>问题清单</View>
+                <Image src={Issue} mode='widthFix' className={styles.issue}></Image>
+                <Text className={styles.issueText}>问题清单</Text>
               </View>
               <View className={styles.hLine}></View>
               <View className={styles.dot}></View>
             </View>
             <View className={styles.listBody}>
-              {data?.problems?.map((v, i) => (
+              {data?.problems ? data.problems.map((v, i) => (
                 <View key={i} className={styles.listItem}>
                   <View className={styles.itemBg}>{v}</View>
                 </View>
-              ))}
+              )) : <View className={styles.noProblem}>牙齿情况正常</View>}
             </View>
           </View>
         </ScrollView>
-        {/* <View className={cls(styles.btn)} onClick={submit}>
-          开始检测
-        </View> */}
       </View>
     </View>
   );

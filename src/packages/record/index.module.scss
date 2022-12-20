@@ -115,7 +115,7 @@
       }
     }
 
-    .patientlist {
+    .check-records {
       flex-shrink: 1;
       flex-grow: 1;
 
@@ -278,18 +278,6 @@
             }
           }
         }
-      }
-    }
-
-    .loadmore {
-      width: 100%;
-      box-sizing: border-box;
-      padding: 20px 0;
-      text-align: center;
-
-      .text {
-        font-size: 24px;
-        color: var(--text-gray);
       }
     }
   }

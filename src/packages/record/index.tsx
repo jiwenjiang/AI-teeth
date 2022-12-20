@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import { Image, Input, Text, View } from "@tarojs/components";
-import { navigateBack, navigateTo, useReachBottom, showLoading, hideLoading } from "@tarojs/taro";
+import { navigateBack, navigateTo, pageScrollTo } from "@tarojs/taro";
 import { Success } from "@taroify/icons";
 
 import { GenderType, DetectType } from "@/service/const";
@@ -9,6 +9,7 @@ import request from "@/service/request";
 import dayjs from "dayjs";
 
 import NavBar from "@/comps/NavBar";
+import Pagination from "@/comps/Pagination";
 
 import Female from "@/static/icons/female.png";
 import Male from "@/static/icons/male.png";
@@ -26,7 +27,7 @@ export default function App() {
   const [showMask, setShowMask] = useState<boolean>(true)
   const [showClear, setShowClear] = useState<boolean>(false)
   const [searchText, setSearchText] = useState<string>('')
-  const [patientList, setPatientList] = useState<{
+  const [checkRecords, setCheckRecords] = useState<{
     id: number;
     userId: number;
     childrenId: number;
@@ -39,12 +40,16 @@ export default function App() {
     checkTime: number;
     hint: string;
   }[]>([]);
-  const [pageInfo, setPageInfo] = useState<any>(null);
+  const [pageInfo, setPageInfo] = useState({
+    page: 0,
+    totalPage: 0,
+    totalRecord: 0,
+  });
 
   let resetFlag = false;
 
   useEffect(() => {
-    getPatients();
+    getCheckRecords();
   }, [checkType]);
 
   useEffect(() => {
@@ -85,12 +90,16 @@ export default function App() {
     2: '早期预警',
   }
 
-  const getPatients = async () => {
+  const getCheckRecords = async (page?: number) => {
     const response = await request({
-      url: `/check/list?checkType=${checkType}${!resetFlag ? ('&name=' + searchText) : ''}`,
+      url: `/check/list?checkType=${checkType}${!resetFlag ? ('&name=' + searchText) : ''}${page ? ('&pageNo=' + page) : ''}`,
     });
-    setPatientList(response.data.records);
+    setCheckRecords(response.data.records);
     setPageInfo(response.data.page);
+
+    pageScrollTo({
+      scrollTop: 0,
+    });
   };
 
   const onNavBarClick = () => {
@@ -129,13 +138,13 @@ export default function App() {
       return
     }
 
-    await getPatients()
+    await getCheckRecords()
   }
 
   const clearSearch = async () => {
     setSearchText('')
     resetFlag = true
-    await getPatients()
+    await getCheckRecords()
     resetFlag = false
   }
 
@@ -157,22 +166,17 @@ export default function App() {
     });
   };
 
-  useReachBottom(async () => {
-    if (pageInfo.page < pageInfo.totalPage) {
-      showLoading({
-        title: '加载中...',
-      })
+  const onPrevPage = async () => {
+    if (pageInfo.page - 1 < 1) return;
 
-      const response = await request({
-        url: `/check/list?checkType=${checkType}${searchText ? `&name=${searchText}` : ''}&pageNo=${pageInfo.page + 1}`,
-      });
-      setPatientList(patientList.concat(response.data.records));
-      setPageInfo(response.data.page);
+    await getCheckRecords(pageInfo.page - 1);
+  };
 
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      hideLoading();
-    }
-  });
+  const onNextPage = async () => {
+    if (pageInfo.page + 1 > pageInfo.totalPage) return;
+
+    await getCheckRecords(pageInfo.page + 1);
+  };
 
   return (
     <View className={styles.page}>
@@ -214,9 +218,9 @@ export default function App() {
           </View>
         </View>
         {/* 患者列表 */}
-        <View className={styles.patientlist}>
+        <View className={styles['check-records']}>
           {/* 无患者时 */}
-          {patientList.length === 0 && (
+          {checkRecords.length === 0 && (
             <View className={styles.nopatient}>
               <Image className={styles.banner} src={Banner} mode='widthFix' />
               <Text className={styles.text}>暂无数据</Text>
@@ -224,7 +228,7 @@ export default function App() {
           )}
           {/* 有患者时 */}
           {/* 患者列表 */}
-          {patientList.length > 0 && patientList.map((patient, index) => (
+          {checkRecords.length > 0 && checkRecords.map((patient, index) => (
             <View
               className={styles.patient}
               key={index}
@@ -260,12 +264,14 @@ export default function App() {
               <View className={styles.tag}>{tag(patient.age)}</View>
             </View>
           ))}
-          {/* 上拉加载更多 */}
-          {(patientList.length > 0 && pageInfo?.page) && (
-            <View className={styles.loadmore}>
-              <Text className={styles.text}>{pageInfo?.page < pageInfo?.totalPage ? '上拉加载更多' : '已加载全部内容'}</Text>
-            </View>
-          )}
+          {checkRecords.length > 0 ? (
+            <Pagination
+              page={pageInfo.page}
+              totalPage={pageInfo.totalPage}
+              onPrevPage={onPrevPage}
+              onNextPage={onNextPage}
+            />
+          ) : null}
           {/* 筛选检测类型的下拉菜单 */}
           {showSelect && (
             <View

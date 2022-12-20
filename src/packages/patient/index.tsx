@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 
-import { Image, Input, Picker, Text, View } from "@tarojs/components";
 import { showToast, switchTab } from "@tarojs/taro";
+import { Image, Input, Picker, Text, View } from "@tarojs/components";
 
 import CustomButton from "@/comps/CustomButton";
+import Pagination from "@/comps/Pagination";
 
 import { GenderType } from "@/service/const";
 import request from "@/service/request";
@@ -38,13 +39,20 @@ export default function App() {
     gender: GenderType;
     birthday: string;
     birthdayDate: number;
+    createTime: string;
   }[]>([]);
+  const [pageInfo, setPageInfo] = useState({
+    page: 0,
+    totalPage: 0,
+    totalRecord: 0,
+  });
   const [currPatient, setCurrPatient] = useState<{
     id: number;
     name: string;
     gender: GenderType;
     birthday: string;
     birthdayDate: number;
+    createTime: string;
   }>();
   const [gender, setGender] = useState(GenderType.MALE);
   const [name, setName] = useState('');
@@ -65,16 +73,22 @@ export default function App() {
     setCurrPatient(patientList[0]);
   }, [patientList]);
 
-  const getPatients = async () => {
+  const getPatients = async (page?: number) => {
     let url = '/children/list'
     if (searchText) {
       url += `?name=${searchText}`
+    }
+    if (page && page > 0 && searchText) {
+      url += `&pageNo=${page}`
+    } else if (page && page > 0 && !searchText) {
+      url += `?pageNo=${page}`
     }
 
     const response = await request({
       url,
     });
     setPatientList(response.data.children);
+    setPageInfo(response.data.page);
   };
 
   const addPatientStyles = {
@@ -169,6 +183,9 @@ export default function App() {
         icon: "error",
         duration: 2000,
       });
+    } finally {
+      setName('');
+      setNamePlaceholder('请输入真实姓名');
     }
   };
 
@@ -230,6 +247,18 @@ export default function App() {
     setNavBarTitle('患者管理');
   };
 
+  const onPrevPage = async () => {
+    if (pageInfo.page - 1 < 1) return;
+
+    await getPatients(pageInfo.page - 1);
+  };
+
+  const onNextPage = async () => {
+    if (pageInfo.page + 1 > pageInfo.totalPage) return;
+
+    await getPatients(pageInfo.page + 1);
+  };
+
   return (
     <View className={styles.page}>
       <NavBar title={navBarTitle} back={onNavBarClick} />
@@ -276,7 +305,7 @@ export default function App() {
                   <Image className={styles.gender} src={patient.gender === 1 ? Male : Female} mode='widthFix' />
                   <Text className={styles.age}>{dayjs().year() - dayjs.unix(patient.birthdayDate).year()}岁</Text>
                 </View>
-                <View className={styles.lower}>创建时间　{'2022-10-09'}</View>
+                <View className={styles.lower}>创建时间　{patient.createTime}</View>
               </View>
               <View className={styles.actions}>
                 <Image
@@ -294,6 +323,14 @@ export default function App() {
               </View>
             </View>
           ))}
+          {patientList.length > 0 ? (
+            <Pagination
+              page={pageInfo.page}
+              totalPage={pageInfo.totalPage}
+              onPrevPage={onPrevPage}
+              onNextPage={onNextPage}
+            />
+          ) : null}
           {/* 新建患者的悬浮按钮 */}
           {patientList.length > 0 && (
             <Image
