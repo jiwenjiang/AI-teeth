@@ -65,6 +65,7 @@ export default function App() {
       latestCheck: any;
     }[]
   >([]);
+  const [pageReady, setPageReady] = useState<boolean>(false);
   const [pageInfo, setPageInfo] = useState({
     page: 0,
     totalPage: 0,
@@ -96,6 +97,7 @@ export default function App() {
       data: { type: router.params.type, name: name }
     });
     setPatientList(response.data.children);
+    setPageReady(true);
     setPageInfo(response.data.page);
   };
 
@@ -235,7 +237,7 @@ export default function App() {
           </Text>
         </View>
         {/* 患者列表 */}
-        <View className={styles.patientlist}>
+        {pageReady && (<View className={styles.patientlist}>
           {/* 无患者时 */}
           {patientList.length === 0 && (
             <View className={styles.nopatient}>
@@ -305,7 +307,7 @@ export default function App() {
               onClick={() => showAddPatientMask()}
             />
           )}
-        </View>
+        </View>)}
         {/* 添加患者的蒙版 */}
         {showMask && (
           <View className={styles.mask}>
