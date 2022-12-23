@@ -305,21 +305,23 @@ export default function App() {
               </View>
             )}
             {(condition.type === "caries" ||
-              condition.type === "heavy_caries") &&
-              teethList?.map((v, i) => (
-                <View className={styles.teeth} key={i}>
+              condition.type === "heavy_caries") && (
+                <View className={styles.teeth}>
                   <View className={styles.title}>
                     提示：检测出的龋齿已被标出
                   </View>
-                  <View className={styles.teethImgBox}>
-                    <Canvas
-                      type="2d"
-                      id={`canvas${i}`}
-                      style={{ width: v.canvasW, height: v.canvasH }}
-                    />
-                  </View>
+                  {teethList?.map((v, i) => (
+                    <View className={styles.teethImgBox} key={i}>
+                      <Canvas
+                        type="2d"
+                        id={`canvas${i}`}
+                        style={{ width: v.canvasW, height: v.canvasH }}
+                      />
+                    </View>
+                  ))}
                 </View>
-              ))}
+              )
+            }
           </View>
         )}
         <View className={cls(styles.btn)} onClick={save}>

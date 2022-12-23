@@ -55,7 +55,7 @@
     .content {
         background: #F6F6F6;
         box-sizing: border-box;
-        padding: 28px 40px 40px;
+        padding: 28px 40px 180px;
         position: relative;
 
         .result {
@@ -131,6 +131,8 @@
 
         .teeth {
             background: #E0ECFF;
+            box-shadow: 0px 0px 10px rgba(199, 213, 238, 0.54);
+            backdrop-filter: blur(4px);
             border-radius: 24px;
             position: relative;
             margin-top: 28px;
@@ -145,8 +147,6 @@
 
             .teethImgBox {
                 background: #F6F9FF;
-                box-shadow: 0px 0px 10px rgba(199, 213, 238, 0.54);
-                backdrop-filter: blur(4px);
                 display: flex;
                 justify-content: center;
                 align-items: center;
