@@ -10,7 +10,7 @@ import NoCaries from "@/static/imgs/report-no_caries.png";
 import NoTeeth from "@/static/imgs/report-no_teeth.png";
 import { Button, Popup } from "@taroify/core";
 import { Canvas, Image, Text, View } from "@tarojs/components";
-import Taro, { navigateBack, useRouter } from "@tarojs/taro";
+import Taro, { getCurrentPages, navigateBack, useRouter } from "@tarojs/taro";
 import React, { useEffect, useRef, useState } from "react";
 import { cls } from "reactutils";
 import styles from "./report.module.scss";
@@ -64,14 +64,14 @@ export default function App() {
   const [reportImg, setReportImg] = useState("");
 
   const onNavBarClick = () => {
-    const currentPages = Taro.getCurrentPages();
+    const currentPages = getCurrentPages();
     if (
       currentPages.length > 1 &&
       currentPages[currentPages.length - 2].route.includes(
         "packages/caries/photo"
       )
     ) {
-      Taro.navigateBack({
+      navigateBack({
         delta: 2
       });
     } else {

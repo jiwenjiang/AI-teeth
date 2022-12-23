@@ -10,7 +10,7 @@ import Male from "@/static/icons/male.png";
 import Voice from "@/static/icons/voice.svg";
 import Tishi from "@/static/imgs/weixintishi.png";
 import { Image, ScrollView, Text, View } from "@tarojs/components";
-import { navigateBack, useRouter } from "@tarojs/taro";
+import { getCurrentPages, navigateBack, useRouter } from "@tarojs/taro";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { cls } from "reactutils";
 import styles from "./report.module.scss";
@@ -30,7 +30,19 @@ export default function App() {
   const canvasBox = useRef();
 
   const onNavBarClick = () => {
-    navigateBack();
+    const currentPages = getCurrentPages();
+    if (
+      currentPages.length > 1 &&
+      currentPages[currentPages.length - 2].route.includes(
+        "packages/caries/photo"
+      )
+    ) {
+      navigateBack({
+        delta: 2
+      });
+    } else {
+      navigateBack();
+    }
   };
 
   const getAttr = async () => {
