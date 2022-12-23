@@ -275,10 +275,7 @@ export default function App() {
                   </View>
                   {patient?.latestCheck?.checkResult && (
                     <View className={styles.middle}>
-                      <View className={styles.last}>上次检测结果：</View>
-                      <View className={styles.result}>
-                        {patient?.latestCheck?.checkResult}
-                      </View>
+                      上次检测结果：{patient?.latestCheck?.checkResult}
                     </View>
                   )}
                   {patient.latestCheck?.hint && (
