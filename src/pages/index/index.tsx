@@ -71,27 +71,28 @@ export default function App() {
     <View className={styles.page}>
       <NavBar showIcon={false} title={"首页"} />
       <View className={styles.content}>
-        <View className={styles.bottomlayer}></View>
         <View className={styles.bannerwrapper}>
           <Image className={styles.bannerimg} src={Banner} mode="widthFix" />
         </View>
         <View className={styles.servicelist}>
           <View className={styles.mainservices}>
             {mainServices.map((service, index) => (
-              <View
-                className={styles.service}
-                key={index}
-                onClick={() => goToModule(service.path)}
-              >
-                <Image
-                  className={styles.bg}
-                  src={service.bgSrc}
-                  mode="widthFix"
-                />
-                <View className={styles.name}>{service.cnName}</View>
-                {!service.open && (
-                  <View className={styles.mask}>敬请期待...</View>
-                )}
+              <View className={styles.servicewrapper}>
+                <View
+                  className={styles.service}
+                  key={index}
+                  onClick={() => goToModule(service.path)}
+                >
+                  <Image
+                    className={styles.bg}
+                    src={service.bgSrc}
+                    mode="widthFix"
+                  />
+                  <View className={styles.name}>{service.cnName}</View>
+                  {!service.open && (
+                    <View className={styles.mask}>敬请期待...</View>
+                  )}
+                </View>
               </View>
             ))}
           </View>

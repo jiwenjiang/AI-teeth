@@ -17,29 +17,18 @@
   box-sizing: border-box;
 
   .content {
+    // 解决 flex 元素边距无效问题
+    flex-shrink: 0;
     flex-grow: 1;
 
     display: flex;
     flex-direction: column;
-    padding-left: 40px;
-    padding-right: 40px;
+    box-sizing: border-box;
     padding-bottom: 160px;
 
     position: relative;
 
-    .bottomlayer {
-      position: absolute;
-      top: 248px;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: #F6F6F6;
-      border-top-left-radius: 36px;
-      border-top-right-radius: 36px;
-    }
-
     .bannerwrapper {
-      z-index: 3;
       width: 100%;
       box-sizing: border-box;
       padding-top: 5px;
@@ -49,76 +38,88 @@
 
       .bannerimg {
         width: 100%;
+        display: flex;
       }
     }
 
     .servicelist {
-      z-index: 3;
       display: flex;
       flex-direction: column;
+      box-sizing: border-box;
+      padding-top: 40px;
+      padding-left: 40px;
+      padding-right: 40px;
 
       .mainservices {
-        margin-top: 40px;
 
         display: flex;
         flex-wrap: wrap;
         justify-content: space-between;
 
-        .service {
+        .servicewrapper {
           width: 320px;
-          height: 264px;
+          height: 292px;
           box-sizing: border-box;
-          padding: 32px;
-          margin-bottom: 40px;
+          padding-bottom: 28px;
 
-          border-radius: 32px;
-          background-color: #fff;
-
-          position: relative;
-
-          display: flex;
-          flex-direction: column;
-          justify-content: space-between;
-
-          .bg {
-            position: absolute;
-            top: 0;
-            left: 0;
+          .service {
             width: 100%;
             height: 100%;
-          }
+            box-sizing: border-box;
+            padding: 32px;
 
-          .name {
-            z-index: 2;
-            font-size: 36px;
-            font-weight: 600;
-            color: #fff;
-          }
+            border-radius: 32px;
+            background-color: var(--bg-gray);
 
-          .mask {
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            right: 0;
-
-            z-index: 3;
-
-            border-radius: 16px;
-            background-color: rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(2px);
+            position: relative;
 
             display: flex;
-            justify-content: center;
-            align-items: center;
+            flex-direction: column;
+            justify-content: space-between;
 
-            font-size: 32px;
-            color: #fff;
+            .bg {
+              position: absolute;
+              top: 0;
+              left: 0;
+              width: 100%;
+              height: 100%;
+            }
+
+            .name {
+              z-index: 2;
+              font-size: 36px;
+              font-weight: 600;
+              color: #fff;
+            }
+
+            .mask {
+              position: absolute;
+              top: 0;
+              bottom: 0;
+              left: 0;
+              right: 0;
+
+              z-index: 3;
+
+              border-radius: 16px;
+              background-color: rgba(0, 0, 0, 0.3);
+              backdrop-filter: blur(2px);
+
+              display: flex;
+              justify-content: center;
+              align-items: center;
+
+              font-size: 32px;
+              color: #fff;
+            }
           }
         }
       }
 
       .otherservices {
+        display: flex;
+        flex-direction: column;
+
         .service {
           width: 100%;
 
