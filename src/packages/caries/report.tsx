@@ -22,6 +22,11 @@ const resultColor = {
 };
 
 const resultTypes = {
+  detecting: {
+    symptom: "检测中",
+    color: "#1DA1F2",
+    treatment: "算法正在识别中，请稍候。"
+  },
   no_teeth: {
     symptom: "未发现牙齿",
     color: "#1DA1F2",
@@ -113,6 +118,14 @@ export default function App() {
       setCondition({
         type: "no_caries",
         ...resultTypes.no_caries
+      });
+      return;
+    }
+
+    if (data.result.includes("检测中")) {
+      setCondition({
+        type: "detecting",
+        ...resultTypes.detecting
       });
       return;
     }
@@ -225,12 +238,12 @@ export default function App() {
       success: res => {
         wx.saveImageToPhotosAlbum({
           filePath: wx.env.USER_DATA_PATH + `/${time}.png`,
-          success: function(res) {
+          success: function (res) {
             wx.showToast({
               title: "保存成功"
             });
           },
-          fail: function(err) {
+          fail: function (err) {
             console.log(err);
           }
         });
