@@ -3,8 +3,6 @@ import { Image, Text, View } from "@tarojs/components";
 import { getStorageSync, navigateTo, setStorageSync, switchTab } from "@tarojs/taro";
 import React, { useEffect, useState } from "react";
 
-import dayjs from "dayjs";
-
 import NavBar from "@/comps/NavBar";
 import TabBar from "@/comps/TabBar";
 
@@ -14,8 +12,6 @@ import upload2Server from "@/service/upload";
 
 import { Arrow } from "@taroify/icons";
 
-import Female from "@/static/icons/female.png";
-import Male from "@/static/icons/male.png";
 import About from "@/static/icons/mine-about.png";
 import Agreement from "@/static/icons/mine-agreement.png";
 import Privacy from "@/static/icons/mine-privacy.png";
@@ -35,9 +31,7 @@ export default function App() {
 
       const user = {
         ...getStorageSync('user'),
-        birthday: data.birthday,
         avatarUrl: data.avatarUrl,
-        age: dayjs().year() - dayjs(data.birthday).year(),
       };
 
       setUser(user);
@@ -145,12 +139,6 @@ export default function App() {
             {user.phone && (
               <Text className={styles.phone}>{maskPhone(user?.phone)}</Text>
             )}
-            <View className={styles.other2}>
-              <Image className={styles.gender} src={user?.gender === 1 ? Male : Female} mode='widthFix' />
-              {user.age && (
-                <Text className={styles.age}>{user.age}岁</Text>
-              )}
-            </View>
           </View>
         </View>
         <View className={styles.entries}>
