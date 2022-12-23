@@ -17,7 +17,7 @@
   box-sizing: border-box;
 
   .content {
-    // 解决 flex 元素边距无效问题
+    // TODO: 解决 flex 元素边距无效问题
     flex-shrink: 0;
     flex-grow: 1;
 
