@@ -61,6 +61,7 @@ export default function App() {
       gender: GenderType;
       birthday: string;
       birthdayDate: number;
+      age: number;
       latestCheck: any;
     }[]
   >([]);
@@ -266,7 +267,7 @@ export default function App() {
                       mode="widthFix"
                     />
                     <Text className={styles.age}>
-                      {dayjs().year() - dayjs.unix(patient.birthdayDate).year()}
+                      {patient.age}
                       岁
                     </Text>
                     <Text className={styles.seperator}></Text>
