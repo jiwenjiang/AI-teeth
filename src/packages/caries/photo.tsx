@@ -57,6 +57,7 @@ export default function App() {
   const router = useRouter();
   const { systemInfo } = useContext(SystemContext);
   const [navBarTitle] = useState(router.params.childName ?? "儿童龋齿检测");
+  const [checkType, setCheckType] = useState<DetectType | null>(null);
   const [showGuide, setShowGuide] = useState(false);
   const [showAdd, setShowAdd] = useState(false);
   const [showRemove, setShowRemove] = useState<boolean>(false);
@@ -69,17 +70,29 @@ export default function App() {
   const guide = attrs[picIndex] ?? {};
 
   useEffect(() => {
-    getAttr();
-    initImgInfos();
+    getCheckType();
   }, []);
 
   useEffect(() => {
-    if (Number(router.params.type) === DetectType.CARIES) {
+    if (!checkType) {
+      return;
+    }
+
+    getAttr();
+    initImgInfos();
+  }, [checkType]);
+
+  useEffect(() => {
+    if (!checkType) {
+      return;
+    }
+
+    if (checkType === DetectType.CARIES) {
       setHasPic(imageInfos.length > 0);
-    } else if (Number(router.params.type) === DetectType.WARNING) {
+    } else if (checkType === DetectType.WARNING) {
       setHasPic(attrs?.some(v => v.fileId));
     }
-  }, [attrs, imageInfos]);
+  }, [checkType, attrs, imageInfos]);
 
   const onNavBarClick = () => {
     if (showGuide) {
@@ -89,16 +102,20 @@ export default function App() {
     navigateBack();
   };
 
+  const getCheckType = () => {
+    setCheckType(Number(router.params.type));
+  }
+
   const getAttr = async () => {
     const response = await request({
       url: "/check/attribute",
-      data: { checkType: router.params.type }
+      data: { checkType: checkType?.toString() }
     });
     setAttrs(response.data.positions);
   };
 
   const initImgInfos = () => {
-    if (Number(router.params.type) === DetectType.WARNING) {
+    if (checkType === DetectType.WARNING) {
       setImageInfos(Array(attrs.length).fill({
         fileId: 0,
         fileUrl: '',
@@ -173,7 +190,7 @@ export default function App() {
 
   // 保存上传成功后返回的图片信息
   const onPhotoUploaded = (v) => {
-    if (Number(router.params.type) === DetectType.CARIES) {
+    if (checkType === DetectType.CARIES) {
       setImageInfos([
         ...imageInfos,
         {
@@ -182,7 +199,7 @@ export default function App() {
           filePath: v.url,
         },
       ]);
-    } else if (Number(router.params.type) === DetectType.WARNING) {
+    } else if (checkType === DetectType.WARNING) {
       attrs[picIndex].fileId = v.id;
       attrs[picIndex].fileUrl = v.url;
       setAttrs([...attrs]);
@@ -206,9 +223,9 @@ export default function App() {
   }
 
   const removePhoto = () => {
-    if (Number(router.params.type) === DetectType.CARIES) {
+    if (checkType === DetectType.CARIES) {
       setImageInfos(imageInfos.filter((_, index) => index !== removeIndex));
-    } else if (Number(router.params.type) === DetectType.WARNING) {
+    } else if (checkType === DetectType.WARNING) {
       setAttrs(attrs.map((v, index) => {
         if (index === removeIndex) {
           v.fileId = 0;
@@ -224,13 +241,13 @@ export default function App() {
     if (hasPic) {
       setFileLoading(submitImg);
       let images;
-      if (Number(router.params.type) === DetectType.CARIES) {
+      if (checkType === DetectType.CARIES) {
         images = imageInfos
           ?.map((v, i) => ({
             fileId: v.fileId,
             position: (i + 1).toString(),
           }))
-      } else if (Number(router.params.type) === DetectType.WARNING) {
+      } else if (checkType === DetectType.WARNING) {
         images = attrs
           ?.filter(v => v.fileId)
           ?.map(v => ({
@@ -243,18 +260,18 @@ export default function App() {
         method: "POST",
         url: "/check/submit",
         data: {
-          checkType: Number(router.params.type),
+          checkType: checkType?.toString(),
           childrenId: Number(router.params.childrenId),
           images,
         }
       });
       setFileLoading({ ...submitImg, show: false });
-      if (Number(router.params.type) === DetectType.CARIES) {
+      if (checkType === DetectType.CARIES) {
         Taro.navigateTo({
           url: `/packages/caries/report?id=${res.data.id}&childName=${router.params.childName}`
         });
       }
-      if (Number(router.params.type) === DetectType.WARNING) {
+      if (checkType === DetectType.WARNING) {
         Taro.navigateTo({
           url: `/packages/caries/warningReport?id=${res.data.id}&childName=${router.params.childName}`
         });
