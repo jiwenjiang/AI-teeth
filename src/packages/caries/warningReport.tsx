@@ -16,6 +16,7 @@ import { cls } from "reactutils";
 import styles from "./report.module.scss";
 
 const resultText = {
+  "-2": "检测中",
   "0": "不需要早期干预",
   "1": "可能需要早期干预",
   "2": "需要早期干预"
@@ -37,7 +38,10 @@ export default function App() {
       url: "/check/get",
       data: { id: router.params.id || 74 }
     });
-    setData(response.data);
+    setData({
+      ...response.data,
+      problems: response.data.problems.filter((v: any) => v),
+    });
   };
 
   useEffect(() => {
@@ -112,7 +116,7 @@ export default function App() {
               <View className={styles.dot}></View>
             </View>
             <View className={styles.listBody}>
-              {data?.problems ? data.problems.map((v, i) => (
+              {data?.problems?.length > 0 ? data.problems.map((v, i) => (
                 <View key={i} className={styles.listItem}>
                   <View className={styles.itemBg}>{v}</View>
                 </View>
