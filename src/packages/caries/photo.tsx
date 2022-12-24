@@ -10,7 +10,7 @@ import Warn2 from "@/static/icons/warn2.png";
 import Voice from "@/static/icons/voice.svg";
 import { Popup } from "@taroify/core";
 import { Image, Text, View } from "@tarojs/components";
-import Taro, { navigateBack, useRouter } from "@tarojs/taro";
+import Taro, { navigateBack, useRouter, canIUse, showModal } from "@tarojs/taro";
 import React, { useContext, useEffect, useState } from "react";
 import { cls } from "reactutils";
 import styles from "./photo.module.scss";
@@ -70,6 +70,7 @@ export default function App() {
   const guide = attrs[picIndex] ?? {};
 
   useEffect(() => {
+    checkCompatibility();
     getCheckType();
   }, []);
 
@@ -101,6 +102,16 @@ export default function App() {
     }
     navigateBack();
   };
+
+  const checkCompatibility = () => {
+    const canEditImage = canIUse("editImage");
+    console.log('canEditImage: ', canEditImage)
+    if (!canEditImage) {
+      showModal({
+        title: '当前微信版本过低，无法使用小程序功能，请升级到最新微信版本后重试。'
+      });
+    }
+  }
 
   const getCheckType = () => {
     setCheckType(Number(router.params.type));
