@@ -187,11 +187,18 @@ export default function App() {
 
   // 图片编辑完毕，开始上传
   const onPhotoReady = (res) => {
-    setFileLoading(uploadImg());
-    uploadImages({
-      type: MediaType.PICTURE,
-      filePath: res.tempFilePath,
-    });
+    try {
+      setFileLoading(uploadImg());
+      uploadImages({
+        type: MediaType.PICTURE,
+        filePath: res.tempFilePath,
+      });
+    } catch (error) {
+      setFileLoading(uploadImg(false));
+      showModal({
+        title: "上传失败",
+      })
+    }
   }
 
   // 上传图片
