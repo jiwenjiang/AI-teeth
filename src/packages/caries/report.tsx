@@ -1,18 +1,15 @@
 import NavBar from "@/comps/NavBar";
+import Share from "@/comps/Share";
 import request from "@/service/request";
-import baocun from "@/static/icons/baocun.svg";
 import Female from "@/static/icons/female.png";
-import fenxiang from "@/static/icons/fenxiang.svg";
 import Male from "@/static/icons/male.png";
 import Voice from "@/static/icons/voice.svg";
 import Doctor from "@/static/imgs/doctor.png";
 import NoCaries from "@/static/imgs/report-no_caries.png";
 import NoTeeth from "@/static/imgs/report-no_teeth.png";
-import { Button, Popup } from "@taroify/core";
 import { Canvas, Image, Text, View } from "@tarojs/components";
 import Taro, { getCurrentPages, navigateBack, useRouter } from "@tarojs/taro";
 import React, { useEffect, useRef, useState } from "react";
-import { cls } from "reactutils";
 import styles from "./report.module.scss";
 
 const resultColor = {
@@ -60,8 +57,6 @@ export default function App() {
   const [condition, setCondition] = useState<any>(null);
   const canvasBox = useRef();
   const [teethList, setTeethList] = useState<any>([]);
-  const [show, setShow] = useState(false);
-  const [reportImg, setReportImg] = useState("");
 
   const onNavBarClick = () => {
     const currentPages = getCurrentPages();
@@ -203,58 +198,6 @@ export default function App() {
     }
   }, [data, condition]);
 
-  const save = async () => {
-    // Taro.request({
-    //   url:
-    //     "http://47.99.84.246:5000/gen-img?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJyb2xlTmFtZSI6Im95QU1LNU5EZVRnSzN1OXpLYVpweDhaTjc3aE0iLCJ1c2VySWQiOiIxMzIiLCJwbGF0Zm9ybUNvZGUiOjJ9.rNYwBR-PkQ2oXDpGXPGe1sAQyjNKAi4RsWgs-DZIZPPK7p_38nSCuArmFA-Q8eJKzGKaXuYySBgPPoDBwkFugA&id=331",
-    //   success(res) {
-    //     console.log("🚀 ~ file: report.tsx:193 ~ success ~ res", res);
-    //   }
-    // });
-    setShow(true);
-
-    const res = await request({
-      url: "/check/report",
-      data: { id: router.params.id }
-    });
-    setReportImg(res.data?.replace(/[\r\n]/g, ""));
-    // console.log("🚀 ~ file: report.tsx:193 ~ save ~ res", res);
-  };
-
-  const saveImg = () => {
-    if (!reportImg) {
-      wx.showToast({
-        title: "图片生成中",
-        icon: "loading"
-      });
-      return;
-    }
-    const fileSystem = wx.getFileSystemManager();
-    const time = new Date().valueOf();
-    fileSystem.writeFile({
-      filePath: wx.env.USER_DATA_PATH + `/${time}.png`,
-      data: reportImg,
-      encoding: "base64",
-      success: res => {
-        wx.saveImageToPhotosAlbum({
-          filePath: wx.env.USER_DATA_PATH + `/${time}.png`,
-          success: function (res) {
-            wx.showToast({
-              title: "保存成功"
-            });
-          },
-          fail: function (err) {
-            console.log(err);
-          }
-        });
-        console.log(res);
-      },
-      fail: err => {
-        console.log(err);
-      }
-    });
-  };
-
   return (
     <View className="page">
       <NavBar title={navBarTitle} back={onNavBarClick} />
@@ -306,63 +249,22 @@ export default function App() {
             )}
             {(condition.type === "caries" ||
               condition.type === "heavy_caries") && (
-                <View className={styles.teeth}>
-                  <View className={styles.title}>
-                    提示：检测出的龋齿已被标出
+              <View className={styles.teeth}>
+                <View className={styles.title}>提示：检测出的龋齿已被标出</View>
+                {teethList?.map((v, i) => (
+                  <View className={styles.teethImgBox} key={i}>
+                    <Canvas
+                      type="2d"
+                      id={`canvas${i}`}
+                      style={{ width: v.canvasW, height: v.canvasH }}
+                    />
                   </View>
-                  {teethList?.map((v, i) => (
-                    <View className={styles.teethImgBox} key={i}>
-                      <Canvas
-                        type="2d"
-                        id={`canvas${i}`}
-                        style={{ width: v.canvasW, height: v.canvasH }}
-                      />
-                    </View>
-                  ))}
-                </View>
-              )
-            }
+                ))}
+              </View>
+            )}
           </View>
         )}
-        <View className={cls(styles.btn)} onClick={save}>
-          保存/分享
-        </View>
-        <Popup
-          defaultOpen
-          placement="bottom"
-          open={show}
-          onClose={() => setShow(false)}
-        >
-          <View className={styles.shareBox}>
-            <View className={styles.shareIconBox}>
-              <Button openType="share" className={styles.shareBtn}>
-                <View>
-                  <View className={styles.iconBox}>
-                    <Image src={fenxiang} className={styles.icon} />
-                  </View>
-                  <View className={styles.iconText}>分享</View>
-                </View>
-              </Button>
-
-              <View onClick={saveImg}>
-                <View className={styles.iconBox}>
-                  <Image src={baocun} className={styles.icon} />
-                </View>
-                <View className={styles.iconText}>保存</View>
-              </View>
-            </View>
-            <View className={styles.cancel} onClick={() => setShow(false)}>
-              取消
-            </View>
-          </View>
-          <View className={styles.genImgBox}>
-            <Image
-              src={reportImg}
-              mode="widthFix"
-              className={styles.reportImg}
-            />
-          </View>
-        </Popup>
+        <Share report={1}/>
       </View>
     </View>
   );

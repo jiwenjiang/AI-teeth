@@ -1,18 +1,16 @@
 import NavBar from "@/comps/NavBar";
+import Share from "@/comps/Share";
 import { SystemContext } from "@/service/context";
 import request from "@/service/request";
-import baocun from "@/static/icons/baocun.svg";
 import Current1 from "@/static/icons/currentGreen.svg";
 import Current3 from "@/static/icons/currentRed.svg";
 import Current2 from "@/static/icons/currentYellow.svg";
 import Female from "@/static/icons/female.png";
-import fenxiang from "@/static/icons/fenxiang.svg";
 import Male from "@/static/icons/male.png";
 import Voice from "@/static/icons/voice.svg";
 import Issue from "@/static/icons/warningreport-problems-bg.png";
 import Tishi from "@/static/imgs/weixintishi.png";
-import { Popup } from "@taroify/core";
-import { Button, Image, ScrollView, Text, View } from "@tarojs/components";
+import { Image, ScrollView, Text, View } from "@tarojs/components";
 import { getCurrentPages, navigateBack, useRouter } from "@tarojs/taro";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { cls } from "reactutils";
@@ -64,49 +62,6 @@ export default function App() {
   useEffect(() => {
     getAttr();
   }, []);
-
-  const save = async () => {
-    setShow(true);
-    const res = await request({
-      url: "/check/report",
-      data: { id: router.params.id }
-    });
-    setReportImg(res.data?.replace(/[\r\n]/g, ""));
-  };
-
-  const saveImg = () => {
-    if (!reportImg) {
-      wx.showToast({
-        title: "图片生成中",
-        icon: "loading"
-      });
-      return;
-    }
-    const fileSystem = wx.getFileSystemManager();
-    const time = new Date().valueOf();
-    fileSystem.writeFile({
-      filePath: wx.env.USER_DATA_PATH + `/${time}.png`,
-      data: reportImg,
-      encoding: "base64",
-      success: res => {
-        wx.saveImageToPhotosAlbum({
-          filePath: wx.env.USER_DATA_PATH + `/${time}.png`,
-          success: function(res) {
-            wx.showToast({
-              title: "保存成功"
-            });
-          },
-          fail: function(err) {
-            console.log(err);
-          }
-        });
-        console.log(res);
-      },
-      fail: err => {
-        console.log(err);
-      }
-    });
-  };
 
   return (
     <View className="page">
@@ -192,45 +147,7 @@ export default function App() {
             </View>
           </View>
         </ScrollView>
-        <View className={cls(styles.btn)} onClick={save}>
-          保存/分享
-        </View>
-        <Popup
-          defaultOpen
-          placement="bottom"
-          open={show}
-          onClose={() => setShow(false)}
-        >
-          <View className={styles.shareBox}>
-            <View className={styles.shareIconBox}>
-              <Button openType="share" className={styles.shareBtn}>
-                <View>
-                  <View className={styles.iconBox}>
-                    <Image src={fenxiang} className={styles.icon} />
-                  </View>
-                  <View className={styles.iconText}>分享</View>
-                </View>
-              </Button>
-
-              <View onClick={saveImg}>
-                <View className={styles.iconBox}>
-                  <Image src={baocun} className={styles.icon} />
-                </View>
-                <View className={styles.iconText}>保存</View>
-              </View>
-            </View>
-            <View className={styles.cancel} onClick={() => setShow(false)}>
-              取消
-            </View>
-          </View>
-          <View className={styles.genImgBox}>
-            <Image
-              src={reportImg}
-              mode="widthFix"
-              className={styles.reportImg}
-            />
-          </View>
-        </Popup>
+        <Share report={2} />
       </View>
     </View>
   );
