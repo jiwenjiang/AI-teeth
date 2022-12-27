@@ -16,8 +16,7 @@ import { cls } from "reactutils";
 import styles from "./report.module.scss";
 
 const resultColor = {
-  1: "#0051EF",
-  2: "#FF6B00",
+  2: "#FF9900",
   3: "#FF0000"
 };
 
@@ -155,7 +154,7 @@ export default function App() {
 
         ctx.drawImage(image, 0, 0, image.width, image.height);
         v.imageResults.forEach(c => {
-          if (c.score > 0.8) {
+          if (c.result > 1) {
             ctx.lineWidth = 8;
             ctx.strokeStyle = resultColor[c.result];
             ctx.strokeRect(
