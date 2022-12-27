@@ -22,31 +22,19 @@ const resultColor = {
 
 const resultTypes = {
   detecting: {
-    symptom: "检测中",
     color: "#1DA1F2",
-    treatment: "算法正在识别中，请稍候。"
   },
   no_teeth: {
-    symptom: "未发现牙齿",
     color: "#1DA1F2",
-    treatment: "您上传的照片未检测到，请重新上传/拍摄照片！"
   },
   no_caries: {
-    symptom: "未发现龋齿情况",
     color: "#1DA1F2",
-    treatment:
-      "您上传的口内照中，暂未发现龋齿，请继续保持口腔卫生，认真刷牙哦！同时定期进行口腔检查和预防性涂氟。"
   },
   caries: {
-    symptom: "牙齿存在轻度龋齿",
     color: "#FF6B00",
-    treatment:
-      "您上传的口内照中，检测到有可能存在龋齿，请及时前往口腔科就医检查！"
   },
   heavy_caries: {
-    symptom: "牙齿发现重度龋齿",
     color: "#FF0000",
-    treatment: "您上传的口内照中，发现严重龋齿，请尽快前往口腔科就医检查！"
   }
 };
 
@@ -97,7 +85,7 @@ export default function App() {
   }, [data]);
 
   const getCondition = () => {
-    if (data.result.includes("重度龋齿")) {
+    if (data.result.includes("严重龋齿")) {
       setCondition({
         type: "heavy_caries",
         ...resultTypes.heavy_caries
@@ -105,18 +93,18 @@ export default function App() {
       return;
     }
 
-    if (data.result.includes("轻度龋齿")) {
+    if (data.result.includes("未检测到龋齿")) {
       setCondition({
-        type: "caries",
-        ...resultTypes.caries
+        type: "no_caries",
+        ...resultTypes.no_caries
       });
       return;
     }
 
-    if (data.result.includes("未发现龋齿")) {
+    if (data.result.includes("龋齿")) {
       setCondition({
-        type: "no_caries",
-        ...resultTypes.no_caries
+        type: "caries",
+        ...resultTypes.caries
       });
       return;
     }
@@ -279,13 +267,13 @@ export default function App() {
               <View className={styles.title}>
                 <Text className={styles.label}>检测结果：</Text>
                 <Text style={{ color: condition.color }}>
-                  {condition.symptom}
+                  {data.result}
                 </Text>
               </View>
               <View className={styles.card}>
                 <View className={styles.head}>治疗方案</View>
                 <View className={styles.resultBody}>
-                  <View>{condition.treatment}</View>
+                  <View>{data.treatment}</View>
                   <View className={styles.desc}>
                     <Image className={styles.icon} src={Voice} />
                     （测量结果仅供参考，具体结果请以口腔医生检查结果为准。）
