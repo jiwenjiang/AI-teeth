@@ -10,7 +10,7 @@ import NoCaries from "@/static/imgs/report-no_caries.png";
 import NoTeeth from "@/static/imgs/report-no_teeth.png";
 import { Button, Popup } from "@taroify/core";
 import { Canvas, Image, Text, View } from "@tarojs/components";
-import Taro, { getCurrentPages, navigateBack, useRouter } from "@tarojs/taro";
+import Taro, { getCurrentPages, navigateBack, useRouter, switchTab } from "@tarojs/taro";
 import React, { useEffect, useRef, useState } from "react";
 import { cls } from "reactutils";
 import styles from "./report.module.scss";
@@ -61,8 +61,12 @@ export default function App() {
       navigateBack({
         delta: 2
       });
-    } else {
+    } else if (currentPages.length > 1) {
       navigateBack();
+    } else {
+      switchTab({
+        url: "/pages/index/index"
+      });
     }
   };
 

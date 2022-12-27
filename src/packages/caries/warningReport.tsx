@@ -10,7 +10,7 @@ import Male from "@/static/icons/male.png";
 import Voice from "@/static/icons/voice.svg";
 import Tishi from "@/static/imgs/weixintishi.png";
 import { Image, ScrollView, Text, View } from "@tarojs/components";
-import { getCurrentPages, navigateBack, useRouter } from "@tarojs/taro";
+import { getCurrentPages, navigateBack, useRouter, switchTab } from "@tarojs/taro";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { cls } from "reactutils";
 import styles from "./report.module.scss";
@@ -40,8 +40,12 @@ export default function App() {
       navigateBack({
         delta: 2
       });
-    } else {
+    } else if (currentPages.length > 1) {
       navigateBack();
+    } else {
+      switchTab({
+        url: "/pages/index/index"
+      });
     }
   };
 
