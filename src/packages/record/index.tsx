@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import { Image, Input, Text, View } from "@tarojs/components";
-import { navigateBack, navigateTo, pageScrollTo } from "@tarojs/taro";
+import { switchTab, navigateTo, pageScrollTo } from "@tarojs/taro";
 import { Success } from "@taroify/icons";
 
 import { GenderType, DetectType } from "@/service/const";
@@ -103,7 +103,9 @@ export default function App() {
   };
 
   const onNavBarClick = () => {
-    navigateBack();
+    switchTab({
+      url: "/pages/index/index"
+    })
   };
 
   const toggleShowSelect = () => {
