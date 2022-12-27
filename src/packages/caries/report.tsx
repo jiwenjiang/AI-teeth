@@ -154,7 +154,7 @@ export default function App() {
 
         ctx.drawImage(image, 0, 0, image.width, image.height);
         v.imageResults.forEach(c => {
-          if (c.result > 1) {
+          if (c.result > 1 && c.score >= 0.8) {
             ctx.lineWidth = 8;
             ctx.strokeStyle = resultColor[c.result];
             ctx.strokeRect(
