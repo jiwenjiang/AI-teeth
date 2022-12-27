@@ -142,14 +142,23 @@
             margin-bottom: 24px;
         }
 
+        .btnWrapper {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100vw;
+            background-color: #fff;
+            display: flex;
+            justify-content: center;
+            box-sizing: border-box;
+            padding: 20px 0 50px;
+        }
+
         .btn {
             background: #BBD4FF;
             border-radius: 80px;
             width: calc(100vw - 160px);
             height: 86px;
-            position: fixed;
-            bottom: 50px;
-            left: 80px;
             font-size: 34px;
             display: flex;
             align-items: center;

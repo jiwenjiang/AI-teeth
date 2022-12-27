@@ -463,11 +463,13 @@ export default function App() {
               {doUploadCards()}
               {uploadedCards()}
             </View>
-            <View
-              className={cls(styles.btn, hasPic && styles.activeBtn)}
-              onClick={submit}
-            >
-              开始检测
+            <View className={styles.btnWrapper}>
+              <View
+                className={cls(styles.btn, hasPic && styles.activeBtn)}
+                onClick={submit}
+              >
+                开始检测
+              </View>
             </View>
           </View>
           <Popup
