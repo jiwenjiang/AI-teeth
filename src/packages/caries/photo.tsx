@@ -1,4 +1,3 @@
-import MaskLoading from "@/comps/Loading";
 import NavBar from "@/comps/NavBar";
 import { DetectType, MediaType } from "@/service/const";
 import { SystemContext } from "@/service/context";
@@ -10,7 +9,7 @@ import Warn2 from "@/static/icons/warn2.png";
 import Voice from "@/static/icons/voice.svg";
 import { Popup } from "@taroify/core";
 import { Image, Text, View } from "@tarojs/components";
-import Taro, { navigateBack, useRouter, canIUse, showModal } from "@tarojs/taro";
+import Taro, { navigateBack, useRouter, canIUse, showModal, showLoading, hideLoading } from "@tarojs/taro";
 import React, { useContext, useEffect, useState } from "react";
 import { cls } from "reactutils";
 import styles from "./photo.module.scss";
@@ -43,16 +42,6 @@ const mainServices = [
   }
 ];
 
-const uploadImg = (v = true) => ({
-  text: "照片上传中...",
-  show: v
-});
-
-const submitImg = {
-  text: "照片检测中...",
-  show: true
-};
-
 export default function App() {
   const router = useRouter();
   const { systemInfo } = useContext(SystemContext);
@@ -65,8 +54,9 @@ export default function App() {
   const [imageInfos, setImageInfos] = useState<ImageInfo[]>([]);
   const [removeIndex, setRemoveIndex] = useState<number>(0);
   const [picIndex, setPicIndex] = useState(0);
-  const [fileLoading, setFileLoading] = useState(uploadImg(false));
   const [hasPic, setHasPic] = useState<boolean>(false);
+  const [intvlId, setIntvlId] = useState<number>(-1);
+  const [reportId, setReportId] = useState<number>(-1);
   const guide = attrs[picIndex] ?? {};
 
   useEffect(() => {
@@ -95,11 +85,22 @@ export default function App() {
     }
   }, [checkType, attrs, imageInfos]);
 
+  useEffect(() => {
+    if (reportId <= 0) {
+      return;
+    }
+
+    onResultReady();
+    window.clearTimeout(intvlId);
+  }, [reportId]);
+
   const onNavBarClick = () => {
     if (showGuide) {
       setShowGuide(false);
       return;
     }
+
+    window.clearTimeout(intvlId);
     navigateBack();
   };
 
@@ -188,13 +189,14 @@ export default function App() {
   // 图片编辑完毕，开始上传
   const onPhotoReady = (res) => {
     try {
-      setFileLoading(uploadImg());
+      showLoading({
+        title: '照片上传中……',
+      });
       uploadImages({
         type: MediaType.PICTURE,
         filePath: res.tempFilePath,
       });
     } catch (error) {
-      setFileLoading(uploadImg(false));
       showModal({
         title: "上传失败",
       })
@@ -222,7 +224,8 @@ export default function App() {
       attrs[picIndex].fileUrl = v.url;
       setAttrs([...attrs]);
     }
-    setFileLoading(uploadImg(false));
+
+    hideLoading();
   }
 
   const openGuide = () => {
@@ -256,46 +259,73 @@ export default function App() {
   }
 
   const submit = async () => {
-    if (hasPic) {
-      setFileLoading(submitImg);
-      let images;
-      if (checkType === DetectType.CARIES) {
-        images = imageInfos
-          ?.map((v, i) => ({
-            fileId: v.fileId,
-            position: (i + 1).toString(),
-          }))
-      } else if (checkType === DetectType.WARNING) {
-        images = attrs
-          ?.filter(v => v.fileId)
-          ?.map(v => ({
-            fileId: v.fileId,
-            position: v.position,
-          }))
-      }
-
-      const res = await request({
-        method: "POST",
-        url: "/check/submit",
-        data: {
-          checkType: checkType?.toString(),
-          childrenId: Number(router.params.childrenId),
-          images,
-        }
-      });
-      setFileLoading({ ...submitImg, show: false });
-      if (checkType === DetectType.CARIES) {
-        Taro.navigateTo({
-          url: `/packages/caries/report?id=${res.data.id}&childName=${router.params.childName}`
-        });
-      }
-      if (checkType === DetectType.WARNING) {
-        Taro.navigateTo({
-          url: `/packages/caries/warningReport?id=${res.data.id}&childName=${router.params.childName}`
-        });
-      }
+    if (!hasPic) {
+      return;
     }
+
+    showLoading({
+      title: '检测中……',
+    });
+
+    let images;
+    if (checkType === DetectType.CARIES) {
+      images = imageInfos
+        ?.map((v, i) => ({
+          fileId: v.fileId,
+          position: (i + 1).toString(),
+        }))
+    } else if (checkType === DetectType.WARNING) {
+      images = attrs
+        ?.filter(v => v.fileId)
+        ?.map(v => ({
+          fileId: v.fileId,
+          position: v.position,
+        }))
+    }
+
+    const res = await request({
+      method: "POST",
+      url: "/check/submit",
+      data: {
+        checkType: checkType?.toString(),
+        childrenId: Number(router.params.childrenId),
+        images,
+      }
+    });
+    const { id } = res?.data;
+    pollingDetectingResult(id);
   };
+
+  const pollingDetectingResult = async (id) => {
+    const res = await request({
+      url: `/check/get?id=${id}`,
+    });
+
+    if ((checkType === DetectType.CARIES && res.data.result !== '检测中') || (checkType === DetectType.WARNING && Number(res.data.result) >= 0)) {
+      setReportId(id);
+      return;
+    }
+
+    const temp = window.setTimeout(() => {
+      pollingDetectingResult(id);
+    }, 2000);
+    setIntvlId(temp);
+  }
+
+  const onResultReady = () => {
+    hideLoading();
+
+    if (checkType === DetectType.CARIES) {
+      Taro.navigateTo({
+        url: `/packages/caries/report?id=${reportId}&childName=${router.params.childName}`
+      });
+    }
+    if (checkType === DetectType.WARNING) {
+      Taro.navigateTo({
+        url: `/packages/caries/warningReport?id=${reportId}&childName=${router.params.childName}`
+      });
+    }
+  }
 
   const doUploadCards = () => {
     if ((router.params.type === '1' && imageInfos.length < 10)) {
@@ -405,7 +435,7 @@ export default function App() {
       ) : (
         <View
           className={styles.body}
-          style={{ height: `calc(100vh - ${systemInfo.navHeight}px - 106px)` }}
+          style={{ height: `calc(100vh - ${systemInfo.navHeight}px)` }}
         >
           {/* 页面标题及检测范围提示 */}
           <View className={styles.tip}>
@@ -471,7 +501,6 @@ export default function App() {
           </Popup>
         </View>
       )}
-      <MaskLoading visible={fileLoading.show} text={fileLoading.text} />
     </View>
   );
 }
