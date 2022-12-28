@@ -18,19 +18,24 @@ const resultColor = {
 };
 
 const resultTypes = {
-  detecting: {
+  "-2": {
+    type: 'detecting',
     color: "#1DA1F2",
   },
-  no_teeth: {
+  "-1": {
+    type: 'no_teeth',
     color: "#1DA1F2",
   },
-  no_caries: {
+  "0": {
+    type: 'no_caries',
     color: "#1DA1F2",
   },
-  caries: {
+  "1": {
+    type: 'caries',
     color: "#FF6B00",
   },
-  heavy_caries: {
+  "2": {
+    type: 'heavy_caries',
     color: "#FF0000",
   }
 };
@@ -84,42 +89,9 @@ export default function App() {
   }, [data]);
 
   const getCondition = () => {
-    if (data.result.includes("严重龋齿")) {
-      setCondition({
-        type: "heavy_caries",
-        ...resultTypes.heavy_caries
-      });
-      return;
+    if (Object.keys(resultTypes).includes(data.result.resultLevel.toString())) {
+      setCondition(resultTypes[data.result.resultLevel.toString()])
     }
-
-    if (data.result.includes("未检测到龋齿")) {
-      setCondition({
-        type: "no_caries",
-        ...resultTypes.no_caries
-      });
-      return;
-    }
-
-    if (data.result.includes("龋齿")) {
-      setCondition({
-        type: "caries",
-        ...resultTypes.caries
-      });
-      return;
-    }
-
-    if (data.result.includes("检测中")) {
-      setCondition({
-        type: "detecting",
-        ...resultTypes.detecting
-      });
-      return;
-    }
-
-    setCondition({
-      type: "no_teeth",
-      ...resultTypes.no_teeth
-    });
   };
 
   const renderCanvas = async (v, i) => {
@@ -240,22 +212,22 @@ export default function App() {
             )}
             {(condition.type === "caries" ||
               condition.type === "heavy_caries") && (
-              <View className={styles.teeth}>
-                <View className={styles.title}>提示：检测出的龋齿已被标出</View>
-                {teethList?.map((v, i) => (
-                  <View className={styles.teethImgBox} key={i}>
-                    <Canvas
-                      type="2d"
-                      id={`canvas${i}`}
-                      style={{ width: v.canvasW, height: v.canvasH }}
-                    />
-                  </View>
-                ))}
-              </View>
-            )}
+                <View className={styles.teeth}>
+                  <View className={styles.title}>提示：检测出的龋齿已被标出</View>
+                  {teethList?.map((v, i) => (
+                    <View className={styles.teethImgBox} key={i}>
+                      <Canvas
+                        type="2d"
+                        id={`canvas${i}`}
+                        style={{ width: v.canvasW, height: v.canvasH }}
+                      />
+                    </View>
+                  ))}
+                </View>
+              )}
           </View>
         )}
-        <Share report={1}/>
+        <Share report={1} />
       </View>
     </View>
   );
