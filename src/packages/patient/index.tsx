@@ -60,6 +60,7 @@ export default function App() {
   const [showDelete, setShowDelete] = useState(false);
   const [birthday, setBirthday] = useState('2010-01-02');
   const [namePlaceholder, setNamePlaceholder] = useState('请输入真实姓名');
+  const [lastTimeSearchAll, setLastTimeSearchAll] = useState<boolean>(true);
 
   useEffect(() => {
     getPatients();
@@ -72,6 +73,12 @@ export default function App() {
 
     setCurrPatient(patientList[0]);
   }, [patientList]);
+
+  useEffect(() => {
+    if (!lastTimeSearchAll && !searchText) {
+      getPatients()
+    }
+  }, [searchText]);
 
   const getPatients = async (page?: number) => {
     let url = '/children/list'
@@ -89,6 +96,7 @@ export default function App() {
     });
     setPatientList(response.data.children);
     setPageInfo(response.data.page);
+    setLastTimeSearchAll(!searchText);
   };
 
   const addPatientStyles = {
