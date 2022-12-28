@@ -25,18 +25,22 @@ const resultTypes = {
   "-1": {
     type: 'no_teeth',
     color: "#1DA1F2",
-  },
-  "0": {
-    type: 'no_caries',
-    color: "#1DA1F2",
+    treatment: '您上传的照片未检测到牙齿，请重新上传/拍摄照片！',
   },
   "1": {
-    type: 'caries',
-    color: "#FF6B00",
+    type: 'no_caries',
+    color: "#1DA1F2",
+    treatment: '您上传的口内照中，暂未发现龋齿，请继续保持口腔卫生，认真刷牙哦！同时定期进行口腔检查和预防性涂氟。',
   },
   "2": {
+    type: 'caries',
+    color: "#FF6B00",
+    treatment: '您上传的口内照中，检测到有可能存在龋齿，请及时前往口腔科就医检查！',
+  },
+  "3": {
     type: 'heavy_caries',
     color: "#FF0000",
+    treatment: '您上传的口内照中，检测到有可能存在龋齿，请及时前往口腔科就医检查！',
   }
 };
 
@@ -89,8 +93,8 @@ export default function App() {
   }, [data]);
 
   const getCondition = () => {
-    if (Object.keys(resultTypes).includes(data.result.resultLevel.toString())) {
-      setCondition(resultTypes[data.result.resultLevel.toString()])
+    if (Object.keys(resultTypes).includes(data.resultLevel.toString())) {
+      setCondition(resultTypes[data.resultLevel.toString()])
     }
   };
 
@@ -192,7 +196,7 @@ export default function App() {
               <View className={styles.card}>
                 <View className={styles.head}>治疗方案</View>
                 <View className={styles.resultBody}>
-                  <View>{data.treatment}</View>
+                  <View>{condition.treatment}</View>
                   <View className={styles.desc}>
                     <Image className={styles.icon} src={Voice} />
                     （测量结果仅供参考，具体结果请以口腔医生检查结果为准。）
