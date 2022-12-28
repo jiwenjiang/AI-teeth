@@ -308,7 +308,7 @@ export default function App() {
 
     const temp = window.setTimeout(() => {
       pollingDetectingResult(id);
-    }, 2000);
+    }, 10000);
     setIntvlId(temp);
   }
 
