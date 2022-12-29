@@ -18,20 +18,29 @@ const resultColor = {
 };
 
 const resultTypes = {
-  detecting: {
+  "-2": {
+    type: 'detecting',
     color: "#1DA1F2",
   },
-  no_teeth: {
+  "-1": {
+    type: 'no_teeth',
     color: "#1DA1F2",
+    treatment: '您上传的照片未检测到牙齿，请重新上传/拍摄照片！',
   },
-  no_caries: {
+  "1": {
+    type: 'no_caries',
     color: "#1DA1F2",
+    treatment: '您上传的口内照中，暂未发现龋齿，请继续保持口腔卫生，认真刷牙哦！同时定期进行口腔检查和预防性涂氟。',
   },
-  caries: {
+  "2": {
+    type: 'caries',
     color: "#FF6B00",
+    treatment: '您上传的口内照中，检测到有可能存在龋齿，请及时前往口腔科就医检查！',
   },
-  heavy_caries: {
+  "3": {
+    type: 'heavy_caries',
     color: "#FF0000",
+    treatment: '您上传的口内照中，检测到有可能存在龋齿，请及时前往口腔科就医检查！',
   }
 };
 
@@ -84,42 +93,9 @@ export default function App() {
   }, [data]);
 
   const getCondition = () => {
-    if (data.result.includes("严重龋齿")) {
-      setCondition({
-        type: "heavy_caries",
-        ...resultTypes.heavy_caries
-      });
-      return;
+    if (Object.keys(resultTypes).includes(data.resultLevel.toString())) {
+      setCondition(resultTypes[data.resultLevel.toString()])
     }
-
-    if (data.result.includes("未检测到龋齿")) {
-      setCondition({
-        type: "no_caries",
-        ...resultTypes.no_caries
-      });
-      return;
-    }
-
-    if (data.result.includes("龋齿")) {
-      setCondition({
-        type: "caries",
-        ...resultTypes.caries
-      });
-      return;
-    }
-
-    if (data.result.includes("检测中")) {
-      setCondition({
-        type: "detecting",
-        ...resultTypes.detecting
-      });
-      return;
-    }
-
-    setCondition({
-      type: "no_teeth",
-      ...resultTypes.no_teeth
-    });
   };
 
   const renderCanvas = async (v, i) => {
@@ -220,7 +196,7 @@ export default function App() {
               <View className={styles.card}>
                 <View className={styles.head}>治疗方案</View>
                 <View className={styles.resultBody}>
-                  <View>{data.treatment}</View>
+                  <View>{condition.treatment}</View>
                   <View className={styles.desc}>
                     <Image className={styles.icon} src={Voice} />
                     （测量结果仅供参考，具体结果请以口腔医生检查结果为准。）
@@ -240,22 +216,22 @@ export default function App() {
             )}
             {(condition.type === "caries" ||
               condition.type === "heavy_caries") && (
-              <View className={styles.teeth}>
-                <View className={styles.title}>提示：检测出的龋齿已被标出</View>
-                {teethList?.map((v, i) => (
-                  <View className={styles.teethImgBox} key={i}>
-                    <Canvas
-                      type="2d"
-                      id={`canvas${i}`}
-                      style={{ width: v.canvasW, height: v.canvasH }}
-                    />
-                  </View>
-                ))}
-              </View>
-            )}
+                <View className={styles.teeth}>
+                  <View className={styles.title}>提示：检测出的龋齿已被标出</View>
+                  {teethList?.map((v, i) => (
+                    <View className={styles.teethImgBox} key={i}>
+                      <Canvas
+                        type="2d"
+                        id={`canvas${i}`}
+                        style={{ width: v.canvasW, height: v.canvasH }}
+                      />
+                    </View>
+                  ))}
+                </View>
+              )}
           </View>
         )}
-        <Share report={1}/>
+        <Share report={1} />
       </View>
     </View>
   );
