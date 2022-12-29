@@ -45,9 +45,10 @@ export default function Steper({
     }
     const fileSystem = wx.getFileSystemManager();
     const time = new Date().valueOf();
+    const data = reportImg.slice(22);
     fileSystem.writeFile({
       filePath: wx.env.USER_DATA_PATH + `/${time}.png`,
-      data: reportImg,
+      data,
       encoding: "base64",
       success: res => {
         wx.saveImageToPhotosAlbum({
