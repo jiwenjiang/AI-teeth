@@ -39,6 +39,7 @@ export default function App() {
     gender: GenderType;
     birthday: string;
     birthdayDate: number;
+    age: number;
     createTime: string;
   }[]>([]);
   const [pageInfo, setPageInfo] = useState({
@@ -52,6 +53,7 @@ export default function App() {
     gender: GenderType;
     birthday: string;
     birthdayDate: number;
+    age: number;
     createTime: string;
   }>();
   const [gender, setGender] = useState(GenderType.MALE);
@@ -243,6 +245,7 @@ export default function App() {
     setEditMode(true);
     setNavBarTitle('编辑患者');
 
+    setCurrPatient(patient);
     setName(patient.name);
     setGender(patient.gender);
     setBirthday(patient.birthday);
@@ -311,7 +314,7 @@ export default function App() {
                   <Text className={styles.name}>{patient.name}</Text>
                   <Text className={styles.seperator}></Text>
                   <Image className={styles.gender} src={patient.gender === 1 ? Male : Female} mode='widthFix' />
-                  <Text className={styles.age}>{dayjs().year() - dayjs.unix(patient.birthdayDate).year()}岁</Text>
+                  <Text className={styles.age}>{patient.age}岁</Text>
                 </View>
                 <View className={styles.lower}>创建时间　{patient.createTime}</View>
               </View>
