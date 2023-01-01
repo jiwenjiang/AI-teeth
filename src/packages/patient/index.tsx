@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react";
 
-import { showToast, switchTab } from "@tarojs/taro";
+import {
+  showToast,
+  switchTab,
+  useReachBottom,
+} from "@tarojs/taro";
 import { Image, Input, Picker, Text, View } from "@tarojs/components";
 
 import CustomButton from "@/comps/CustomButton";
@@ -81,6 +85,10 @@ export default function App() {
       getPatients()
     }
   }, [searchText]);
+
+  useReachBottom(() => {
+    console.log('已到页面底部')
+  })
 
   const getPatients = async (page?: number) => {
     let url = '/children/list'
