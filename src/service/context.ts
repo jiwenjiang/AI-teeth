@@ -5,7 +5,7 @@ export const ChildContext = createContext<{
   updateChild: ({ len: number }) => void;
 }>({
   child: { len: 0 },
-  updateChild: () => {}
+  updateChild: () => { }
 });
 
 export const SystemContext = createContext<{
@@ -13,5 +13,24 @@ export const SystemContext = createContext<{
   updateSystemInfo: ({ navHeight: number }) => void;
 }>({
   systemInfo: { navHeight: 84 },
-  updateSystemInfo: () => {}
+  updateSystemInfo: () => { }
+});
+
+export const NavContext = createContext<{
+  nav: {
+    skip: boolean,
+    // 1: 龋齿检测
+    // 2: 早期预警
+    prevPageType: number,
+  };
+  updateNav: ({
+    skip,
+    prevPageType,
+  }) => void;
+}>({
+  nav: {
+    skip: false,
+    prevPageType: 0,
+  },
+  updateNav: () => { },
 });

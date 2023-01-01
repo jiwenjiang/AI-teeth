@@ -1,6 +1,6 @@
 import NavBar from "@/comps/NavBar";
 import { DetectType, MediaType } from "@/service/const";
-import { SystemContext } from "@/service/context";
+import { SystemContext, NavContext } from "@/service/context";
 import request from "@/service/request";
 import upload2Server from "@/service/upload";
 import AddPatient from "@/static/icons/add-patient.png";
@@ -9,7 +9,16 @@ import Warn2 from "@/static/icons/warn2.png";
 import Voice from "@/static/icons/voice.svg";
 import { Popup } from "@taroify/core";
 import { Image, Text, View } from "@tarojs/components";
-import Taro, { navigateBack, useRouter, canIUse, showModal, showLoading, hideLoading } from "@tarojs/taro";
+import {
+  navigateBack,
+  useRouter,
+  navigateTo,
+  canIUse,
+  useDidShow,
+  showModal,
+  showLoading,
+  hideLoading,
+} from "@tarojs/taro";
 import React, { useContext, useEffect, useState } from "react";
 import { cls } from "reactutils";
 import styles from "./photo.module.scss";
@@ -45,6 +54,7 @@ const mainServices = [
 export default function App() {
   const router = useRouter();
   const { systemInfo } = useContext(SystemContext);
+  const { nav, updateNav } = useContext(NavContext);
   const [navBarTitle] = useState(router.params.childName ?? "儿童龋齿检测");
   const [checkType, setCheckType] = useState<DetectType | null>(null);
   const [showGuide, setShowGuide] = useState(false);
@@ -94,6 +104,10 @@ export default function App() {
     window.clearTimeout(intvlId);
   }, [reportId]);
 
+  useDidShow(() => {
+    navBackIfNecessary();
+  });
+
   const onNavBarClick = () => {
     if (showGuide) {
       setShowGuide(false);
@@ -103,6 +117,18 @@ export default function App() {
     window.clearTimeout(intvlId);
     navigateBack();
   };
+
+  const navBackIfNecessary = () => {
+    if (!nav.skip) {
+      return;
+    }
+
+    updateNav({
+      skip: false,
+      prevPageType: 0,
+    })
+    navigateBack()
+  }
 
   const checkCompatibility = () => {
     const canEditImage = canIUse("editImage");
@@ -308,23 +334,21 @@ export default function App() {
 
     const temp = window.setTimeout(() => {
       pollingDetectingResult(id);
-    }, 10000);
+    }, 5000);
     setIntvlId(temp);
   }
 
   const onResultReady = () => {
     hideLoading();
 
-    if (checkType === DetectType.CARIES) {
-      Taro.navigateTo({
-        url: `/packages/caries/report?id=${reportId}&childName=${router.params.childName}`
-      });
-    }
-    if (checkType === DetectType.WARNING) {
-      Taro.navigateTo({
-        url: `/packages/caries/warningReport?id=${reportId}&childName=${router.params.childName}`
-      });
-    }
+    const targetPage = checkType === DetectType.CARIES ? 'report' : 'warningReport';
+    updateNav({
+      skip: true,
+      prevPageType: checkType,
+    });
+    navigateTo({
+      url: `/packages/caries/${targetPage}?id=${reportId}&childName=${router.params.childName}`
+    });
   }
 
   const doUploadCards = () => {

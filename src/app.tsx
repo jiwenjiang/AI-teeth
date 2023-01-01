@@ -11,10 +11,17 @@ import {
 import React, { useState } from "react";
 import "./app.scss";
 import "./custom-variables.scss";
-import { SystemContext } from "./service/context";
+import {
+  SystemContext,
+  NavContext,
+} from "./service/context";
 
 function App(props) {
   const [systemInfo, setSystemInfo] = useState({ navHeight: 84 });
+  const [nav, setNav] = useState({
+    skip: false,
+    prevPageType: 0,
+  });
 
   const calcBarheight = async () => {
     const systemInfo = wx.getSystemInfoSync();
@@ -39,7 +46,9 @@ function App(props) {
     <SystemContext.Provider
       value={{ systemInfo, updateSystemInfo: setSystemInfo }}
     >
-      <View className="html">{props.children}</View>
+      <NavContext.Provider value={{ nav, updateNav: setNav }}>
+        <View className="html">{props.children}</View>
+      </NavContext.Provider>
     </SystemContext.Provider>
   );
 }
