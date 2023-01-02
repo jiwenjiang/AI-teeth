@@ -1,10 +1,17 @@
 import React, { useEffect, useState } from "react";
 
 import { Image, Input, Picker, Text, View } from "@tarojs/components";
-import { navigateTo, showToast, switchTab, useDidShow, useRouter } from "@tarojs/taro";
+import {
+  navigateTo,
+  showToast,
+  switchTab,
+  useDidShow,
+  useRouter,
+  useReachBottom,
+} from "@tarojs/taro";
 
 import CustomButton from "@/comps/CustomButton";
-import Pagination from "@/comps/Pagination";
+import LoadMore from "@/comps/LoadMore";
 
 import { DetectType, GenderType } from "@/service/const";
 import request from "@/service/request";
@@ -86,6 +93,12 @@ export default function App() {
     getPatients();
   });
 
+  useReachBottom(() => {
+    if (pageInfo.page < pageInfo.totalPage) {
+      getPatients('', pageInfo.page + 1);
+    }
+  })
+
   const getPatients = async (name = "", page?: number) => {
     let url = '/children/list';
     if (page && page > 0 && !searchText) {
@@ -96,7 +109,7 @@ export default function App() {
       url,
       data: { type: router.params.type, name: name }
     });
-    setPatientList(response.data.children);
+    setPatientList((prev) => prev.concat(response.data.children));
     setPageReady(true);
     setPageInfo(response.data.page);
   };
@@ -206,18 +219,6 @@ export default function App() {
     getPatients(searchText);
   };
 
-  const onPrevPage = async () => {
-    if (pageInfo.page - 1 < 1) return;
-
-    await getPatients('', pageInfo.page - 1);
-  };
-
-  const onNextPage = async () => {
-    if (pageInfo.page + 1 > pageInfo.totalPage) return;
-
-    await getPatients('', pageInfo.page + 1);
-  };
-
   return (
     <View className="page">
       <NavBar title={navBarTitle} back={onNavBarClick} />
@@ -290,14 +291,10 @@ export default function App() {
                 <View className={styles.tag}>{tag(patient.birthdayDate)}</View>
               </View>
             ))}
-          {patientList.length > 0 ? (
-            <Pagination
-              page={pageInfo.page}
-              totalPage={pageInfo.totalPage}
-              onPrevPage={onPrevPage}
-              onNextPage={onNextPage}
-            />
-          ) : null}
+          <LoadMore
+            page={pageInfo.page}
+            totalPage={pageInfo.totalPage}
+          />
           {/* 新建患者的悬浮按钮 */}
           {patientList.length > 0 && (
             <Image

@@ -8,7 +8,7 @@ import {
 import { Image, Input, Picker, Text, View } from "@tarojs/components";
 
 import CustomButton from "@/comps/CustomButton";
-import Pagination from "@/comps/Pagination";
+import LoadMore from "@/comps/LoadMore";
 
 import { GenderType } from "@/service/const";
 import request from "@/service/request";
@@ -87,7 +87,9 @@ export default function App() {
   }, [searchText]);
 
   useReachBottom(() => {
-    console.log('已到页面底部')
+    if (pageInfo.page < pageInfo.totalPage) {
+      getPatients(pageInfo.page + 1);
+    }
   })
 
   const getPatients = async (page?: number) => {
@@ -104,7 +106,7 @@ export default function App() {
     const response = await request({
       url,
     });
-    setPatientList(response.data.children);
+    setPatientList((prev) => prev.concat(response.data.children));
     setPageInfo(response.data.page);
     setLastTimeSearchAll(!searchText);
   };
@@ -266,18 +268,6 @@ export default function App() {
     setNavBarTitle('患者管理');
   };
 
-  const onPrevPage = async () => {
-    if (pageInfo.page - 1 < 1) return;
-
-    await getPatients(pageInfo.page - 1);
-  };
-
-  const onNextPage = async () => {
-    if (pageInfo.page + 1 > pageInfo.totalPage) return;
-
-    await getPatients(pageInfo.page + 1);
-  };
-
   return (
     <View className={styles.page}>
       <NavBar title={navBarTitle} back={onNavBarClick} />
@@ -342,14 +332,10 @@ export default function App() {
               </View>
             </View>
           ))}
-          {patientList.length > 0 ? (
-            <Pagination
-              page={pageInfo.page}
-              totalPage={pageInfo.totalPage}
-              onPrevPage={onPrevPage}
-              onNextPage={onNextPage}
-            />
-          ) : null}
+          <LoadMore
+            page={pageInfo.page}
+            totalPage={pageInfo.totalPage}
+          />
           {/* 新建患者的悬浮按钮 */}
           {patientList.length > 0 && (
             <Image
