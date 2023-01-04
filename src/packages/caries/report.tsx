@@ -1,15 +1,35 @@
+import React, {
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+import Taro, {
+  getCurrentPages,
+  navigateBack,
+  useRouter,
+  switchTab,
+} from "@tarojs/taro";
+import {
+  View,
+  Text,
+  Image,
+  Canvas,
+} from "@tarojs/components";
+
 import NavBar from "@/comps/NavBar";
 import Share from "@/comps/Share";
+
 import request from "@/service/request";
+
+import dayjs from "dayjs";
+
 import Female from "@/static/icons/female.png";
 import Male from "@/static/icons/male.png";
 import Voice from "@/static/icons/voice.svg";
 import Doctor from "@/static/imgs/doctor.png";
 import NoCaries from "@/static/imgs/report-no_caries.png";
 import NoTeeth from "@/static/imgs/report-no_teeth.png";
-import { Canvas, Image, Text, View } from "@tarojs/components";
-import Taro, { getCurrentPages, navigateBack, useRouter, switchTab } from "@tarojs/taro";
-import React, { useEffect, useRef, useState } from "react";
+
 import styles from "./report.module.scss";
 
 const resultColor = {
@@ -178,7 +198,7 @@ export default function App() {
                 src={data?.children?.gender === 1 ? Male : Female}
                 mode="widthFix"
               />
-              <Text className={styles.age}>{data?.children?.age}岁</Text>
+              <Text className={styles.age}>{dayjs().diff(dayjs(data?.children?.birthday), 'year')}岁</Text>
             </View>
             <Text className={styles.time}>{data?.children?.birthday}</Text>
           </View>

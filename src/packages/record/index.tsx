@@ -1,6 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, {
+  useEffect,
+  useState,
+} from "react";
 
-import { Image, Input, Text, View } from "@tarojs/components";
+import {
+  View,
+  Image,
+  Input,
+  Text,
+} from "@tarojs/components";
 import {
   switchTab,
   navigateTo,
@@ -8,12 +16,13 @@ import {
 } from "@tarojs/taro";
 import { Success } from "@taroify/icons";
 
-import { GenderType, DetectType } from "@/service/const";
-import request from "@/service/request";
-import dayjs from "dayjs";
-
 import NavBar from "@/comps/NavBar";
 import LoadMore from "@/comps/LoadMore";
+
+import { GenderType, DetectType } from "@/service/const";
+import request from "@/service/request";
+
+import dayjs from "dayjs";
 
 import Female from "@/static/icons/female.png";
 import Male from "@/static/icons/male.png";
@@ -37,7 +46,7 @@ export default function App() {
     childrenId: number;
     childrenName: string;
     gender: GenderType;
-    age: number;
+    birthday: string;
     checkType: number;
     checkTypeStr: string;
     checkResult: string;
@@ -241,7 +250,7 @@ export default function App() {
                       mode="widthFix"
                     />
                     <Text className={styles.age}>
-                      {patient.age}岁
+                      {dayjs().diff(dayjs(patient.birthday), 'year')}岁
                     </Text>
                     <Text className={styles.seperator}></Text>
                     <Text className={styles.time}>{dayjs.unix(patient.checkTime).format('YYYY-MM-DD HH:mm:ss')}</Text>
@@ -258,7 +267,7 @@ export default function App() {
                     </View>
                   )}
                 </View>
-                <View className={styles.tag}>{tag(patient.age)}</View>
+                <View className={styles.tag}>{tag(dayjs().diff(dayjs(patient.birthday), 'year'))}</View>
               </View>
             ) : null
           ))}

@@ -1,7 +1,31 @@
+import React, {
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+import {
+  View,
+  Image,
+  ScrollView,
+  Text,
+} from "@tarojs/components";
+import {
+  getCurrentPages,
+  navigateBack,
+  useRouter,
+  switchTab,
+} from "@tarojs/taro";
+
 import NavBar from "@/comps/NavBar";
 import Share from "@/comps/Share";
+
 import { SystemContext } from "@/service/context";
 import request from "@/service/request";
+import { cls } from "reactutils";
+
+import dayjs from "dayjs";
+
 import Current1 from "@/static/icons/currentGreen.svg";
 import Current3 from "@/static/icons/currentRed.svg";
 import Current2 from "@/static/icons/currentYellow.svg";
@@ -9,10 +33,7 @@ import Female from "@/static/icons/female.png";
 import Male from "@/static/icons/male.png";
 import Voice from "@/static/icons/voice.svg";
 import Tishi from "@/static/imgs/weixintishi.png";
-import { Image, ScrollView, Text, View } from "@tarojs/components";
-import { getCurrentPages, navigateBack, useRouter, switchTab } from "@tarojs/taro";
-import React, { useContext, useEffect, useRef, useState } from "react";
-import { cls } from "reactutils";
+
 import styles from "./report.module.scss";
 
 const resultText = {
@@ -77,7 +98,7 @@ export default function App() {
                 src={data?.children?.gender === 1 ? Male : Female}
                 mode="widthFix"
               />
-              <Text className={styles.age}>{data?.children?.age}岁</Text>
+              <Text className={styles.age}>{dayjs().diff(dayjs(data?.children?.birthday), 'year')}岁</Text>
             </View>
             <Text className={styles.time}>{data?.children?.birthday}</Text>
           </View>

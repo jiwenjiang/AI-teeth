@@ -18,7 +18,6 @@ import {
   switchTab,
   useDidShow,
   useRouter,
-  useReachBottom,
 } from "@tarojs/taro";
 
 import CustomButton from "@/comps/CustomButton";
