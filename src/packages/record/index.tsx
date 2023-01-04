@@ -49,7 +49,7 @@ export default function App() {
     childrenId: number;
     childrenName: string;
     gender: GenderType;
-    birthday: string;
+    birthday: number;
     checkType: number;
     checkTypeStr: string;
     checkResult: string;
@@ -265,7 +265,7 @@ export default function App() {
                           mode="widthFix"
                         />
                         <Text className={styles.age}>
-                          {dayjs().diff(dayjs(patient.birthday), 'year')}岁
+                          {dayjs().diff(dayjs.unix(patient.birthday), 'year')}岁
                         </Text>
                         <Text className={styles.seperator}></Text>
                         <Text className={styles.time}>{dayjs.unix(patient.checkTime).format('YYYY-MM-DD HH:mm:ss')}</Text>
