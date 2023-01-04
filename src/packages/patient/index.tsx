@@ -81,18 +81,19 @@ export default function App() {
   }, [patientList]);
 
   useEffect(() => {
+    // 上次搜索非空，本次搜索为空，则重新获取全部患者
     if (!lastTimeSearchAll && !searchText) {
-      getPatients()
+      getPatients();
     }
   }, [searchText]);
 
   useReachBottom(() => {
     if (pageInfo.page < pageInfo.totalPage) {
-      getPatients(pageInfo.page + 1);
+      getPatients(false, pageInfo.page + 1);
     }
-  })
+  });
 
-  const getPatients = async (page?: number) => {
+  const getPatients = async (fresh: boolean = true, page?: number) => {
     let url = '/children/list'
     if (searchText) {
       url += `?name=${searchText}`
@@ -106,7 +107,13 @@ export default function App() {
     const response = await request({
       url,
     });
-    setPatientList((prev) => prev.concat(response.data.children));
+    setPatientList((prev) => {
+      if (fresh) {
+        return response.data.children;
+      } else {
+        return prev.concat(response.data.children);
+      }
+    });
     setPageInfo(response.data.page);
     setLastTimeSearchAll(!searchText);
   };
@@ -299,7 +306,7 @@ export default function App() {
               <CustomButton
                 styles={addPatientStyles}
                 click={() => showAddPatientMask()}
-                text={'添加患者'}
+                text='添加患者'
               />
             </View>
           )}
@@ -419,7 +426,7 @@ export default function App() {
                 </View>
               </Picker>
             </View>
-            <CustomButton text={'保存'} click={savePatient} />
+            <CustomButton text='保存' click={savePatient} />
           </View>
         )}
         {/* 删除患者的蒙版 */}
