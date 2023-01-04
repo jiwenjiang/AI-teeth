@@ -220,7 +220,7 @@ export default function App() {
   };
 
   return (
-    <View className="page">
+    <View className='page'>
       <NavBar title={navBarTitle} back={onNavBarClick} />
 
       <View className={styles.content}>
@@ -230,8 +230,8 @@ export default function App() {
             className={styles.input}
             value={searchText}
             onInput={e => setSearchText(e.detail.value)}
-            type="text"
-            placeholder="搜索"
+            type='text'
+            placeholder='搜索'
           />
           <Text className={styles.label} onClick={onSearch}>
             搜索
@@ -242,12 +242,12 @@ export default function App() {
           {/* 无患者时 */}
           {patientList.length === 0 && (
             <View className={styles.nopatient}>
-              <Image className={styles.banner} src={Banner} mode="widthFix" />
+              <Image className={styles.banner} src={Banner} mode='widthFix' />
               <Text className={styles.text}>暂无数据</Text>
               <CustomButton
                 styles={addPatientStyles}
                 click={() => showAddPatientMask()}
-                text={"添加患者"}
+                text='添加患者'
               />
             </View>
           )}
@@ -267,7 +267,7 @@ export default function App() {
                     <Image
                       className={styles.gender}
                       src={patient.gender === GenderType.MALE ? Male : Female}
-                      mode="widthFix"
+                      mode='widthFix'
                     />
                     <Text className={styles.age}>
                       {patient.age}
@@ -300,7 +300,7 @@ export default function App() {
             <Image
               className={styles.addbtn}
               src={AddPatient}
-              mode="widthFix"
+              mode='widthFix'
               onClick={() => showAddPatientMask()}
             />
           )}
@@ -325,13 +325,13 @@ export default function App() {
                     <Image
                       className={styles.icon}
                       src={IcMaleW}
-                      mode="widthFix"
+                      mode='widthFix'
                     />
                   ) : (
                     <Image
                       className={styles.icon}
                       src={IcMale}
-                      mode="widthFix"
+                      mode='widthFix'
                     />
                   )}
                 </View>
@@ -356,13 +356,13 @@ export default function App() {
                     <Image
                       className={styles.icon}
                       src={IcFemale}
-                      mode="widthFix"
+                      mode='widthFix'
                     />
                   ) : (
                     <Image
                       className={styles.icon}
                       src={IcFemaleW}
-                      mode="widthFix"
+                      mode='widthFix'
                     />
                   )}
                 </View>
@@ -380,15 +380,15 @@ export default function App() {
               <Text className={styles.label}>名字</Text>
               <Input
                 className={`${styles.input} ${styles.name}`}
-                type="text"
-                placeholder="请输入真实姓名"
+                type='text'
+                placeholder='请输入真实姓名'
                 value={name}
                 onInput={e => onNameChange(e)}
               />
               <Text className={`${styles.label} ${styles.birthday}`}>生日</Text>
               <Picker
                 className={styles.datepicker}
-                mode="date"
+                mode='date'
                 value={birthday}
                 onChange={onDateChange}
               >
@@ -396,13 +396,13 @@ export default function App() {
                   <Image
                     className={styles.calendar}
                     src={Calendar}
-                    mode="widthFix"
+                    mode='widthFix'
                   />
                   <Text className={styles.text}>{birthday}</Text>
                 </View>
               </Picker>
             </View>
-            <CustomButton text={"保存"} click={addPatient} />
+            <CustomButton text='保存' click={addPatient} />
           </View>
         )}
       </View>
