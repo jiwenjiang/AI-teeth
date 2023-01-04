@@ -1,11 +1,21 @@
-import React, { useEffect, useState } from "react";
+import React, {
+  useEffect,
+  useState,
+  useContext,
+} from "react";
 
 import {
   showToast,
   switchTab,
-  useReachBottom,
 } from "@tarojs/taro";
-import { Image, Input, Picker, Text, View } from "@tarojs/components";
+import {
+  View,
+  Text,
+  Image,
+  Input,
+  Picker,
+  ScrollView,
+} from "@tarojs/components";
 
 import CustomButton from "@/comps/CustomButton";
 import LoadMore from "@/comps/LoadMore";
@@ -15,6 +25,8 @@ import request from "@/service/request";
 import dayjs from "dayjs";
 
 import NavBar from "@/comps/NavBar";
+
+import { SystemContext } from "@/service/context";
 
 import AddPatient from "@/static/icons/add-patient.png";
 import Calendar from "@/static/icons/calendar.png";
@@ -34,6 +46,7 @@ import Warn from "@/static/icons/warn.png";
 import styles from "./index.module.scss";
 
 export default function App() {
+  const { systemInfo } = useContext(SystemContext);
   const [navBarTitle, setNavBarTitle] = useState('患者管理');
   const [editMode, setEditMode] = useState(false);
   const [searchText, setSearchText] = useState<string>('');
@@ -87,11 +100,11 @@ export default function App() {
     }
   }, [searchText]);
 
-  useReachBottom(() => {
+  const getMorePatients = () => {
     if (pageInfo.page < pageInfo.totalPage) {
       getPatients(false, pageInfo.page + 1);
     }
-  });
+  };
 
   const getPatients = async (fresh: boolean = true, page?: number) => {
     let url = '/children/list'
@@ -312,37 +325,46 @@ export default function App() {
           )}
           {/* 有患者时 */}
           {/* 患者列表 */}
-          {patientList.length > 0 && patientList.map((patient, index) => (
-            <View className={styles.patient} key={index}>
-              <View className={styles.info}>
-                <View className={styles.upper}>
-                  <Text className={styles.name}>{patient.name}</Text>
-                  <Text className={styles.seperator}></Text>
-                  <Image className={styles.gender} src={patient.gender === 1 ? Male : Female} mode='widthFix' />
-                  <Text className={styles.age}>{patient.age}岁</Text>
+          {patientList.length > 0 && (
+            <ScrollView
+              className={styles.scrollview}
+              scrollY
+              style={{ height: `calc(100vh - ${systemInfo.navHeight}px - 100px)` }}
+              onScrollToLower={getMorePatients}
+            >
+              {patientList.map((patient, index) => (
+                <View className={styles.patient} key={index}>
+                  <View className={styles.info}>
+                    <View className={styles.upper}>
+                      <Text className={styles.name}>{patient.name}</Text>
+                      <Text className={styles.seperator}></Text>
+                      <Image className={styles.gender} src={patient.gender === 1 ? Male : Female} mode='widthFix' />
+                      <Text className={styles.age}>{patient.age}岁</Text>
+                    </View>
+                    <View className={styles.lower}>创建时间　{patient.createTime}</View>
+                  </View>
+                  <View className={styles.actions}>
+                    <Image
+                      className={styles.action}
+                      src={Edit}
+                      mode='aspectFill'
+                      onClick={() => showEditPatientMask(patient)}
+                    />
+                    <Image
+                      className={styles.action}
+                      src={Delete}
+                      mode='aspectFill'
+                      onClick={() => deletePatient(patient)}
+                    />
+                  </View>
                 </View>
-                <View className={styles.lower}>创建时间　{patient.createTime}</View>
-              </View>
-              <View className={styles.actions}>
-                <Image
-                  className={styles.action}
-                  src={Edit}
-                  mode='aspectFill'
-                  onClick={() => showEditPatientMask(patient)}
-                />
-                <Image
-                  className={styles.action}
-                  src={Delete}
-                  mode='aspectFill'
-                  onClick={() => deletePatient(patient)}
-                />
-              </View>
-            </View>
-          ))}
-          <LoadMore
-            page={pageInfo.page}
-            totalPage={pageInfo.totalPage}
-          />
+              ))}
+              <LoadMore
+                page={pageInfo.page}
+                totalPage={pageInfo.totalPage}
+              />
+            </ScrollView>
+          )}
           {/* 新建患者的悬浮按钮 */}
           {patientList.length > 0 && (
             <Image

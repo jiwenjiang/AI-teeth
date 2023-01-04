@@ -17,6 +17,7 @@
 
   .content {
     flex-grow: 1;
+    overflow: hidden;
 
     display: flex;
     flex-direction: column;
@@ -83,7 +84,7 @@
       box-shadow: 0px -1px 5px rgba(232, 232, 232, 0.5);
 
       box-sizing: border-box;
-      padding: 40px;
+      padding: 40px 0;
 
       position: relative;
 
@@ -106,76 +107,77 @@
         }
       }
 
-      .patient {
-        margin-bottom: 24px;
+      .scrollview {
+        .patient {
+          box-sizing: border-box;
+          margin: 0 40px 24px;
+          padding: 20px;
 
-        width: 100%;
-        background-color: #fff;
-        box-shadow: 0px 4px 30px rgba(188, 188, 188, 0.4);
-        border-radius: 16px;
+          background-color: #fff;
+          box-shadow: 0px 4px 30px rgba(188, 188, 188, 0.4);
+          border-radius: 16px;
 
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-
-        box-sizing: border-box;
-        padding: 20px;
-
-        .info {
           display: flex;
           justify-content: space-between;
-          flex-direction: column;
+          align-items: center;
 
-          .upper {
+
+          .info {
             display: flex;
-            align-items: center;
+            justify-content: space-between;
+            flex-direction: column;
 
-            .name {
-              font-size: 32px;
-              color: #333;
+            .upper {
+              display: flex;
+              align-items: center;
+
+              .name {
+                font-size: 32px;
+                color: #333;
+              }
+
+              .seperator {
+                margin-left: 20px;
+                flex-shrink: 0;
+                width: 1px;
+                height: 25px;
+                background-color: #d6d6d6;
+              }
+
+              .gender {
+                margin-left: 20px;
+                width: 28px;
+                height: 28px;
+              }
+
+              .age {
+                margin-left: 6px;
+                font-size: 28px;
+                color: #333;
+              }
             }
 
-            .seperator {
-              margin-left: 20px;
-              flex-shrink: 0;
-              width: 1px;
-              height: 25px;
-              background-color: #d6d6d6;
-            }
-
-            .gender {
-              margin-left: 20px;
-              width: 28px;
-              height: 28px;
-            }
-
-            .age {
-              margin-left: 6px;
+            .lower {
+              margin-top: 18px;
               font-size: 28px;
               color: #333;
             }
           }
 
-          .lower {
-            margin-top: 18px;
-            font-size: 28px;
-            color: #333;
-          }
-        }
+          .actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
 
-        .actions {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
+            .action {
+              width: 60px;
+              height: 60px;
+              box-sizing: border-box;
+              padding: 10px;
 
-          .action {
-            width: 60px;
-            height: 60px;
-            box-sizing: border-box;
-            padding: 10px;
-
-            &:first-child {
-              margin-right: 40px;
+              &:first-child {
+                margin-right: 40px;
+              }
             }
           }
         }
