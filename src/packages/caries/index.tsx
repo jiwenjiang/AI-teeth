@@ -123,12 +123,18 @@ export default function App() {
       url,
       data: { type: router.params.type, name: search }
     });
+    const formattedPatients = response.data.children.map((v: any) => {
+      return {
+        ...v,
+        age: dayjs().diff(dayjs(v.birthday), 'year'),
+      }
+    });
     setPatientList((prev) => {
       if (fresh) {
-        return response.data.children;
+        return formattedPatients;
       }
 
-      return prev.concat(response.data.children);
+      return prev.concat(formattedPatients);
     });
     setPageReady(true);
     setPageInfo(response.data.page);
@@ -288,7 +294,7 @@ export default function App() {
                 >
                   <View className={styles.info}>
                     <View className={styles.upper}>
-                      <Text className={styles.name}>{patient.name}</Text>
+                      <Text className={styles.name}>{patient?.name}</Text>
                       <Text className={styles.seperator}></Text>
                       <Image
                         className={styles.gender}

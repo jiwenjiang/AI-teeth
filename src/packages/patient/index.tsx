@@ -120,12 +120,18 @@ export default function App() {
     const response = await request({
       url,
     });
+    const formattedPatients = response.data.children.map((v: any) => {
+      return {
+        ...v,
+        age: dayjs().diff(dayjs(v.birthday), 'year'),
+      }
+    });
     setPatientList((prev) => {
       if (fresh) {
-        return response.data.children;
+        return formattedPatients;
       }
 
-      return prev.concat(response.data.children);
+      return prev.concat(formattedPatients);
     });
     setPageInfo(response.data.page);
     setLastTimeSearchAll(!searchText);
