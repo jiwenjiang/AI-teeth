@@ -123,9 +123,9 @@ export default function App() {
     setPatientList((prev) => {
       if (fresh) {
         return response.data.children;
-      } else {
-        return prev.concat(response.data.children);
       }
+
+      return prev.concat(response.data.children);
     });
     setPageInfo(response.data.page);
     setLastTimeSearchAll(!searchText);

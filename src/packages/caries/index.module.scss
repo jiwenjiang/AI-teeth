@@ -43,7 +43,8 @@
     box-shadow: 0px -1px 5px rgba(232, 232, 232, 0.5);
 
     box-sizing: border-box;
-    padding: 40px;
+    padding-top: 40px;
+    padding-bottom: 40px;
 
     position: relative;
 
@@ -67,10 +68,11 @@
     }
 
     .patient {
-      margin-bottom: 24px;
+      box-sizing: border-box;
+      padding: 20px;
+      margin: 0 40px 24px;
       height: 192px;
 
-      width: 100%;
       box-shadow: 0px 4px 32px rgba(188, 188, 188, 0.4);
       border-radius: 16px;
 
@@ -78,8 +80,6 @@
       justify-content: space-between;
       align-items: flex-start;
 
-      box-sizing: border-box;
-      padding: 20px;
       position: relative;
 
       .info {

@@ -1,6 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, {
+  useEffect,
+  useState,
+  useContext,
+} from "react";
 
-import { Image, Input, Picker, Text, View } from "@tarojs/components";
+import {
+  View,
+  Image,
+  Input,
+  Picker,
+  Text,
+  ScrollView,
+} from "@tarojs/components";
 import {
   navigateTo,
   showToast,
@@ -15,6 +26,8 @@ import LoadMore from "@/comps/LoadMore";
 
 import { DetectType, GenderType } from "@/service/const";
 import request from "@/service/request";
+import { SystemContext } from "@/service/context";
+
 import dayjs from "dayjs";
 
 import AddPatient from "@/static/icons/add-patient.png";
@@ -54,6 +67,7 @@ const activeGenderTextStyles = {
 };
 
 export default function App() {
+  const { systemInfo } = useContext(SystemContext);
   const router = useRouter();
   const [navBarTitle, setNavBarTitle] = useState(
     +(router.params.type as any) === DetectType.CARIES
@@ -93,23 +107,29 @@ export default function App() {
     getPatients();
   });
 
-  useReachBottom(() => {
+  const getMorePatients = () => {
     if (pageInfo.page < pageInfo.totalPage) {
-      getPatients('', pageInfo.page + 1);
+      getPatients(searchText, false, pageInfo.page + 1);
     }
-  })
+  }
 
-  const getPatients = async (name = "", page?: number) => {
+  const getPatients = async (search = "", fresh: boolean = true, page?: number) => {
     let url = '/children/list';
-    if (page && page > 0 && !searchText) {
+    if (page && page > 0) {
       url += `?pageNo=${page}`;
     };
 
     const response = await request({
       url,
-      data: { type: router.params.type, name: name }
+      data: { type: router.params.type, name: search }
     });
-    setPatientList((prev) => prev.concat(response.data.children));
+    setPatientList((prev) => {
+      if (fresh) {
+        return response.data.children;
+      }
+
+      return prev.concat(response.data.children);
+    });
     setPageReady(true);
     setPageInfo(response.data.page);
   };
@@ -253,48 +273,56 @@ export default function App() {
           )}
           {/* 有患者时 */}
           {/* 患者列表 */}
-          {patientList.length > 0 &&
-            patientList.map((patient, index) => (
-              <View
-                className={styles.patient}
-                key={index}
-                onClick={() => goto(patient)}
-              >
-                <View className={styles.info}>
-                  <View className={styles.upper}>
-                    <Text className={styles.name}>{patient.name}</Text>
-                    <Text className={styles.seperator}></Text>
-                    <Image
-                      className={styles.gender}
-                      src={patient.gender === GenderType.MALE ? Male : Female}
-                      mode='widthFix'
-                    />
-                    <Text className={styles.age}>
-                      {patient.age}
-                      岁
-                    </Text>
-                    <Text className={styles.seperator}></Text>
-                    <Text className={styles.time}>{patient.birthday}</Text>
+          {patientList.length > 0 && (
+            <ScrollView
+              className={styles.scrollview}
+              scrollY
+              style={{ height: `calc(100vh - ${systemInfo.navHeight}px - 100px)` }}
+              onScrollToLower={getMorePatients}
+            >
+              {patientList.map((patient, index) => (
+                <View
+                  className={styles.patient}
+                  key={index}
+                  onClick={() => goto(patient)}
+                >
+                  <View className={styles.info}>
+                    <View className={styles.upper}>
+                      <Text className={styles.name}>{patient.name}</Text>
+                      <Text className={styles.seperator}></Text>
+                      <Image
+                        className={styles.gender}
+                        src={patient.gender === GenderType.MALE ? Male : Female}
+                        mode='widthFix'
+                      />
+                      <Text className={styles.age}>
+                        {patient.age}
+                        岁
+                      </Text>
+                      <Text className={styles.seperator}></Text>
+                      <Text className={styles.time}>{patient.birthday}</Text>
+                    </View>
+                    {patient?.latestCheck?.checkResult && (
+                      <View className={styles.middle}>
+                        上次检测结果：{patient?.latestCheck?.checkResult}
+                      </View>
+                    )}
+                    {patient.latestCheck?.hint && (
+                      <View className={styles.lower}>
+                        <Image src={Warning} className={styles.warning} /> 提示：
+                        {patient?.latestCheck?.hint}
+                      </View>
+                    )}
                   </View>
-                  {patient?.latestCheck?.checkResult && (
-                    <View className={styles.middle}>
-                      上次检测结果：{patient?.latestCheck?.checkResult}
-                    </View>
-                  )}
-                  {patient.latestCheck?.hint && (
-                    <View className={styles.lower}>
-                      <Image src={Warning} className={styles.warning} /> 提示：
-                      {patient?.latestCheck?.hint}
-                    </View>
-                  )}
+                  <View className={styles.tag}>{tag(patient.birthdayDate)}</View>
                 </View>
-                <View className={styles.tag}>{tag(patient.birthdayDate)}</View>
-              </View>
-            ))}
-          <LoadMore
-            page={pageInfo.page}
-            totalPage={pageInfo.totalPage}
-          />
+              ))}
+              <LoadMore
+                page={pageInfo.page}
+                totalPage={pageInfo.totalPage}
+              />
+            </ScrollView>
+          )}
           {/* 新建患者的悬浮按钮 */}
           {patientList.length > 0 && (
             <Image
