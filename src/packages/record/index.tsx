@@ -1,6 +1,7 @@
 import React, {
   useEffect,
   useState,
+  useContext,
 } from "react";
 
 import {
@@ -8,17 +9,18 @@ import {
   Image,
   Input,
   Text,
+  ScrollView,
 } from "@tarojs/components";
 import {
   switchTab,
   navigateTo,
-  useReachBottom,
 } from "@tarojs/taro";
 import { Success } from "@taroify/icons";
 
 import NavBar from "@/comps/NavBar";
 import LoadMore from "@/comps/LoadMore";
 
+import { SystemContext } from "@/service/context";
 import { GenderType, DetectType } from "@/service/const";
 import request from "@/service/request";
 
@@ -35,6 +37,7 @@ import Clear from "@/static/icons/clear.png";
 import styles from "./index.module.scss";
 
 export default function App() {
+  const { systemInfo } = useContext(SystemContext);
   const [showSelect, setShowSelect] = useState<boolean>(false)
   const [checkType, setCheckType] = useState<number>(0)
   const [showMask, setShowMask] = useState<boolean>(true)
@@ -75,11 +78,11 @@ export default function App() {
     }
   }, [searchText]);
 
-  useReachBottom(() => {
+  const getMoreRecords = () => {
     if (pageInfo.page < pageInfo.totalPage) {
-      getCheckRecords(pageInfo.page + 1);
+      getCheckRecords(false, pageInfo.page + 1);
     }
-  })
+  }
 
   const checkTypes = [
     {
@@ -109,11 +112,17 @@ export default function App() {
     2: '早期预警',
   }
 
-  const getCheckRecords = async (page?: number) => {
+  const getCheckRecords = async (fresh: boolean = true, page?: number) => {
     const response = await request({
       url: `/check/list?${!resetFlag ? ('&name=' + searchText) : ''}${page ? ('&pageNo=' + page) : ''}`,
     });
-    setCheckRecords((prev) => prev.concat(response.data.records));
+    setCheckRecords((prev) => {
+      if (fresh) {
+        return response.data.records;
+      }
+
+      return prev.concat(response.data.records);
+    });
     setPageInfo(response.data.page);
   };
 
@@ -233,48 +242,56 @@ export default function App() {
           )}
           {/* 有患者时 */}
           {/* 患者列表 */}
-          {checkRecords.length > 0 && checkRecords.map((patient, index) => (
-            (checkType === 0 || (checkType > 0 && patient.checkType === checkType)) ? (
-              <View
-                className={styles.patient}
-                key={index}
-                onClick={() => goto(patient)}
-              >
-                <View className={styles.info}>
-                  <View className={styles.upper}>
-                    <Text className={styles.name}>{patient.childrenName}</Text>
-                    <Text className={styles.seperator}></Text>
-                    <Image
-                      className={styles.gender}
-                      src={patient.gender === GenderType.MALE ? Male : Female}
-                      mode="widthFix"
-                    />
-                    <Text className={styles.age}>
-                      {dayjs().diff(dayjs(patient.birthday), 'year')}岁
-                    </Text>
-                    <Text className={styles.seperator}></Text>
-                    <Text className={styles.time}>{dayjs.unix(patient.checkTime).format('YYYY-MM-DD HH:mm:ss')}</Text>
+          {checkRecords.length > 0 &&
+            <ScrollView
+              scrollY
+              style={{ height: `calc(100vh - ${systemInfo.navHeight}px - 120px)` }}
+              onScrollToLower={getMoreRecords}
+            >
+              {checkRecords.map((patient, index) => (
+                (checkType === 0 || (checkType > 0 && patient.checkType === checkType)) ? (
+                  <View
+                    className={styles.patient}
+                    key={index}
+                    onClick={() => goto(patient)}
+                  >
+                    <View className={styles.info}>
+                      <View className={styles.upper}>
+                        <Text className={styles.name}>{patient.childrenName}</Text>
+                        <Text className={styles.seperator}></Text>
+                        <Image
+                          className={styles.gender}
+                          src={patient.gender === GenderType.MALE ? Male : Female}
+                          mode="widthFix"
+                        />
+                        <Text className={styles.age}>
+                          {dayjs().diff(dayjs(patient.birthday), 'year')}岁
+                        </Text>
+                        <Text className={styles.seperator}></Text>
+                        <Text className={styles.time}>{dayjs.unix(patient.checkTime).format('YYYY-MM-DD HH:mm:ss')}</Text>
+                      </View>
+                      {patient?.checkResult && (
+                        <View className={styles.middle}>
+                          {checkResultPrefix[patient?.checkType]}：{patient?.checkResult}
+                        </View>
+                      )}
+                      {patient.hint && (
+                        <View className={styles.lower}>
+                          <Image src={Warning} className={styles.warning} /> 提示：
+                          {patient?.hint}
+                        </View>
+                      )}
+                    </View>
+                    <View className={styles.tag}>{tag(dayjs().diff(dayjs(patient.birthday), 'year'))}</View>
                   </View>
-                  {patient?.checkResult && (
-                    <View className={styles.middle}>
-                      {checkResultPrefix[patient?.checkType]}：{patient?.checkResult}
-                    </View>
-                  )}
-                  {patient.hint && (
-                    <View className={styles.lower}>
-                      <Image src={Warning} className={styles.warning} /> 提示：
-                      {patient?.hint}
-                    </View>
-                  )}
-                </View>
-                <View className={styles.tag}>{tag(dayjs().diff(dayjs(patient.birthday), 'year'))}</View>
-              </View>
-            ) : null
-          ))}
-          <LoadMore
-            page={pageInfo.page}
-            totalPage={pageInfo.totalPage}
-          />
+                ) : null
+              ))}
+              <LoadMore
+                page={pageInfo.page}
+                totalPage={pageInfo.totalPage}
+              />
+            </ScrollView>
+          }
           {/* 筛选检测类型的下拉菜单 */}
           {showSelect && (
             <View

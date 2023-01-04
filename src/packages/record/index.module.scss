@@ -22,6 +22,7 @@
 
   .content {
     flex-grow: 1;
+    overflow: hidden;
 
     display: flex;
     flex-direction: column;
@@ -118,13 +119,14 @@
     .check-records {
       flex-shrink: 1;
       flex-grow: 1;
+      overflow-y: auto;
 
       background-color: #f9fdff;
       border-radius: 24px 24px 0px 0px;
       box-shadow: 0px -1px 5px rgba(232, 232, 232, 0.5);
 
       box-sizing: border-box;
-      padding: 40px;
+      padding: 40px 0;
 
       position: relative;
 
@@ -148,10 +150,12 @@
       }
 
       .patient {
-        margin-bottom: 24px;
+        box-sizing: border-box;
+        margin: 0 40px 24px;
+        padding: 20px;
+
         height: 192px;
 
-        width: 100%;
         box-shadow: 0px 4px 32px rgba(188, 188, 188, 0.2);
         border-radius: 16px;
 
@@ -159,8 +163,6 @@
         justify-content: space-between;
         align-items: flex-start;
 
-        box-sizing: border-box;
-        padding: 20px;
         position: relative;
 
         .info {
