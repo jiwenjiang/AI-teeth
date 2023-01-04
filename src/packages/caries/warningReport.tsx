@@ -8,7 +8,6 @@ import Current2 from "@/static/icons/currentYellow.svg";
 import Female from "@/static/icons/female.png";
 import Male from "@/static/icons/male.png";
 import Voice from "@/static/icons/voice.svg";
-import Issue from "@/static/icons/warningreport-problems-bg.png";
 import Tishi from "@/static/imgs/weixintishi.png";
 import { Image, ScrollView, Text, View } from "@tarojs/components";
 import { getCurrentPages, navigateBack, useRouter, switchTab } from "@tarojs/taro";
@@ -29,8 +28,6 @@ export default function App() {
   const [navBarTitle] = useState(router.params.childName ?? "儿童龋齿检测");
   const [data, setData] = useState<any>({});
   const canvasBox = useRef();
-  const [show, setShow] = useState(false);
-  const [reportImg, setReportImg] = useState("");
 
   const onNavBarClick = () => {
     const currentPages = getCurrentPages();
@@ -124,7 +121,7 @@ export default function App() {
               </View>
             </View>
           </View>
-          <View className={styles.warningList}>
+          {/* <View className={styles.warningList}>
             <View className={styles.listHead}>
               <View className={styles.border}></View>
               <View className={styles.titleBox}>
@@ -149,7 +146,7 @@ export default function App() {
                 <View className={styles.noProblem}>牙齿情况正常</View>
               )}
             </View>
-          </View>
+          </View> */}
         </ScrollView>
         <Share report={2} />
       </View>
