@@ -65,8 +65,6 @@ export default function App() {
   const [removeIndex, setRemoveIndex] = useState<number>(0);
   const [picIndex, setPicIndex] = useState(0);
   const [hasPic, setHasPic] = useState<boolean>(false);
-  const [intvlId, setIntvlId] = useState<number>(-1);
-  const [reportId, setReportId] = useState<number>(-1);
   const guide = attrs[picIndex] ?? {};
 
   useEffect(() => {
@@ -95,15 +93,6 @@ export default function App() {
     }
   }, [checkType, attrs, imageInfos]);
 
-  useEffect(() => {
-    if (reportId <= 0) {
-      return;
-    }
-
-    onResultReady();
-    window.clearTimeout(intvlId);
-  }, [reportId]);
-
   useDidShow(() => {
     navBackIfNecessary();
   });
@@ -114,7 +103,6 @@ export default function App() {
       return;
     }
 
-    window.clearTimeout(intvlId);
     navigateBack();
   };
 
@@ -289,10 +277,6 @@ export default function App() {
       return;
     }
 
-    showLoading({
-      title: '检测中……',
-    });
-
     let images;
     if (checkType === DetectType.CARIES) {
       images = imageInfos
@@ -319,28 +303,10 @@ export default function App() {
       }
     });
     const { id } = res?.data;
-    pollingDetectingResult(id);
+    navToReportPage(id);
   };
 
-  const pollingDetectingResult = async (id) => {
-    const res = await request({
-      url: `/check/get?id=${id}`,
-    });
-
-    if ((checkType === DetectType.CARIES && res.data.result !== '检测中') || (checkType === DetectType.WARNING && Number(res.data.result) >= 0)) {
-      setReportId(id);
-      return;
-    }
-
-    const temp = window.setTimeout(() => {
-      pollingDetectingResult(id);
-    }, 2000);
-    setIntvlId(temp);
-  }
-
-  const onResultReady = () => {
-    hideLoading();
-
+  const navToReportPage = (reportId) => {
     const targetPage = checkType === DetectType.CARIES ? 'report' : 'warningReport';
     updateNav({
       skip: true,
