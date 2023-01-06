@@ -93,23 +93,7 @@ export default function App() {
   const onNavBarClick = () => {
     (intvlId > -1) && window.clearTimeout(intvlId);
 
-    const currentPages = getCurrentPages();
-    if (
-      currentPages.length > 1 &&
-      currentPages[currentPages.length - 2].route.includes(
-        "packages/caries/photo"
-      )
-    ) {
-      navigateBack({
-        delta: 2
-      });
-    } else if (currentPages.length > 1) {
-      navigateBack();
-    } else {
-      switchTab({
-        url: "/pages/index/index"
-      });
-    }
+    navigateBack();
   };
 
   const pollingReport = async () => {

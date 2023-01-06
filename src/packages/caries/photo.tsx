@@ -115,7 +115,7 @@ export default function App() {
       skip: false,
       prevPageType: 0,
     })
-    navigateBack()
+    navigateBack();
   }
 
   const checkCompatibility = () => {

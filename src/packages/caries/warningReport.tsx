@@ -37,7 +37,7 @@ import Tishi from "@/static/imgs/weixintishi.png";
 import styles from "./report.module.scss";
 
 const resultText = {
-  "-2": "检测中",
+  "-2": "未检测到结果",
   "0": "不需要早期干预",
   "1": "可能需要早期干预",
   "2": "需要早期干预"
@@ -49,41 +49,40 @@ export default function App() {
   const [navBarTitle] = useState(router.params.childName ?? "儿童龋齿检测");
   const [data, setData] = useState<any>({});
   const canvasBox = useRef();
+  const [resultReady, setResultReady] = useState<boolean>(false);
+  const [intvlId, setIntvlId] = useState<number>(-1);
+
+  useEffect(() => {
+    pollingReport();
+  }, []);
 
   const onNavBarClick = () => {
-    const currentPages = getCurrentPages();
-    if (
-      currentPages.length > 1 &&
-      currentPages[currentPages.length - 2].route.includes(
-        "packages/caries/photo"
-      )
-    ) {
-      navigateBack({
-        delta: 2
-      });
-    } else if (currentPages.length > 1) {
-      navigateBack();
-    } else {
-      switchTab({
-        url: "/pages/index/index"
-      });
-    }
+    (intvlId > -1) && window.clearTimeout(intvlId);
+
+    navigateBack();
   };
 
-  const getAttr = async () => {
+  const pollingReport = async () => {
+    if (resultReady) {
+      return;
+    }
+
     const response = await request({
       url: "/check/get",
       data: { id: router.params.id || 74 }
     });
-    setData({
-      ...response.data,
-      problems: response.data.problems.filter((v: any) => v)
-    });
-  };
+    setData(response.data);
 
-  useEffect(() => {
-    getAttr();
-  }, []);
+    if (Object.keys(resultText).includes(response.data.resultLevel.toString())) {
+      setResultReady(true);
+      return;
+    }
+
+    const temp = window.setTimeout(() => {
+      pollingReport();
+    }, 2000);
+    setIntvlId(temp);
+  };
 
   return (
     <View className="page">
