@@ -38,7 +38,7 @@ const resultColor = {
 };
 
 const resultTypes = {
-  "-2": {
+  "0": {
     type: 'detecting',
     color: "#1DA1F2",
   },
@@ -73,8 +73,26 @@ export default function App() {
   const [condition, setCondition] = useState<any>(null);
   const canvasBox = useRef();
   const [teethList, setTeethList] = useState<any>([]);
+  const [resultReady, setResultReady] = useState<boolean>(false);
+  const [intvlId, setIntvlId] = useState<number>(-1);
+
+  useEffect(() => {
+    pollingReport();
+  }, []);
+
+  useEffect(() => {
+    if (data.id) {
+      getCondition();
+    }
+
+    if (data.resultLevel >= 2) {
+      calcCanvasSize(data.images);
+    }
+  }, [data]);
 
   const onNavBarClick = () => {
+    (intvlId > -1) && window.clearTimeout(intvlId);
+
     const currentPages = getCurrentPages();
     if (
       currentPages.length > 1 &&
@@ -94,23 +112,27 @@ export default function App() {
     }
   };
 
-  const getReport = async () => {
+  const pollingReport = async () => {
+    if (resultReady) {
+      return;
+    }
+
     const response = await request({
       url: "/check/get",
       data: { id: router.params.id || 74 }
     });
     setData(response.data);
-  };
 
-  useEffect(() => {
-    getReport();
-  }, []);
-
-  useEffect(() => {
-    if (data.id) {
-      getCondition();
+    if (response.data.resultLevel.toString() !== '0') {
+      setResultReady(true);
+      return;
     }
-  }, [data]);
+
+    const temp = window.setTimeout(() => {
+      pollingReport();
+    }, 2000);
+    setIntvlId(temp);
+  };
 
   const getCondition = () => {
     if (Object.keys(resultTypes).includes(data.resultLevel.toString())) {
@@ -178,12 +200,6 @@ export default function App() {
       });
     });
   };
-
-  useEffect(() => {
-    if (condition?.type === "caries" || condition?.type === "heavy_caries") {
-      calcCanvasSize(data.images);
-    }
-  }, [data, condition]);
 
   return (
     <View className="page">
