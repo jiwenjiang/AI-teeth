@@ -50,7 +50,7 @@
   if (res.stdout) {
     const lastComment = getGitLastMsg("%s");
     execa.execaCommandSync(`git add .`);
-    execa.execaSync("git", ["commit", "-m", lastComment]);
+    execa.execaSync("git", ["commit", "-m", comment]);
     console.log("\x1b[42m%s\x1b[0m", "代码提交至本地仓库");
   }
 
