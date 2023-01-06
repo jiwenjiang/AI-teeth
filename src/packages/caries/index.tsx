@@ -233,6 +233,10 @@ export default function App() {
     );
   };
 
+  const onConfirm = () => {
+    getPatients(searchText)
+  }
+
   const goto = v => {
     console.log("t", router.params.type);
     navigateTo({
@@ -255,6 +259,7 @@ export default function App() {
             className={styles.input}
             value={searchText}
             onInput={e => setSearchText(e.detail.value)}
+            onConfirm={onConfirm}
             type='text'
             placeholder='搜索'
           />
