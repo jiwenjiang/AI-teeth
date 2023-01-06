@@ -39,6 +39,7 @@ import IcMale from "@/static/icons/ic-male.png";
 import Male from "@/static/icons/male.png";
 import Warning from "@/static/icons/warning.svg";
 import Banner from "@/static/imgs/patient-banner.png";
+import Clear from "@/static/icons/clear.png";
 
 import NavBar from "@/comps/NavBar";
 import styles from "./index.module.scss";
@@ -97,10 +98,18 @@ export default function App() {
   const [showMask, setShowMask] = useState(false);
   const [birthday, setBirthday] = useState("2010-01-02");
   const [searchText, setSearchText] = useState("");
+  const [lastTimeSearchAll, setLastTimeSearchAll] = useState<boolean>(true);
 
   useEffect(() => {
     getPatients();
   }, []);
+
+  useEffect(() => {
+    // 上次搜索非空，本次搜索为空，则重新获取全部患者
+    if (!lastTimeSearchAll && !searchText) {
+      getPatients();
+    }
+  }, [searchText]);
 
   useDidShow(() => {
     getPatients();
@@ -137,6 +146,7 @@ export default function App() {
     });
     setPageReady(true);
     setPageInfo(response.data.page);
+    setLastTimeSearchAll(!searchText);
   };
 
   const tag = v => {
@@ -237,6 +247,10 @@ export default function App() {
     getPatients(searchText)
   }
 
+  const clearSearch = () => {
+    setSearchText('')
+  }
+
   const goto = v => {
     console.log("t", router.params.type);
     navigateTo({
@@ -263,6 +277,11 @@ export default function App() {
             type='text'
             placeholder='搜索'
           />
+          {searchText && (
+            <View className={styles.clear} onClick={clearSearch}>
+              <Image className={styles.icon} src={Clear} mode='widthFix' />
+            </View>
+          )}
           <Text className={styles.label} onClick={onSearch}>
             搜索
           </Text>
